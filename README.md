@@ -30,6 +30,12 @@
 ### vlt noch solche spaesschen hier:
 
 ### Installation
+fuer die webanwendung einfach in den `user` ordner navigieren und den Befehl `npm install` ausfuehren
+* Dependencies:
+	* npm
+	* nodejs
+
+danach Server einfach mit `npm start` starten
 
 ### Konfiguration
 
