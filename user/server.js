@@ -4,7 +4,7 @@ const express       = require('express');
 const app           = express();
 const port          = 1337; // port ueber den man auf die API bzw das frontend zugriff hat
 
-// wir machen den ordner /static fuer den server verfuegbar
+// wir machen den ordner /static fuer das frontend verfuegbar
 app.use(express.json());
 app.set('views','./views');
 app.use('/static', express.static(path.resolve('static')));
