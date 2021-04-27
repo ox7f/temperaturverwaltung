@@ -3,10 +3,10 @@
 * Wir haben keine Ahnung wie Sensoren funktionieren (WHKAWSF)
 
 ### Teammitglieder:
-1. Daniel Kock
-2. Karl Huber-Herre
-3. Nils Schützke
-4. Michael Blümler 
+* Daniel Kock
+* Karl Huber-Herre
+* Nils Schützke
+* Michael Blümler 
 
 ### Teamleiter: 
 * Michael Blümler 
