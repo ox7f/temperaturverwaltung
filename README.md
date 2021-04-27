@@ -26,3 +26,11 @@
 * 2 Applikationen erstellen User / Admin (min. 2 Sprachen)
 * Dokumentation
 * Testen
+
+### vlt noch solche spaesschen hier:
+
+### Installation
+
+### Konfiguration
+
+### Bedienungsanleitung
