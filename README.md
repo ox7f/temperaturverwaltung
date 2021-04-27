@@ -32,10 +32,9 @@
 ### Installation
 fuer die webanwendung einfach in den `user` ordner navigieren und den Befehl `npm install` ausfuehren
 * Dependencies:
-	* npm
-	* nodejs
+	* [nodejs](https://nodejs.org/en/download/)
 
-danach Server einfach mit `npm start` starten
+danach Server mit `npm start` starten
 
 ### Konfiguration
 
