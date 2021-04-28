@@ -4,7 +4,7 @@
 
 ### Teammitglieder:
 * Daniel Kock
-* Karl Huber-Herre
+* Karl Hubert-Herre
 * Nils Schützke
 * Michael Blümler 
 
