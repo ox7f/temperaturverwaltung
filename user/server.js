@@ -2,13 +2,13 @@ const routes        = require('./routes');
 const path          = require('path');
 const express       = require('express');
 const app           = express();
-const port          = 1337; // port ueber den man auf die API bzw das frontend zugriff hat
+const port          = 1337; // port auf den der server horcht
 
-// wir machen den ordner /static fuer das frontend verfuegbar
-app.use(express.json());
+// /static verfuegbar machen
 app.set('views','./views');
-app.use('/static', express.static(path.resolve('static')));
 
+app.use(express.json());
+app.use('/static', express.static(path.resolve('static')));
 app.use(routes);
 
 app.all('*', (req, res) => {
