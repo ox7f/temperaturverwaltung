@@ -1,0 +1,19 @@
+<% if (user.isAdmin){ %>
+    <!-- wenn admin, dann werte neue spalte zum loeschen bzw neue zeile um werte hinzuzufuegen -->
+<% } %>
+
+<div class="container-fluid">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Sensor</th>
+                <th scope="col">Timestamp</th>
+                <th scope="col">Value in °C</th>
+                <% if (user.isAdmin){ %>
+                    <th scope="col"></th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody id="temperatures"></tbody>
+    </table>
+</div>
