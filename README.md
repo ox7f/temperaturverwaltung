@@ -7,6 +7,7 @@
 * Karl Hubert-Herre
 * Nils Schützke
 * Michael Blümler 
+* Dominic Ruch
 
 ### Teamleiter: 
 * Michael Blümler 
@@ -30,7 +31,7 @@
 ### vlt noch solche spaesschen hier:
 
 ### Installation
-fuer die webanwendung einfach in den `user` ordner navigieren und den Befehl `npm install` ausfuehren
+für die Webanwendung einfach in den `user` ordner navigieren und den Befehl `npm install` ausführen
 * Dependencies:
 	* [nodejs](https://nodejs.org/en/download/)
 
