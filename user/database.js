@@ -11,6 +11,19 @@ class Database {
     }
 
     async migrate() {
+        // todo: hersteller, sensor table
+        /*
+        CREATE TABLE IF NOT EXISTS Temperatur (
+            id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            todo
+        );
+
+        CREATE TABLE IF NOT EXISTS Sensor (
+            id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            todo
+        );
+        */
+
         return this.db.exec(`
             DROP TABLE IF EXISTS Temperatur;
             DROP TABLE IF EXISTS User;
@@ -64,7 +77,7 @@ class Database {
     async signup(email, passwd, passwd2) {
         return new Promise(async (resolve, reject) => {
             try {
-                let query = 'INSERT INTO User (email, passwd) VALUES = ?';
+                let query = 'INSERT INTO User (email, passwd) VALUES (?, ?)';
                 resolve(await this.db.run(query, [email, passwd]));
             } catch(e) {
                 reject(e);
@@ -75,8 +88,19 @@ class Database {
     async add(sensor, value) {
         return new Promise(async (resolve, reject) => {
             try {
-                let query = 'INSERT INTO Temperatur (sensor, value) VALUES = ?';
+                let query = 'INSERT INTO Temperatur (sensor, value) VALUES (?, ?)';
                 resolve(await this.db.run(query, [sensor, value]));
+            } catch(e) {
+                reject(e);
+            }
+        });
+    }
+
+    async remove(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let query = 'DELETE FROM Temperatur WHERE id = ?';
+                resolve(await this.db.run(query, [id]));
             } catch(e) {
                 reject(e);
             }

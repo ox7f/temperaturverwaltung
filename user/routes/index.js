@@ -73,11 +73,11 @@ router.post('/api/add', (req, res) => {
 })
 
 router.post('/api/remove', (req, res) => {
-	let { sensor, value } = req.body
+	let id = req.body.id
 
-	if (sensor && value) {
-		return db.add(sensor, value)
-			.then(() => res.send({ message: 'Successfully added' }))
+	if (id) {
+		return db.remove(id)
+			.then(() => res.send({ message: 'Successfully removed' }))
 			.catch((e) => res.send({ message: 'Something went wrong' }))
 	}
 
