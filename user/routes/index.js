@@ -93,8 +93,23 @@ router.post('/api/remove', (req, res) => {
 
 // get db values
 router.post('/api/list', (req, res) => {
-	return db.list()
-		.then(data => res.json({data:data, admin:req.session.isAdmin}))
+	let { filter } = req.body,
+		tableHead = ['id', 'time', 'value']
+
+	switch(filter) {
+		case 'b':
+			tableHead = ['name', 'adresse', 'serverschrank']
+			break
+		case 'c':
+			tableHead = ['name', 'adresse', 'serverschrank', 'time', 'value']
+			break
+		case 'd':
+			tableHead = ['name', 'id', 'serverschrank', 'time', 'value']
+			break
+	}
+
+	return db.list(filter)
+		.then(data => res.json({ data:data, filter:tableHead, admin:req.session.isAdmin }))
 		.catch((e) => res.send({ message: 'Missing parameters' }))
 })
 

@@ -1,22 +1,36 @@
+// todo: nice-to-have: umstruktierung beim init-laden
+// init server call vermeiden, um zu pruefen ob user admin ist oder nicht
+
 // dom-table with temp values
-const temperaturesTable = document.getElementById('temperatures')
+let tableBody = document.getElementById('tableBody'),
+	tableHead = document.getElementById('tableHead'),
+	filterSelect = document.getElementById('filter')
 
 let isAdmin = 0,
-	tempArray = [],
-	filter = null
+	tableBodyArray = [],
+	tableHeadArray = []
 
-// add temp value to table
-const addTempToTable = temperature => {
-	const template = `
+// add row to tableHead
+const addDataToTableHead = name => {
+	tableHead.insertAdjacentHTML('beforeend', `<th scope="col">${ name }</th>`)
+}
+
+// add data to tableBody
+const addDataToTableBody = temperature => {
+	let bodyData = ''
+
+	for (let [key, value] of Object.entries(temperature)) {
+		bodyData += `<td scope="row">${ value }</td>`
+	}
+
+	const templateBody = `
 		<tr>
-			<th scope="row">${ temperature.sensor }</th>
-			<td>${ temperature.time }</td>
-			<td>${ temperature.value }</td>
+			${ bodyData }
 			${ isAdmin ? '<td><i id=' + temperature.id + ' class="fas fa-times" onclick="iconClick(this, \'remove\')"></i></td>' : '' }
 		</tr>
 	`
 
-	temperaturesTable.insertAdjacentHTML('beforeend', template)
+	tableBody.insertAdjacentHTML('beforeend', templateBody)
 }
 
 // get temp values from db
@@ -26,20 +40,28 @@ const getTemperatures = () => {
 		credentials: 'same-origin',
 		headers: {
 			'Content-Type': 'application/json'
-		}
+		},
+		body: JSON.stringify({filter: document.getElementById('filter').value})
 	})
 	.then(res => res.json())
 	.then(data => {
+		console.log(data)
 		isAdmin = data.admin
 
-		if (tempArray === data.data)
+		if (tableBodyArray === data.data)
 			return
 
-		tempArray = data.data
-		temperaturesTable.innerHTML = ''
+			tableBodyArray = data.data
 
-		data.data.forEach(temperature => {
-			addTempToTable(temperature)
+		tableHead.innerHTML = ''
+		tableBody.innerHTML = ''
+
+		data.data.forEach(data => {
+			addDataToTableBody(data)
+		})
+
+		data.filter.forEach(name => {
+			addDataToTableHead(name)
 		})
 	})
 }
@@ -51,9 +73,10 @@ const init = () => {
 			if (!isAdmin)
 				return
 
+			// todo: kopf machen was wir hier immer brauchen um einen Temp-wert zu adden 
 			let template = ` 
 				<table class="table">
-					<thead>
+					<thead id="tableHead">
 						<tr>
 							<td><input class="form-control" id="sensorId"></td>
 							<td><input class="form-control" readonly></input></td>
@@ -61,10 +84,10 @@ const init = () => {
 							<td><i onclick="iconClick(this, \'add\')" class="fas fa-check"></i></td> 
 						</tr>
 					</thead>
-					<tbody id="temperatures"></tbody>
+					<tbody id="tableBody"></tbody>
 				</table>
 			`
-			temperaturesTable.parentElement.insertAdjacentHTML('beforeend', template)
+			tableBody.parentElement.insertAdjacentHTML('beforeend', template)
 		})
 }
 
@@ -114,7 +137,7 @@ const iconClick = (element, action) => {
 	}
 }
 
-// toast for messages from backend
+// todo: toast for messages from backend
 const showToast = message => {
 	let toast = document.createElement('div'),
 		text = document.createElement('span')
@@ -132,3 +155,4 @@ setInterval(() => {
 }, 5000)
 
 init()
+filterSelect.addEventListener('change', getTemperatures)

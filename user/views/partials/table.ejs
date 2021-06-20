@@ -1,19 +1,9 @@
-<% if (user.isAdmin){ %>
-    <!-- wenn admin, dann werte neue spalte zum loeschen bzw neue zeile um werte hinzuzufuegen -->
-<% } %>
-
 <div class="container-fluid">
+    <%- include('../partials/select'); %>
     <table class="table">
         <thead>
-            <tr>
-                <th scope="col">Sensor</th>
-                <th scope="col">Timestamp</th>
-                <th scope="col">Value in °C</th>
-                <% if (user.isAdmin){ %>
-                    <th scope="col"></th>
-                <% } %>
-            </tr>
+            <tr id="tableHead"></tr>
         </thead>
-        <tbody id="temperatures"></tbody>
+        <tbody id="tableBody"></tbody>
     </table>
 </div>
