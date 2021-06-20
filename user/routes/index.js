@@ -8,22 +8,20 @@ let db
 // login
 router.get('/', (req, res) => {
 	// falls schon eingeloggt auf dashboard weiterleiten
-	if (req.session.email) {
+	if (req.session.email)
 		return res.redirect('/dashboard')
-	}
 
     return res.render('pages/index')
 })
 
 // dashboard
 router.get('/dashboard', (req, res) => {
-	// falls noch nicht eingeloggt auf login weiterleiten
-	if (req.session.email) {
+	// check session => redirect to login
+	if (req.session.email)
 		return res.render('pages/dashboard', {user: {
 			email: req.session.email,
 			isAdmin: req.session.isAdmin
 		}})
-	}
 
 	return res.redirect('/')
 })
@@ -39,7 +37,7 @@ router.get('/api/logout', (req, res) => {
 router.post('/api/login', (req, res) => {
 	let { email, password } = req.body
 
-	if (email && password) {
+	if (email && password)
 		return db.login(email, password)
 			.then((user) => {
 				req.session.email = user.email
@@ -49,7 +47,6 @@ router.post('/api/login', (req, res) => {
 				return res.redirect('/dashboard')
 			})
 			.catch((e) => res.redirect('/'))
-	}
 
 	return res.send({ message: 'Missing parameters' })
 })
@@ -58,11 +55,10 @@ router.post('/api/login', (req, res) => {
 router.post('/api/signup', (req, res) => {
 	let { email, password, password2 } = req.body
 
-	if (email && password && passwordConf) {
+	if (email && password && passwordConf)
 		return db.signup(email, password, password2)
 			.then(() => res.send({ message: 'Login successful' }))
 			.catch((e) => res.send({ message: 'Something went wrong' }))
-	}
 
 	return res.send({ message: 'Missing parameters' })
 })
@@ -73,11 +69,10 @@ router.post('/api/signup', (req, res) => {
 router.post('/api/add', (req, res) => {
 	let { sensor, value } = req.body
 
-	if (sensor && value) {
+	if (sensor && value)
 		return db.add(sensor, value)
 			.then(() => res.send({ message: 'Successfully added' }))
 			.catch((e) => res.send({ message: 'Something went wrong' }))
-	}
 
 	return res.send({ message: 'Missing parameters' })
 })
@@ -86,11 +81,10 @@ router.post('/api/add', (req, res) => {
 router.post('/api/remove', (req, res) => {
 	let id = req.body.id
 
-	if (id) {
+	if (id)
 		return db.remove(id)
 			.then(() => res.send({ message: 'Successfully removed' }))
 			.catch((e) => res.send({ message: 'Something went wrong' }))
-	}
 
 	return res.send({ message: 'Missing parameters' })
 })
