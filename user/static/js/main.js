@@ -1,9 +1,11 @@
+// dom-table with temp values
 const temperaturesTable = document.getElementById('temperatures')
 
 let isAdmin = 0,
 	tempArray = [],
 	filter = null
 
+// add temp value to table
 const addTempToTable = temperature => {
 	const template = `
 		<tr>
@@ -17,6 +19,7 @@ const addTempToTable = temperature => {
 	temperaturesTable.insertAdjacentHTML('beforeend', template)
 }
 
+// get temp values from db
 const getTemperatures = () => {
 	return fetch('/api/list', {
 		method: 'POST',
@@ -41,6 +44,7 @@ const getTemperatures = () => {
 	})
 }
 
+// init table
 const init = () => {
 	getTemperatures()
 		.then(() => {
@@ -64,6 +68,7 @@ const init = () => {
 		})
 }
 
+// click event (add, remove)
 const iconClick = (element, action) => {
 	switch(action) {
 		case 'remove':
@@ -109,6 +114,7 @@ const iconClick = (element, action) => {
 	}
 }
 
+// toast for messages from backend
 const showToast = message => {
 	let toast = document.createElement('div'),
 		text = document.createElement('span')
@@ -120,6 +126,7 @@ const showToast = message => {
 	document.body.appendChild(toast)
 }
 
+// update temp values every x seconds
 setInterval(() => {
 	getTemperatures()
 }, 5000)

@@ -6,10 +6,12 @@ class Database {
         this.db = undefined;
     }
     
+    // connect to db
     async connect() {
         this.db = await sqlite.open(this.db_file);
     }
 
+    // db migration
     async migrate() {
         // todo: hersteller und sensor table
         /*
@@ -53,6 +55,7 @@ class Database {
         `);
     }
 
+    // user login
     async login(email, password) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -64,7 +67,7 @@ class Database {
         });
     }
 
-    // todo
+    // user signup
     async signup(email, passwd, passwd2) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -76,6 +79,7 @@ class Database {
         });
     }
 
+    // add value
     async add(sensor, value) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -87,6 +91,7 @@ class Database {
         });
     }
 
+    // remove value
     async remove(id) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -98,6 +103,7 @@ class Database {
         });
     }
 
+    // get values
     async list() {
         return new Promise(async (resolve, reject) => {
             try {

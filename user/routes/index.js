@@ -3,7 +3,11 @@ const router  = express.Router()
 
 let db
 
+// +++++ Routes +++++
+
+// login
 router.get('/', (req, res) => {
+	// falls schon eingeloggt auf dashboard weiterleiten
 	if (req.session.email) {
 		return res.redirect('/dashboard')
 	}
@@ -11,7 +15,9 @@ router.get('/', (req, res) => {
     return res.render('pages/index')
 })
 
+// dashboard
 router.get('/dashboard', (req, res) => {
+	// falls noch nicht eingeloggt auf login weiterleiten
 	if (req.session.email) {
 		return res.render('pages/dashboard', {user: {
 			email: req.session.email,
@@ -24,10 +30,12 @@ router.get('/dashboard', (req, res) => {
 
 // +++++ Login, Session stuff +++++
 
+// logout
 router.get('/api/logout', (req, res) => {
 	req.session.destroy(() => res.redirect('/'))
 })
 
+// login
 router.post('/api/login', (req, res) => {
 	let { email, password } = req.body
 
@@ -46,6 +54,7 @@ router.post('/api/login', (req, res) => {
 	return res.send({ message: 'Missing parameters' })
 })
 
+// signup
 router.post('/api/signup', (req, res) => {
 	let { email, password, password2 } = req.body
 
@@ -60,6 +69,7 @@ router.post('/api/signup', (req, res) => {
 
 // +++++ Admin stuff +++++
 
+// add value
 router.post('/api/add', (req, res) => {
 	let { sensor, value } = req.body
 
@@ -72,6 +82,7 @@ router.post('/api/add', (req, res) => {
 	return res.send({ message: 'Missing parameters' })
 })
 
+// remove value
 router.post('/api/remove', (req, res) => {
 	let id = req.body.id
 
@@ -86,6 +97,7 @@ router.post('/api/remove', (req, res) => {
 
 // +++++ Dashboard stuff +++++
 
+// get db values
 router.post('/api/list', (req, res) => {
 	return db.list()
 		.then(data => res.json({data:data, admin:req.session.isAdmin}))

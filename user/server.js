@@ -14,8 +14,9 @@ app.set('views', './views')
 // set the view engine to ejs
 app.set('view engine', 'ejs')
 
+// session settings
 app.use(session({
-    secret: 'secret',
+    secret: 'secret', // needs something more secure
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -31,12 +32,14 @@ app.use(express.json())
 app.use('/static', express.static('./static'))
 app.use(routes(db))
 
+// undefined endpoints return 404 + message
 app.all('*', (req, res) => {
     return res.status(404).send({
         message: '404 page not found'
     })
 });
 
+// server starten
 (async () => {
     await db.connect()
     await db.migrate()
