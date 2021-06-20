@@ -1,7 +1,10 @@
-let isAdmin = 0
 const temperaturesTable = document.getElementById('temperatures')
 
-const addTemperature = temperature => {
+let isAdmin = 0,
+	tempArray = [],
+	filter = null
+
+const addTempToTable = temperature => {
 	const template = `
 		<tr>
 			<th scope="row">${ temperature.sensor }</th>
@@ -15,7 +18,7 @@ const addTemperature = temperature => {
 }
 
 const getTemperatures = () => {
-	fetch('/api/list', {
+	return fetch('/api/list', {
 		method: 'POST',
 		credentials: 'same-origin',
 		headers: {
@@ -25,32 +28,43 @@ const getTemperatures = () => {
 	.then(res => res.json())
 	.then(data => {
 		isAdmin = data.admin
+
+		if (tempArray === data.data)
+			return
+
+		tempArray = data.data
 		temperaturesTable.innerHTML = ''
+
 		data.data.forEach(temperature => {
-			addTemperature(temperature)
+			addTempToTable(temperature)
 		})
 	})
 }
 
+const init = () => {
+	getTemperatures()
+		.then(() => {
+			if (!isAdmin)
+				return
 
-leerzeileEinfuegen = () => {
-	const template = ` 
-		<table class="table">
-			<thead>
-				<tr>
-					<td><input class="form-control" id="sensorId"></td>
-					<td><input class="form-control" readonly></input></td>
-					<td><input class="form-control" id="tempValue"></td>
-					<td><i onclick="iconClick(this, \'add\')" class="fas fa-check"></i></td> 
-				</tr>
-			</thead>
-			<tbody id="temperatures"></tbody>
-		</table>
-	`
-	temperaturesTable.parentElement.insertAdjacentHTML('beforeend', template)
+			let template = ` 
+				<table class="table">
+					<thead>
+						<tr>
+							<td><input class="form-control" id="sensorId"></td>
+							<td><input class="form-control" readonly></input></td>
+							<td><input class="form-control" id="tempValue"></td>
+							<td><i onclick="iconClick(this, \'add\')" class="fas fa-check"></i></td> 
+						</tr>
+					</thead>
+					<tbody id="temperatures"></tbody>
+				</table>
+			`
+			temperaturesTable.parentElement.insertAdjacentHTML('beforeend', template)
+		})
 }
 
-iconClick = (element, action) => {
+const iconClick = (element, action) => {
 	switch(action) {
 		case 'remove':
 			let tempId = Number(element.id)
@@ -67,15 +81,13 @@ iconClick = (element, action) => {
 			})
 			.then(res => res.text())
 			.then(text => {
-				// if text => error/success meldung
+				showToast(text)
 				getTemperatures()
 			})
 			break
 		case 'add':
 			let tempValue = Number(document.getElementById('tempValue').value),
 				sensorId = Number(document.getElementById('sensorId').value)
-
-			console.log('add temp', tempValue, sensorId)
 
 			fetch('/api/add', {
 				method: 'POST',
@@ -90,16 +102,26 @@ iconClick = (element, action) => {
 			})
 			.then(res => res.text())
 			.then(text => {
-				// if text => error/success meldung
+				showToast(text)
 				getTemperatures()
 			})
 			break
 	}
 }
 
-getTemperatures()
-leerzeileEinfuegen()
+const showToast = message => {
+	let toast = document.createElement('div'),
+		text = document.createElement('span')
+
+	text.value = message
+	toast.style.position = 'absolute'
+
+	toast.appendChild(text)
+	document.body.appendChild(toast)
+}
 
 setInterval(() => {
 	getTemperatures()
 }, 5000)
+
+init()

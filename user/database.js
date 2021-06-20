@@ -11,9 +11,9 @@ class Database {
     }
 
     async migrate() {
-        // todo: hersteller, sensor table
+        // todo: hersteller und sensor table
         /*
-        CREATE TABLE IF NOT EXISTS Temperatur (
+        CREATE TABLE IF NOT EXISTS Hersteller (
             id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             todo
         );
@@ -47,18 +47,9 @@ class Database {
                 ('admin123', 'admin@admin.de', 1);
 
             INSERT INTO Temperatur (sensor, value) VALUES 
-                (1, 21),
-                (1, 22),
-                (1, 20),
-                (1, 15),
-                (2, 23),
-                (2, 24),
-                (2, 29),
-                (2, 21),
-                (3, 19),
-                (3, 20),
-                (3, 21),
-                (3, 21);
+                (1, 21), (1, 22), (1, 15),
+                (2, 23), (2, 24), (2, 29),
+                (3, 20), (3, 21), (3, 21);
         `);
     }
 
