@@ -2,7 +2,7 @@ const socket = io();
 
 // todo
 socket.on('table-data', data => {
-	
+	console.log('funktioniert?')
 })
 
 // todo: nice-to-have: umstruktierung beim init-laden
