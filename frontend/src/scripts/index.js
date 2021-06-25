@@ -9,8 +9,8 @@ app.service('Socket', ['$rootScope', '$window', ($rootScope, $window) => {
     let Service = this,
         socket = io(SOCKET_HOST);
 
-   socket.on('connect', () => {
-        socket.emit('connected', {msg: 'JAAAA, geile kacke!'});
+    socket.on('table-data', (data) => {
+        console.log('table-data', data);
     });
 
     return Service;
