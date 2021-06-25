@@ -31,11 +31,22 @@
 ### vlt noch solche spaesschen hier:
 
 ### Installation
-für die Webanwendung einfach in den `user` ordner navigieren und den Befehl `npm install` ausführen
-* Dependencies:
-	* [nodejs](https://nodejs.org/en/download/)
+#### Frontend
+AngularJS Anwendung
+=> in den Ordner `frontend` navigieren (`cd frontend`)
+=> `npm install`
+=> `yarn start`
 
-danach Server mit `npm start` starten
+#### Backend
+Python Flask Anwendung
+=> in den Ordner `backend` navigieren (`cd backend`)
+=> `pip install -r requirements.txt` oder `python3 -m pip install -r requirements.txt`
+=> `python3 server.py`
+
+### Dependencies
+Python3
+pip
+npm
 
 ### Konfiguration
 
