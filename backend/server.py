@@ -8,11 +8,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # neuer client
 @socketio.on('connect')
 def connected():
-    emit('table-data', 'connected', broadcast=True)
-
-
-
-
+    emit('table-data', 'todo: table data aus der datenbank')
 
 if __name__ == '__main__':
     socketio.run(app, port=1337, debug=True)
