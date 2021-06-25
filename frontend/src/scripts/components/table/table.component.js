@@ -5,7 +5,7 @@ class TableComponent {
         this.Socket = Socket;
         this.$scope = $scope;
 
-        console.log('table component');
+        // todo
     }
 }
 
@@ -15,5 +15,5 @@ export const TableComponentDefinition = {
     template,
     controller: TableComponent
 };
-  
+
 export default TableComponent;

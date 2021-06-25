@@ -9,8 +9,10 @@ app.service('Socket', ['$rootScope', '$window', ($rootScope, $window) => {
     let Service = this,
         socket = io(SOCKET_HOST);
 
-   console.log('angular controller');
-       
+   socket.on('connect', () => {
+        socket.emit('connected', {msg: 'JAAAA, geile kacke!'});
+    });
+
     return Service;
 }]);
 
