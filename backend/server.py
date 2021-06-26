@@ -96,9 +96,19 @@ def removeTemperature():
     return jsonify({'message': 'success'})
 
 # socket stuff
-@socketio.on('connect')
-def connected():
+@socketio.on('get-table-data')
+def getTableData():
+    if (session['logged_in'] != True):
+        return jsonify({'message': 'Nicht eingeloggt'})
+
     emit('table-data', 'todo: table data aus der datenbank')
+
+@socketio.on('get-users')
+def getUsers():
+    if (session['logged_in'] != True):
+        return jsonify({'message': 'Nicht eingeloggt'})
+
+    emit('user-data', 'todo: user data aus der datenbank')
 
 if __name__ == '__main__':
     socketio.run(app, port=1337, debug=True)

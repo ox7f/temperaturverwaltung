@@ -37,9 +37,26 @@ app.service('SocketService', function() {
     let Service = this,
         socket = io(SOCKET_HOST);
 
+    Service.getTableData = () => {
+        socket
+        .emit('get-table-data', (data) => {
+            console.log('get-table-data', data);
+        });
+    };
+
+    Service.getUsers = () => {
+        socket
+        .emit('get-users', (data) => {
+            console.log('get-users', data);
+        });
+    };
+
     socket
     .on('table-data', (data) => {
         console.log('table-data', data);
+    })
+    .on('user-data', (data) => {
+        console.log('user-data', data);
     })
     .on('temperature-added', (data) => {
         console.log('temperature-added', data);

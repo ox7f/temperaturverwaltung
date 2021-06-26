@@ -46,6 +46,7 @@ Python Flask Anwendung
 ### Dependencies
 Python3
 pip
+Nodejs
 npm
 
 ### Konfiguration
