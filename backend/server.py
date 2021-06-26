@@ -22,6 +22,13 @@ mydb = mysql.connector.connect(
 @cross_origin()
 def login():
     data = request.json
+
+    if not data['name']:
+        return jsonify({'message': 'Keine Anmeldename definiert'})
+
+    if not data['password']:
+        return jsonify({'message': 'Keine Passwort definiert'})
+
     logincursor = mydb.cursor()
 
     sql = 'SELECT * FROM benutzer WHERE Anmeldename = %s AND Passwort = %s'
@@ -61,7 +68,7 @@ def logout():
 @app.route('/api/addTemperatur', methods=['GET', 'POST'])
 @cross_origin()
 def addTemperature():
-    if (session['logged_in'] != True):
+    if not session['logged_in']:
         return jsonify({'message': 'Nicht eingeloggt'})
 
     if (session['is_admin'] == 0):
@@ -85,7 +92,7 @@ def addTemperature():
 @app.route('/api/removeTemperature', methods=['GET', 'POST'])
 @cross_origin()
 def removeTemperature():
-    if (session['logged_in'] != True):
+    if not session['logged_in']:
         return jsonify({'message': 'Nicht eingeloggt'})
 
     if (session['is_admin'] == 0):
@@ -98,14 +105,14 @@ def removeTemperature():
 # socket stuff
 @socketio.on('get-table-data')
 def getTableData():
-    if (session['logged_in'] != True):
+    if not session['logged_in']:
         return jsonify({'message': 'Nicht eingeloggt'})
 
     emit('table-data', 'todo: table data aus der datenbank')
 
 @socketio.on('get-users')
 def getUsers():
-    if (session['logged_in'] != True):
+    if not session['logged_in']:
         return jsonify({'message': 'Nicht eingeloggt'})
 
     emit('user-data', 'todo: user data aus der datenbank')
