@@ -1,13 +1,13 @@
 {
   "name": "temperaturverwaltung-frontend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Frontend der Anwendung",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack/webpack.config.prod.js  --colors",
     "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js"
   },
-  "author": "",
+  "author": "Nils Schuetzke, Karl Herre, Daniel Kock",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.4.0",
@@ -33,10 +33,10 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "@babel/polyfill": "latest",
+    "@babel/polyfill": "^7.4.0",
     "angular": "latest",
-    "core-js": "latest",
+    "core-js": "^3.0.1",
     "socket.io-client": "latest",
-    "yarn": "latest"
+    "yarn": "^1.17.3"
   }
 }
