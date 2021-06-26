@@ -8,10 +8,6 @@ let app = angular.module('app', [tableModule]);
 app.service('SessionService', function() {
     let Service = this;
 
-    Service.getUser = () => {
-        return User;
-    };
-
     Service.login = (data) => {  
         return fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',

@@ -1,11 +1,14 @@
 import template from './table.html';
 
 class TableComponent {
-    constructor(Socket, $scope) {
-        this.Socket = Socket;
+    constructor(SocketService, DataService, SessionService, $scope) {
+        this.Socket = SocketService;
+        this.Session = SessionService;
+        this.Data = DataService;
         this.$scope = $scope;
 
         // todo
+        this.Session.login({name: 'test', password: 'test123'});
     }
 }
 

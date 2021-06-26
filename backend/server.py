@@ -5,7 +5,7 @@ import mysql.connector
 
 app = Flask(__name__)
 cors = CORS(app)
-app.config['SECRET_KEY'] = 'WHKAWSF hat ganz dicke Eier'
+app.config['SECRET_KEY'] = 'WHKAWSF kleines Geheimnis Zwingersmiley'
 app.config['CORS_HEADERS'] = 'Content-Type'
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
 
@@ -24,7 +24,7 @@ def login():
     data = request.json
     logincursor = mydb.cursor()
 
-    sql = 'SELECT `Administrator` FROM benutzer WHERE Anmeldename = %s AND Passwort = %s'
+    sql = 'SELECT * FROM benutzer WHERE Anmeldename = %s AND Passwort = %s'
     val = (data['name'], data['password'])
 
     logincursor.execute(sql, val)
@@ -32,12 +32,21 @@ def login():
     logincursor.close()
 
     if (userResult):
-        session['logged_in'] = True
-        status = userResult[0]
+        status = True
+        session['logged_in'] = status
+        session['is_admin'] = userResult[0]
+    else:
+        return jsonify({'message': 'Benutzer nicht gefunden / Password falsch'})
 
     response = {
-        'status': status,
-        'isAdmin': userResult[0],
+        'loggedin': status,
+        'user': {
+            'id': userResult[0],
+            'name': userResult[1],
+            'email': userResult[2],
+            'number': userResult[3],
+            'isAdmin': userResult[4]
+        }
     }
 
     return jsonify(response)
@@ -45,35 +54,46 @@ def login():
 @app.route('/api/logout', methods=['GET', 'POST'])
 @cross_origin()
 def logout():
+    session.pop('is_admin', None)
     session.pop('logged_in', None)
     return jsonify({'message': 'success'})
 
 @app.route('/api/addTemperatur', methods=['GET', 'POST'])
 @cross_origin()
 def addTemperature():
-    print(request)
+    if (session['logged_in'] != True):
+        return jsonify({'message': 'Nicht eingeloggt'})
 
-    #addcursor = mydb.cursor()
+    if (session['is_admin'] == 0):
+        return jsonify({'message': 'Bist kein Admin, also verpiss dich'})
 
-    #sql = 'INSERT INTO temperatur (SensorID, Temperatur) VALUES (%s, %s)'
-    #val = (1, 20.5)
+    data = request.json
 
-    #addcursor.execute(sql, val)
-    #mydb.commit()
-    #addcursor.close()
+    addcursor = mydb.cursor()
 
-    emit('temperature-added', 'todo: table data aus der datenbank')
+    sql = 'INSERT INTO temperatur (SensorID, Temperatur) VALUES (%s, %s)'
+    val = (data.sensorId, data.temperature)
 
-    message = 'todo: success oder error'
-    return message
+    addcursor.execute(sql, val)
+    mydb.commit()
+    addcursor.close()
+
+    emit('temperature-added', jsonify(data))
+
+    return jsonify({'message': 'success'})
 
 @app.route('/api/removeTemperature', methods=['GET', 'POST'])
 @cross_origin()
 def removeTemperature():
-    print(request)
+    if (session['logged_in'] != True):
+        return jsonify({'message': 'Nicht eingeloggt'})
+
+    if (session['is_admin'] == 0):
+        return jsonify({'message': 'Bist kein Admin, also verpiss dich'})
+
     emit('temperature-removed', 'todo: table data aus der datenbank')
-    message = 'todo: success oder error'
-    return message
+
+    return jsonify({'message': 'success'})
 
 # socket stuff
 @socketio.on('connect')
