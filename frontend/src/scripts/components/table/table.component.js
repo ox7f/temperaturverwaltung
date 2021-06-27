@@ -8,7 +8,7 @@ class TableComponent {
         this.$scope = $scope;
 
         // todo
-        this.Session.login({name: 'test', password: 'test123'});
+        this.Session.login('test', 'test123');
     }
 }
 

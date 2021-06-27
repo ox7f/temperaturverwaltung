@@ -5,16 +5,17 @@ import tableModule from './components/table';
 
 let app = angular.module('app', [tableModule]);
 
-app.service('SessionService', function() {
-    let Service = this;
+// routing https://realpython.com/handling-user-authentication-with-angular-and-flask/#developing-the-angular-app
 
-    Service.login = (data) => {  
+app.service('SessionService', function() {
+    this.login = (name, password) => {
         return fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user: name,
+                password: password
+            })
         })
         .then(response => response.json())
         .then(json => {
@@ -22,41 +23,38 @@ app.service('SessionService', function() {
         });
     };
     
-    Service.logout = (data) => {
+    this.logout = (data) => {
         return fetch(`${SOCKET_HOST}/api/logout`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log('logoutCall', json);
         });
     };
+
+    return this;
 });
 
 app.service('SocketService', function() {
-    let Service = this,
-        socket = io(SOCKET_HOST);
+    let socket = io(SOCKET_HOST);
 
-    Service.getTableData = () => {
-        socket
-        .emit('get-table-data', (data) => {
-            console.log('get-table-data', data);
-        });
+    this.getTableData = () => {
+        socket.emit('get-table-data');
     };
 
-    Service.getUsers = () => {
-        socket
-        .emit('get-users', (data) => {
-            console.log('get-users', data);
-        });
+    this.getUsers = () => {
+        socket.emit('get-users');
     };
 
     socket
-    .on('table-data', (data) => {
-        console.log('table-data', data);
-    })
     .on('user-data', (data) => {
         console.log('user-data', data);
+    })
+    .on('table-data', (data) => {
+        console.log('table-data', data);
     })
     .on('temperature-added', (data) => {
         console.log('temperature-added', data);
@@ -65,31 +63,35 @@ app.service('SocketService', function() {
         console.log('temperature-removed', data);
     });
 
-    return Service;
+    return this;
 });
 
 app.service('DataService', function() {
-    let Service = this;
-
-    Service.addTemepratur = (data) => {
+    this.addTemepratur = data => {
         return fetch(`${SOCKET_HOST}/api/addTemperatur`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log('addTemepraturCall', json);
         });
     };
 
-    Service.removeTemepratur = (data) => {
+    this.removeTemepratur = data => {
         return fetch(`${SOCKET_HOST}/api/removeTemperatur`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log('removeTemepraturCall', json);
         });
     };
+
+    return this;
 });
 
 export default app;
