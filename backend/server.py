@@ -63,15 +63,15 @@ def removeTemperature(data):
 
     emit('temperature-removed', {'message': 'success', 'data': data})
 
-@socketio.on('get-table-data')
-def getTableData():
+@socketio.on('get-data')
+def getData():
     if not session['logged_in']:
         emit('login-error', {'message': 'you need to be logged in!'})
         return
 
     # todo: daniel - einbindung dict.py
     data = 'todo'
-    emit('table-data', {'message': 'success', 'data': data})
+    emit('data', {'message': 'success', 'data': data})
 
 @socketio.on('get-users')
 def getUsers():
@@ -81,7 +81,7 @@ def getUsers():
 
     # todo: daniel - einbindung dict.py
     data = 'todo'
-    emit('user-data',  {'message': 'success', 'data': data})
+    emit('users',  {'message': 'success', 'data': data})
 
 if __name__ == '__main__':
     socketio.run(app, port=1337, debug=True)
