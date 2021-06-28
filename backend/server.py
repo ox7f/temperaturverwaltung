@@ -13,6 +13,8 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin='*')
 def login():
+    # request beinhaltet username und passwort
+    # data[name], data[password]
     data = request.json
 
     if not data['user']:
@@ -22,7 +24,7 @@ def login():
         return jsonify({'message': 'Keine Passwort definiert'})
 
     # todo: daniel - einbindung dict.py
-    #emit('user-data', response)
+    #emit('user-data', user)
     return jsonify({'message': 'success'})
 
 @app.route('/api/logout', methods=['POST'])
@@ -60,9 +62,13 @@ def removeTemperature():
     return jsonify({'message': 'success'})
 
 # socket stuff
+
+# client ruft website auf
 @socketio.on('connect')
 def connect():
+    # user bereits eingeloggt?
     if session and session['logged_in']:
+        # eingeloggten user mit daten versorgen
         getTableData()
         getUsers()
 

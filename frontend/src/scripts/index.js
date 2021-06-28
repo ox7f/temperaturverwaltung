@@ -13,7 +13,7 @@ app.service('SessionService', function() {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                user: name,
+                name: name,
                 password: password
             })
         })
