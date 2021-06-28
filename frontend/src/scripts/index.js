@@ -39,42 +39,11 @@ var myChart = new Chart(ctx, {
     }
 });
 
-
 import tableModule from './components/table';
 
 let app = angular.module('app', [tableModule]);
 
 // routing https://realpython.com/handling-user-authentication-with-angular-and-flask/#developing-the-angular-app
-
-app.service('SessionService', function() {
-    this.login = (name, password) => {
-        return fetch(`http://${SOCKET_HOST}/api/login`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                name: name,
-                password: password
-            })
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('loginCall', json);
-        });
-    };
-    
-    this.logout = (data) => {
-        return fetch(`${SOCKET_HOST}/api/logout`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'}
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('logoutCall', json);
-        });
-    };
-
-    return this;
-});
 
 app.service('SocketService', function() {
     let socket = io(SOCKET_HOST);
@@ -87,7 +56,21 @@ app.service('SocketService', function() {
         socket.emit('get-users');
     };
 
+    this.login = (name, password) => {
+        socket.emit('login', {name: name, password: password});
+    };
+
+    this.logout = (name, password) => {
+        socket.emit('logout');
+    };
+
     socket
+    .on('login-success', (data) => {
+        console.log('login-success', data);
+    })
+    .on('login-error', (data) => {
+        console.log('login-error', data);
+    })
     .on('user-data', (data) => {
         console.log('user-data', data);
     })
@@ -100,34 +83,6 @@ app.service('SocketService', function() {
     .on('temperature-removed', (data) => {
         console.log('temperature-removed', data);
     });
-
-    return this;
-});
-
-app.service('DataService', function() {
-    this.addTemepratur = data => {
-        return fetch(`${SOCKET_HOST}/api/addTemperatur`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('addTemepraturCall', json);
-        });
-    };
-
-    this.removeTemepratur = data => {
-        return fetch(`${SOCKET_HOST}/api/removeTemperatur`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('removeTemepraturCall', json);
-        });
-    };
 
     return this;
 });

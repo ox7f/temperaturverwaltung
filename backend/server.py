@@ -8,58 +8,6 @@ app.config['SECRET_KEY'] = 'WHKAWSF kleines Geheimnis Zwinkersmiley'
 app.config['CORS_HEADERS'] = 'Content-Type'
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
 
-# routing stuff
-@app.route('/api/login', methods=['POST'])
-@cross_origin()
-def login():
-    # request beinhaltet username und passwort
-    # data[name], data[password]
-    data = request.json
-    print(data)
-    if not data['name']:
-        return jsonify({'message': 'Keine Anmeldename definiert'})
-
-    if not data['password']:
-        return jsonify({'message': 'Keine Passwort definiert'})
-
-    # todo: daniel - einbindung dict.py
-    #emit('user-data', data)
-    return jsonify({'message': 'success'})
-
-@app.route('/api/logout', methods=['POST'])
-@cross_origin()
-def logout():
-    session.pop('is_admin', None)
-    session.pop('logged_in', None)
-    return jsonify({'message': 'success'})
-
-@app.route('/api/addTemperatur', methods=['POST'])
-@cross_origin()
-def addTemperature():
-    if not session['logged_in']:
-        return jsonify({'message': 'Nicht eingeloggt'})
-
-    if (session['is_admin'] == 0):
-        return jsonify({'message': 'Bist kein Admin, also verpiss dich'})
-
-    data = request.json
-
-    # todo: daniel - einbindung dict.py
-    #emit('temperature-added', 'todo')
-    return jsonify({'message': 'success'})
-
-@app.route('/api/removeTemperature', methods=['POST'])
-@cross_origin()
-def removeTemperature():
-    if not session['logged_in']:
-        return jsonify({'message': 'Nicht eingeloggt'})
-
-    if (session['is_admin'] == 0):
-        return jsonify({'message': 'Bist kein Admin, also verpiss dich'})
-
-    #emit('temperature-removed', 'todo')
-    return jsonify({'message': 'success'})
-
 # socket stuff
 
 # client ruft website auf
@@ -71,21 +19,69 @@ def connect():
         getTableData()
         getUsers()
 
+# client bestaetigt login
+@socketio.on('login')
+def login(data):
+    if not data['name']:
+        return emit('login-error', {'message': 'no username defined'})
+
+    if not data['password']:
+        return emit('login-error', {'message': 'no password defined'})
+
+    # todo: daniel - einbindung dict.py
+    data = 'todo'
+    emit('login-success', {'message': 'success', 'data': data})
+
+# client loggt sich aus
+@socketio.on('logout')
+def logout():
+    session.pop('is_admin', None)
+    session.pop('logged_in', None)
+
+@socketio.on('add-temperature')
+def addTemperature(data):
+    if not session['logged_in']:
+        emit('login-error', {'message': 'you need to be logged in!'})
+        return
+
+    if (session['is_admin'] == 0):
+        emit('login-error', {'message': 'unauthorized access'})
+        return
+
+    # todo: daniel - einbindung dict.py
+    emit('temperature-added', {'message': 'success', 'data': data})
+
+@socketio.on('remove-temperature')
+def removeTemperature(data):
+    if not session['logged_in']:
+        emit('login-error', {'message': 'you need to be logged in!'})
+        return
+
+    if (session['is_admin'] == 0):
+        emit('login-error', {'message': 'unauthorized access'})
+        return
+
+    emit('temperature-removed', {'message': 'success', 'data': data})
+
 @socketio.on('get-table-data')
 def getTableData():
     if not session['logged_in']:
-        return jsonify({'message': 'Nicht eingeloggt'})
+        emit('login-error', {'message': 'you need to be logged in!'})
+        return
 
     # todo: daniel - einbindung dict.py
-    emit('table-data', 'return value of dict.py')
+    data = 'todo'
+    emit('table-data', {'message': 'success', 'data': data})
 
 @socketio.on('get-users')
 def getUsers():
     if not session['logged_in']:
-        return jsonify({'message': 'Nicht eingeloggt'})
+        emit('login-error', {'message': 'you need to be logged in!'})
+        return
 
     # todo: daniel - einbindung dict.py
-    emit('user-data', 'return value of dict.py')
+    data = 'todo'
+    emit('user-data',  {'message': 'success', 'data': data})
 
 if __name__ == '__main__':
     socketio.run(app, port=1337, debug=True)
