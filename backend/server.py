@@ -1,30 +1,29 @@
 from flask import Flask, session, jsonify, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
-import mysql.connector
 
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'WHKAWSF kleines Geheimnis Zwinkersmiley'
 app.config['CORS_HEADERS'] = 'Content-Type'
-socketio = SocketIO(app, cors_allowed_origins='*')
+socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
 
 # routing stuff
 @app.route('/api/login', methods=['POST'])
-@cross_origin(origin='*')
+@cross_origin()
 def login():
     # request beinhaltet username und passwort
     # data[name], data[password]
     data = request.json
-
-    if not data['user']:
+    print(data)
+    if not data['name']:
         return jsonify({'message': 'Keine Anmeldename definiert'})
 
     if not data['password']:
         return jsonify({'message': 'Keine Passwort definiert'})
 
     # todo: daniel - einbindung dict.py
-    #emit('user-data', user)
+    #emit('user-data', data)
     return jsonify({'message': 'success'})
 
 @app.route('/api/logout', methods=['POST'])
