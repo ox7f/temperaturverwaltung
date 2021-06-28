@@ -26,8 +26,7 @@ app.service('SessionService', function() {
     this.logout = (data) => {
         return fetch(`${SOCKET_HOST}/api/logout`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
+            headers: {'Content-Type': 'application/json'}
         })
         .then(response => response.json())
         .then(json => {

@@ -9,14 +9,6 @@ app.config['SECRET_KEY'] = 'WHKAWSF kleines Geheimnis Zwinkersmiley'
 app.config['CORS_HEADERS'] = 'Content-Type'
 socketio = SocketIO(app, cors_allowed_origins='*')
 
-# datenbank anbindung
-mydb = mysql.connector.connect(
-    host     = 'localhost',
-    user     = 'root',
-    password = '',
-    database = 'temperaturverwaltung'
-)
-
 # routing stuff
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin='*')
@@ -29,35 +21,7 @@ def login():
     if not data['password']:
         return jsonify({'message': 'Keine Passwort definiert'})
 
-    loginCursor = mydb.cursor()
-
-    sql = 'SELECT * FROM benutzer WHERE Anmeldename = %s AND Passwort = %s'
-    val = (data['user'], data['password'])
-
-    loginCursor.execute(sql, val)
-    result = loginCursor.fetchone()
-    loginCursor.close()
-
-    if (result):
-        status = True
-        session['logged_in'] = status
-        session['is_admin'] = result[0]
-        session['username'] = result[1]
-        session['email'] = result[2]
-    else:
-        return jsonify({'message': 'Benutzer nicht gefunden / Password falsch'})
-
-    response = {
-        'loggedin': status,
-        'user': {
-            'id': result[0],
-            'name': result[1],
-            'email': result[2],
-            'number': result[3],
-            'isAdmin': result[4]
-        }
-    }
-
+    # todo: daniel - einbindung dict.py
     #emit('user-data', response)
     return jsonify({'message': 'success'})
 
@@ -79,15 +43,7 @@ def addTemperature():
 
     data = request.json
 
-    addCursor = mydb.cursor()
-
-    sql = 'INSERT INTO temperatur (SensorID, Temperatur) VALUES (%s, %s)'
-    val = (data.sensorId, data.temperature)
-
-    addCursor.execute(sql, val)
-    mydb.commit()
-    addCursor.close()
-
+    # todo: daniel - einbindung dict.py
     #emit('temperature-added', 'todo')
     return jsonify({'message': 'success'})
 
@@ -115,51 +71,16 @@ def getTableData():
     if not session['logged_in']:
         return jsonify({'message': 'Nicht eingeloggt'})
 
-    cursor = mydb.cursor()
-    cursor.execute('SELECT * FROM temperatur')
-
-    result = cursor.fetchall()
-    cursor.close()
-
-    temperatures = []
-
-    for temp in result:
-        tempObject = {
-            'id': temp[0],
-            'time': temp[1].__str__(),
-            'sensorId': temp[2],
-            'temperatur': temp[3],
-        }
-
-        temperatures.append(tempObject)
-
-    emit('table-data', temperatures)
+    # todo: daniel - einbindung dict.py
+    emit('table-data', 'return value of dict.py')
 
 @socketio.on('get-users')
 def getUsers():
     if not session['logged_in']:
         return jsonify({'message': 'Nicht eingeloggt'})
 
-    cursor = mydb.cursor()
-    cursor.execute('SELECT * FROM benutzer')
-
-    result = cursor.fetchall()
-    cursor.close()
-
-    users = []
-
-    for user in result:
-        userObject = {
-            'id': user[0],
-            'name': user[1],
-            'email': user[2],
-            'number': user[3],
-            'isAdmin': user[4]
-        }
-
-        users.append(userObject)
-
-    emit('user-data', users)
+    # todo: daniel - einbindung dict.py
+    emit('user-data', 'return value of dict.py')
 
 if __name__ == '__main__':
     socketio.run(app, port=1337, debug=True)
