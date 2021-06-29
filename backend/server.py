@@ -23,14 +23,14 @@ def connect():
 @socketio.on('login')
 def login(data):
     if not data['name']:
-        return emit('login-error', {'message': 'no username defined'})
+        return send('login-error', {'message': 'no username defined'})
 
     if not data['password']:
-        return emit('login-error', {'message': 'no password defined'})
+        return send('login-error', {'message': 'no password defined'})
 
     # todo: daniel - einbindung dict.py
     data = 'todo'
-    emit('login-success', {'message': 'success', 'data': data})
+    send('login-success', {'message': 'success', 'data': data})
 
 # client loggt sich aus
 @socketio.on('logout')
@@ -41,11 +41,11 @@ def logout():
 @socketio.on('add-temperature')
 def addTemperature(data):
     if not session['logged_in']:
-        emit('login-error', {'message': 'you need to be logged in!'})
+        send('login-error', {'message': 'you need to be logged in!'})
         return
 
     if (session['is_admin'] == 0):
-        emit('login-error', {'message': 'unauthorized access'})
+        send('login-error', {'message': 'unauthorized access'})
         return
 
     # todo: daniel - einbindung dict.py
@@ -54,11 +54,11 @@ def addTemperature(data):
 @socketio.on('remove-temperature')
 def removeTemperature(data):
     if not session['logged_in']:
-        emit('login-error', {'message': 'you need to be logged in!'})
+        send('login-error', {'message': 'you need to be logged in!'})
         return
 
     if (session['is_admin'] == 0):
-        emit('login-error', {'message': 'unauthorized access'})
+        send('login-error', {'message': 'unauthorized access'})
         return
 
     emit('temperature-removed', {'message': 'success', 'data': data})
@@ -66,22 +66,22 @@ def removeTemperature(data):
 @socketio.on('get-data')
 def getData():
     if not session['logged_in']:
-        emit('login-error', {'message': 'you need to be logged in!'})
+        send('login-error', {'message': 'you need to be logged in!'})
         return
 
     # todo: daniel - einbindung dict.py
     data = 'todo'
-    emit('data', {'message': 'success', 'data': data})
+    send('data', {'message': 'success', 'data': data})
 
 @socketio.on('get-users')
 def getUsers():
     if not session['logged_in']:
-        emit('login-error', {'message': 'you need to be logged in!'})
+        send('login-error', {'message': 'you need to be logged in!'})
         return
 
     # todo: daniel - einbindung dict.py
     data = 'todo'
-    emit('users',  {'message': 'success', 'data': data})
+    send('users',  {'message': 'success', 'data': data})
 
 if __name__ == '__main__':
     socketio.run(app, port=1337, debug=True)
