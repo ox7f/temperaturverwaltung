@@ -3,7 +3,23 @@ import angular from 'angular';
 
 import tableModule from './components/table';
 
-let app = angular.module('app', [tableModule]);
+let app = angular.module('app', [tableModule], 'ngRoute');
+
+app.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider
+    .when('/', {
+        templateUrl: '../index.html'
+    })
+    .when('/login', {
+        templateUrl: '../index.html'
+    })
+    .when('/logout', {
+        templateUrl: '../index.html'
+    })
+    .otherwise({
+        redirectTo: '/'
+    });
+}]);
 
 // routing https://realpython.com/handling-user-authentication-with-angular-and-flask/#developing-the-angular-app
 /*app.config(function ($routeProvider) {
@@ -22,15 +38,15 @@ let app = angular.module('app', [tableModule]);
     });
 });*/
 
-app.controller('loginCtrl', ['$scope, Socket', function($scope, Socket) {
+app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
 
 }]);
 
-app.controller('logoutCtrl', ['$scope, Socket', function($scope, Socket) {
+app.controller('logoutCtrl', ['$scope', 'Socket', function($scope, Socket) {
 
 }]);
 
-app.controller('signupCtrl', ['$scope, Socket', function($scope, Socket) {
+app.controller('signupCtrl', ['$scope', 'Socket', function($scope, Socket) {
     
 }]);
 
