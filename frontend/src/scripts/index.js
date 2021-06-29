@@ -21,21 +21,28 @@ app.config(['$routeProvider', function ($routeProvider) {
     });
 }]);
 
-// routing https://realpython.com/handling-user-authentication-with-angular-and-flask/#developing-the-angular-app
-/*app.config(function ($routeProvider) {
+//let app = angular.module('app', ['ngRoute', tableModule]);
+
+/*
+app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
     .when('/', {
         templateUrl: '../index.html'
     })
     .when('/login', {
-        templateUrl: '../index.html'
+        templateUrl: '../login.html'
     })
     .when('/logout', {
-        templateUrl: '../index.html'
+        redirectTo: '/login'
+        // braucht kein template, nur controller => weiterleitung auf /login
+    })
+    .when('/signup', {
+        templateUrl: '../signup.html'
     })
     .otherwise({
         redirectTo: '/'
     });
+
 });*/
 
 app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
@@ -43,11 +50,18 @@ app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
 }]);
 
 app.controller('logoutCtrl', ['$scope', 'Socket', function($scope, Socket) {
+}]);
 
+app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
+    console.log('loginCtrl');
+}]);
+
+app.controller('logoutCtrl', ['$scope', 'Socket', function($scope, Socket) {
+    console.log('logoutCtrl');
 }]);
 
 app.controller('signupCtrl', ['$scope', 'Socket', function($scope, Socket) {
-    
+    console.log('signupCtrl');
 }]);
 
 app.service('Socket', function() {
