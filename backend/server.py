@@ -16,7 +16,7 @@ def connect():
     # user bereits eingeloggt?
     if session and session['logged_in']:
         # eingeloggten user mit daten versorgen
-        getTableData()
+        getData()
         getUsers()
 
 # client bestaetigt login
