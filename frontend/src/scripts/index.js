@@ -29,7 +29,23 @@ app.config(['$routeProvider', function ($routeProvider) {
 }]);
 
 app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
-    console.log('loginCtrl');
+    
+    onsole.log('loginCtrl');
+
+    $scope.username;
+    $scope.login = ()=> {
+        if ($scope.username === NULL || $scope.username === '' || $scope.username.length <= 3){
+            return;
+        }        
+    };
+
+    $scope.password;
+    $scope.login = ()=> {
+        if ($scope.password === NULL || $scope.password === '' || $scope.password.length <= 8){
+            return;
+        }        
+    };
+
 }]);
 
 app.controller('logoutCtrl', ['$scope', 'Socket', function($scope, Socket) {
