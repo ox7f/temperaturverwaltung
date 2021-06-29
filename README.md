@@ -7,7 +7,7 @@
 * Karl Hubert-Herre
 * Nils Schützke
 * Michael Blümler 
-* Dominic Ruch
+* Moritz König
 
 ### Teamleiter: 
 * Michael Blümler 
