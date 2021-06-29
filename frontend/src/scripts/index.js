@@ -6,7 +6,7 @@ import tableModule from './components/table';
 let app = angular.module('app', [tableModule]);
 
 // routing https://realpython.com/handling-user-authentication-with-angular-and-flask/#developing-the-angular-app
-app.config(function ($routeProvider) {
+/*app.config(function ($routeProvider) {
     $routeProvider
     .when('/', {
         templateUrl: '../index.html'
@@ -20,13 +20,25 @@ app.config(function ($routeProvider) {
     .otherwise({
         redirectTo: '/'
     });
-});
+});*/
 
+app.controller('loginCtrl', ['$scope, Socket', function($scope, Socket) {
+
+}]);
+
+app.controller('logoutCtrl', ['$scope, Socket', function($scope, Socket) {
+
+}]);
+
+app.controller('signupCtrl', ['$scope, Socket', function($scope, Socket) {
+    
+}]);
 
 app.service('Socket', function() {
     let socket = io(SOCKET_HOST);
 
     let entries = [];
+    let users = [];
 
     socket
     .on('login-success', (data) => {
@@ -36,6 +48,7 @@ app.service('Socket', function() {
         console.log('login-error', data);
     })
     .on('users', (data) => {
+        users = data.data;
         console.log('user-data', data);
     })
     .on('data', (data) => {
