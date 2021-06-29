@@ -6,25 +6,27 @@ import tableModule from './components/table';
 
 let app = angular.module('app', [ngRoute, tableModule]);
 
-// app.config(['$routeProvider', function ($routeProvider) {
-//     $routeProvider
-//     .when('/', {
-//         templateUrl: () => ''
-//     })
-//     .when('/login', {
-//         templateUrl: () => 'login'
-//     })
-//     .when('/logout', {
-//         redirectTo: '/login'
-//         // braucht kein template, nur controller => weiterleitung auf /login
-//     })
-//     .when('/signup', {
-//         templateUrl: () => 'signup'
-//     })
-//     .otherwise({
-//         redirectTo: '/'
-//     });
-// }]);
+app.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider
+    .when('/', {
+        templateUrl: '/public/templates/login.html',
+    })
+    .when('/login', {
+        template: () => 'login',
+        controller: 'loginCtrl'
+    })
+    .when('/logout', {
+        // redirectTo: '/login'
+        controller: 'logoutCtrl'
+    })
+    .when('/signup', {
+        template: () => 'signup',
+        controller: 'signupCtrl'
+    })
+    .otherwise({
+        // redirectTo: '/'
+    });
+}]);
 
 app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
     console.log('loginCtrl');
