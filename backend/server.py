@@ -1,6 +1,6 @@
-from flask import Flask, session, jsonify, request
-from flask_cors import CORS, cross_origin
-from flask_socketio import SocketIO, emit
+from flask import Flask, session
+from flask_cors import CORS
+from flask_socketio import SocketIO, emit, send
 
 app = Flask(__name__)
 CORS(app)
