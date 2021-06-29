@@ -27,7 +27,11 @@ app.config(['$routeProvider', ($routeProvider) => {
 }]);
 
 app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    // check if already logged in => redirect main
+    let user = Socket.getUser();
+
+    if (user) {
+        // redirect to main
+    }
 
     $scope.login = () => {
         Socket.login($scope.username, $scope.password);
@@ -35,7 +39,14 @@ app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
 }]);
 
 app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    // eingeloggt? => redirect to login
+    let user = Socket.getUser();
+
+    if (user) {
+        // redirect to main
+    } else {
+        // redirect to login
+    }
+
     console.log('mainCtrl');
 }]);
 
