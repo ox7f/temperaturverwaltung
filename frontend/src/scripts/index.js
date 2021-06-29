@@ -22,10 +22,23 @@ let app = angular.module('app', [tableModule]);
     });
 });*/
 
+app.controller('loginCtrl', ['$scope, Socket', function($scope, Socket) {
+
+}]);
+
+app.controller('logoutCtrl', ['$scope, Socket', function($scope, Socket) {
+
+}]);
+
+app.controller('signupCtrl', ['$scope, Socket', function($scope, Socket) {
+    
+}]);
+
 app.service('Socket', function() {
     let socket = io(SOCKET_HOST);
 
     let entries = [];
+    let users = [];
 
     socket
     .on('login-success', (data) => {
@@ -35,6 +48,7 @@ app.service('Socket', function() {
         console.log('login-error', data);
     })
     .on('users', (data) => {
+        users = data.data;
         console.log('user-data', data);
     })
     .on('data', (data) => {
