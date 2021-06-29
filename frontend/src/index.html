@@ -9,7 +9,9 @@
     <link rel='stylesheet' href="/public/fontawesome/css/all.css" />
 </header>
 
-<div ng-app="app">
-    <login-module></login-module>
-    <table></table>
-</div>
+<body ng-app="app">
+    <div ng-view>
+        <login-module></login-module>
+        <table></table>
+    </div>
+</body>

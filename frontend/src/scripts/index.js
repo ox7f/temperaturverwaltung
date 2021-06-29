@@ -1,29 +1,30 @@
 import io from 'socket.io-client';
 import angular from 'angular';
+import ngRoute from 'angular-route';
 
 import tableModule from './components/table';
 
-let app = angular.module('app', ['ngRoute', tableModule]);
+let app = angular.module('app', [ngRoute, tableModule]);
 
-app.config(['$routeProvider', function ($routeProvider) {
-    $routeProvider
-    .when('/', {
-        templateUrl: '../index.html'
-    })
-    .when('/login', {
-        templateUrl: '../login.html'
-    })
-    .when('/logout', {
-        redirectTo: '/login'
-        // braucht kein template, nur controller => weiterleitung auf /login
-    })
-    .when('/signup', {
-        templateUrl: '../signup.html'
-    })
-    .otherwise({
-        redirectTo: '/'
-    });
-}]);
+// app.config(['$routeProvider', function ($routeProvider) {
+//     $routeProvider
+//     .when('/', {
+//         templateUrl: () => ''
+//     })
+//     .when('/login', {
+//         templateUrl: () => 'login'
+//     })
+//     .when('/logout', {
+//         redirectTo: '/login'
+//         // braucht kein template, nur controller => weiterleitung auf /login
+//     })
+//     .when('/signup', {
+//         templateUrl: () => 'signup'
+//     })
+//     .otherwise({
+//         redirectTo: '/'
+//     });
+// }]);
 
 app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
     console.log('loginCtrl');
