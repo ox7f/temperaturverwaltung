@@ -60,7 +60,7 @@ app.service('Socket', ['$location', function($location) {
     let socket = io(SOCKET_HOST);
 
     let entries = [];
-    let users = [];
+    let userEntries = [];
     let user = null;
 
     socket
@@ -73,7 +73,7 @@ app.service('Socket', ['$location', function($location) {
         console.log('login-error', data);
     })
     .on('users', (data) => {
-        users = data.data;
+        userEntries = data.data;
         console.log('user-data', data);
     })
     .on('data', (data) => {
@@ -95,6 +95,14 @@ app.service('Socket', ['$location', function($location) {
 
     this.getEntries = () => {
         return entries;
+    };
+
+    this.setUserEntries = (data) => {
+        userEntries = data;
+    };
+
+    this.getUserEntries = () => {
+        return userEntries;
     };
 
     this.addEntry = (entry) => {
