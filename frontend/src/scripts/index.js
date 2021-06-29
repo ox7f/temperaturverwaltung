@@ -7,10 +7,11 @@ import chartModule from './components/chart';
 
 let app = angular.module('app', [ngRoute, tableModule, chartModule]);
 
-app.config(['$routeProvider', function ($routeProvider) {
+app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
     .when('/', {
-        templateUrl: '/public/templates/dashboard.html',
+        templateUrl: '/public/templates/main.html',
+        controller: 'mainCtrl'
     })
     .when('/login', {
         templateUrl: '/public/templates/login.html',
@@ -25,11 +26,15 @@ app.config(['$routeProvider', function ($routeProvider) {
     });
 }]);
 
-app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
+app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
+    console.log('mainCtrl');
+}]);
+
+app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
     console.log('loginCtrl');
 }]);
 
-app.controller('logoutCtrl', ['$scope', 'Socket', function($scope, Socket) {
+app.controller('logoutCtrl', ['$scope', 'Socket', ($scope, Socket) => {
     console.log('logoutCtrl');
 }]);
 
