@@ -6,89 +6,77 @@ import tableModule from './components/table';
 let app = angular.module('app', [tableModule]);
 
 // routing https://realpython.com/handling-user-authentication-with-angular-and-flask/#developing-the-angular-app
-
-app.service('SessionService', function() {
-    this.login = (name, password) => {
-        return fetch(`http://${SOCKET_HOST}/api/login`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                user: name,
-                password: password
-            })
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('loginCall', json);
-        });
-    };
-    
-    this.logout = (data) => {
-        return fetch(`${SOCKET_HOST}/api/logout`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('logoutCall', json);
-        });
-    };
-
-    return this;
+app.config(function ($routeProvider) {
+    $routeProvider
+    .when('/', {
+        templateUrl: '../index.html'
+    })
+    .when('/login', {
+        templateUrl: '../index.html'
+    })
+    .when('/logout', {
+        templateUrl: '../index.html'
+    })
+    .otherwise({
+        redirectTo: '/'
+    });
 });
 
-app.service('SocketService', function() {
+
+app.service('Socket', function() {
     let socket = io(SOCKET_HOST);
 
-    this.getTableData = () => {
-        socket.emit('get-table-data');
+    let entries = [];
+
+    socket
+    .on('login-success', (data) => {
+        console.log('login-success', data);
+    })
+    .on('login-error', (data) => {
+        console.log('login-error', data);
+    })
+    .on('users', (data) => {
+        console.log('user-data', data);
+    })
+    .on('data', (data) => {
+        console.log('table-data', data);
+        entries = data.data;
+    })
+    .on('temperature-added', (data) => {
+        console.log('temperature-added', data);
+        entries.push(data.data);
+    })
+    .on('temperature-removed', (data) => {
+        console.log('temperature-removed', data);
+        entries.splice(entries.indexOf(data.data), 1);
+    });
+
+    this.getEntries = () => {
+        return entries;
+    };
+
+    this.addEntry = (entry) => {
+        entries.push(entry);
+    };
+
+    this.removeEntry = (entry) => {
+        entries.splice(entries.indexOf(entry), 1);
+    };
+
+    this.getData = () => {
+        socket.emit('get-data');
     };
 
     this.getUsers = () => {
         socket.emit('get-users');
     };
 
-    socket
-    .on('user-data', (data) => {
-        console.log('user-data', data);
-    })
-    .on('table-data', (data) => {
-        console.log('table-data', data);
-    })
-    .on('temperature-added', (data) => {
-        console.log('temperature-added', data);
-    })
-    .on('temperature-removed', (data) => {
-        console.log('temperature-removed', data);
-    });
-
-    return this;
-});
-
-app.service('DataService', function() {
-    this.addTemepratur = data => {
-        return fetch(`${SOCKET_HOST}/api/addTemperatur`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('addTemepraturCall', json);
-        });
+    this.login = (name, password) => {
+        socket.emit('login', {name: name, password: password});
     };
 
-    this.removeTemepratur = data => {
-        return fetch(`${SOCKET_HOST}/api/removeTemperatur`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log('removeTemepraturCall', json);
-        });
+    this.logout = () => {
+        socket.emit('logout');
     };
 
     return this;

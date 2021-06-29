@@ -33,10 +33,11 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.0",
-    "angular": "latest",
-    "core-js": "^3.0.1",
-    "socket.io-client": "latest",
-    "yarn": "^1.17.3"
+    "@babel/polyfill": "latest",
+    "angular": "^1.8.2",
+    "chart.js": "^3.4.0",
+    "core-js": "^3.15.1",
+    "socket.io-client": "^4.1.2",
+    "yarn": "^1.22.10"
   }
 }
