@@ -2,12 +2,12 @@
   <form>
     <div class="container">
       <label for="username">Benutzername</label>
-      <input ng-model="username" type="text" placeholder="Username" name="uname" required>
+      <input ng-model="username" type="text" placeholder="Username" name="uname" required minlength="3">
 
       <label for="password">Passwort</label>
-      <input ng-model="password" type="password" placeholder="Password" name="password" required>
+      <input ng-model="password" type="password" placeholder="Password" name="password" required minlength="3">
 
-      <button ng-onclick="login" type="submit">Login</button>
+      <button ng-click="login()">Login</button>
     </div>
   </form>
 </div>

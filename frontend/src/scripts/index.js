@@ -26,45 +26,35 @@ app.config(['$routeProvider', ($routeProvider) => {
     });
 }]);
 
-app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
-    
-    onsole.log('loginCtrl');
+app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
+    // check if already logged in => redirect main
 
-    $scope.username;
-    $scope.login = ()=> {
-        if ($scope.username === NULL || $scope.username === '' || $scope.username.length <= 3){
-            return;
-        }        
-    };
-
-    $scope.password;
-    $scope.login = ()=> {
-        if ($scope.password === NULL || $scope.password === '' || $scope.password.length <= 8){
-            return;
-        }        
+    $scope.login = () => {
+        Socket.login($scope.username, $scope.password);
     };
 }]);
 
 app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
+    // eingeloggt? => redirect to login
     console.log('mainCtrl');
 }]);
 
-app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    console.log('loginCtrl');
-}]);
 
 app.controller('logoutCtrl', ['$scope', 'Socket', ($scope, Socket) => {
     console.log('logoutCtrl');
 }]);
 
-app.service('Socket', function() {
+app.service('Socket', ['$location', function($location) {
     let socket = io(SOCKET_HOST);
 
     let entries = [];
     let users = [];
+    let user = null;
 
     socket
     .on('login-success', (data) => {
+        $location.path('/main');
+        user = data;
         console.log('login-success', data);
     })
     .on('login-error', (data) => {
@@ -87,6 +77,10 @@ app.service('Socket', function() {
         entries.splice(entries.indexOf(data.data), 1);
     });
 
+    this.setEntries = (data) => {
+        entries = data;
+    };
+
     this.getEntries = () => {
         return entries;
     };
@@ -103,6 +97,14 @@ app.service('Socket', function() {
         socket.emit('get-data');
     };
 
+    this.setUser = (data) => {
+        user = dta;
+    };
+
+    this.getUser = () => {
+        return user;
+    };
+
     this.getUsers = () => {
         socket.emit('get-users');
     };
@@ -116,6 +118,6 @@ app.service('Socket', function() {
     };
 
     return this;
-});
+}]);
 
 export default app;
