@@ -3,28 +3,26 @@ import angular from 'angular';
 import ngRoute from 'angular-route';
 
 import tableModule from './components/table';
+import chartModule from './components/chart';
 
-let app = angular.module('app', [ngRoute, tableModule]);
+let app = angular.module('app', [ngRoute, tableModule, chartModule]);
 
-app.config(['$routeProvider', function ($routeProvider) {
+app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
     .when('/', {
-        templateUrl: '/public/templates/login.html',
+        templateUrl: '/public/templates/main.html',
+        controller: 'mainCtrl'
     })
     .when('/login', {
-        template: () => 'login',
+        templateUrl: '/public/templates/login.html',
         controller: 'loginCtrl'
     })
     .when('/logout', {
-        // redirectTo: '/login'
+        redirectTo: '/login',
         controller: 'logoutCtrl'
     })
-    .when('/signup', {
-        template: () => 'signup',
-        controller: 'signupCtrl'
-    })
     .otherwise({
-        // redirectTo: '/'
+        redirectTo: '/'
     });
 }]);
 
@@ -45,15 +43,18 @@ app.controller('loginCtrl', ['$scope', 'Socket', function($scope, Socket) {
             return;
         }        
     };
-
 }]);
 
-app.controller('logoutCtrl', ['$scope', 'Socket', function($scope, Socket) {
+app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
+    console.log('mainCtrl');
+}]);
+
+app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
+    console.log('loginCtrl');
+}]);
+
+app.controller('logoutCtrl', ['$scope', 'Socket', ($scope, Socket) => {
     console.log('logoutCtrl');
-}]);
-
-app.controller('signupCtrl', ['$scope', 'Socket', function($scope, Socket) {
-    console.log('signupCtrl');
 }]);
 
 app.service('Socket', function() {
