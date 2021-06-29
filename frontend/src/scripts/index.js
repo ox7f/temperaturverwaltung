@@ -4,8 +4,9 @@ import ngRoute from 'angular-route';
 
 import tableModule from './components/table';
 import chartModule from './components/chart';
+import userModule from './components/user';
 
-let app = angular.module('app', [ngRoute, tableModule, chartModule]);
+let app = angular.module('app', [ngRoute, tableModule, chartModule, userModule]);
 
 app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
