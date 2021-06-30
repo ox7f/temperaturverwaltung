@@ -18,6 +18,13 @@ def login():
     session['isAdmin'] = 'aus db';
     return {'message': 'success', 'token': 'todo: session token'}
 
+@app.route('/api/logout', methods=['POST'])
+@cross_origin(origin = 'localhost')
+def logout():
+    session.pop('logged_in', None)
+    session.pop('user', None)
+    session.pop('isAdmin', None)
+
 # socket stuff
 
 # client ruft website auf

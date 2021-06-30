@@ -63,9 +63,7 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
     $scope.login = () => {
         fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: {
                 name: $scope.username,
                 password: $scope.password
@@ -74,15 +72,23 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
         .then(res => res.json())
         .then(text => {
             console.log('login:', text);
+            // $cookies.put(); cookie vom backend setzen?
         });
     };
-
-    // $cookies.put(); cookie vom backend setzen?
 }]);
 
 app.controller('logoutCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
     console.log('logoutCtrl');
-    // $cookies.delete(); cookie löschen
+
+    fetch(`http://${SOCKET_HOST}/api/logout`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        })
+        .then(res => res.json())
+        .then(text => {
+            console.log('logout', text);
+            // $cookies.delete(); cookie löschen
+        });
 }]);
 
 app.service('Socket', ['$location', function($location) {
