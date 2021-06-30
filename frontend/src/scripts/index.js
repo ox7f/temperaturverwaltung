@@ -48,6 +48,8 @@ app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
 }]);
 
 app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
+    console.log('loginCtrl');
+
     $scope.login = () => {
         Socket.login($scope.username, $scope.password);
     };
@@ -75,8 +77,8 @@ app.service('Socket', ['$location', function($location) {
 
     socket
     .on('users', (data) => {
-        userEntries = data.data;
         console.log('user-data', data);
+        userEntries = data.data;
     })
     .on('data', (data) => {
         console.log('table-data', data);

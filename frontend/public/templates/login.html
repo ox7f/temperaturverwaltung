@@ -1,13 +1,13 @@
-<div>
+<div class="container-fluid">
   <form>
-    <div class="container">
+    <div class="form-group">
       <label for="username">Benutzername</label>
-      <input ng-model="username" type="text" placeholder="Username" name="uname" required minlength="3">
+      <input ng-model="username" type="text" class="form-control" placeholder="Username" name="uname" required minlength="3">
 
       <label for="password">Passwort</label>
-      <input ng-model="password" type="password" placeholder="Password" name="password" required minlength="3">
+      <input ng-model="password" type="password" class="form-control" placeholder="Password" name="password" required minlength="3">
 
-      <button ng-click="login()">Login</button>
+      <button ng-click="login()" class="btn btn-primary" type="submit">Login</button>
     </div>
   </form>
 </div>
