@@ -52,7 +52,7 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
         Socket.login($scope.username, $scope.password);
     };
 
-    // $cookies.remove(); cookie vom backend setzen?
+    // $cookies.put(); cookie vom backend setzen?
 }]);
 
 app.controller('logoutCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
