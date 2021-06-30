@@ -1,5 +1,5 @@
-from flask import Flask, session, jsonify
-from flask_cors import CORS
+from flask import Flask, session
+from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, send
 
 app = Flask(__name__)
@@ -10,9 +10,13 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
 
 # routing stuff
 
-@app.route('/api/login')
+@app.route('/api/login', methods=['POST'])
+@cross_origin(origin = 'localhost')
 def login():
-    return jsonify({'message': 'success', 'token': 'session token - irgendwas um zu erkennen dass user eingeloggt ist'})
+    session['logged_in'] = 'user existiert in db => true';
+    session['user'] = 'aus db';
+    session['isAdmin'] = 'aus db';
+    return {'message': 'success', 'token': 'todo: session token'}
 
 # socket stuff
 

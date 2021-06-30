@@ -61,7 +61,7 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
     console.log('loginCtrl');
 
     $scope.login = () => {
-        fetch(`${SOCKET_HOST}/api/login`, {
+        fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -71,8 +71,9 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
                 password: $scope.password
             }
         })
-        .then(res => {
-            console.log('login:', res);
+        .then(res => res.json())
+        .then(text => {
+            console.log('login:', text);
         });
     };
 
