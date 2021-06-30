@@ -13,6 +13,10 @@ app.config(['$routeProvider', ($routeProvider) => {
         templateUrl: '/public/templates/main.html',
         controller: 'mainCtrl'
     })
+    .when('/admin', {
+        templateUrl: '/public/templates/admin.html',
+        controller: 'adminCtrl'
+    })
     .when('/login', {
         templateUrl: '/public/templates/login.html',
         controller: 'loginCtrl'
@@ -45,6 +49,12 @@ app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
             }]
         }
     });
+}]);
+
+app.controller('adminCtrl', ['$scope', 'Socket', ($scope, Socket) => {
+    console.log('adminCtrl');
+
+    $scope.users = Socket.getUserEntries();
 }]);
 
 app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {

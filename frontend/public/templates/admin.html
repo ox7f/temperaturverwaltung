@@ -1,5 +1,10 @@
-<div>
+<div class="container-fluid">
     admin
 
+    <ol>
+        <li ng-repeat="user in users">
+            {{ user | json }}
+        </li>
+    </ol>
     <!-- todo: user stuff / verwaltung-->
 </div>
