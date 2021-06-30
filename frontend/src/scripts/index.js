@@ -35,6 +35,20 @@ app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
 
     $scope.entries = Socket.getEntries();
     $scope.userEntries = Socket.getUserEntries();
+
+    new Chart(document.getElementById('chart'), {
+        type: 'bar',
+        data: {
+            labels: $scope.entries.map(entry => entry.zeit.toLocaleTimeString()), // zeit-werte der entries
+            datasets: [{
+                label: 'LABEL',
+                data: $scope.entries.map(entry => entry.temperatur), // temp-werte der entries
+                // backgroundColor: [],
+                // borderColor: [],
+                borderWidth: 1
+            }]
+        }
+    });
 }]);
 
 
