@@ -1,9 +1,11 @@
-import io from 'socket.io-client';
 import angular from 'angular';
 import ngRoute from 'angular-route';
+import ngCookies from 'angular-cookies';
+
+import io from 'socket.io-client';
 import Chart from 'chart.js/auto';
 
-let app = angular.module('app', [ngRoute]);
+let app = angular.module('app', [ngRoute, ngCookies]);
 
 app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
@@ -22,12 +24,6 @@ app.config(['$routeProvider', ($routeProvider) => {
     .otherwise({
         redirectTo: '/login'
     });
-}]);
-
-app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    $scope.login = () => {
-        Socket.login($scope.username, $scope.password);
-    };
 }]);
 
 app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
@@ -51,9 +47,17 @@ app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
     });
 }]);
 
+app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
+    $scope.login = () => {
+        Socket.login($scope.username, $scope.password);
+    };
 
-app.controller('logoutCtrl', ['$scope', 'Socket', ($scope, Socket) => {
+    // $cookies.remove(); cookie vom backend setzen?
+}]);
+
+app.controller('logoutCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
     console.log('logoutCtrl');
+    // $cookies.delete(); cookie löschen
 }]);
 
 app.service('Socket', ['$location', function($location) {
