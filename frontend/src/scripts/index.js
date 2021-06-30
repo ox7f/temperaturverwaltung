@@ -1,12 +1,9 @@
 import io from 'socket.io-client';
 import angular from 'angular';
 import ngRoute from 'angular-route';
+import Chart from 'chart.js/auto';
 
-import tableModule from './components/table';
-import chartModule from './components/chart';
-import userModule from './components/user';
-
-let app = angular.module('app', [ngRoute, tableModule, chartModule, userModule]);
+let app = angular.module('app', [ngRoute]);
 
 app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
@@ -23,32 +20,21 @@ app.config(['$routeProvider', ($routeProvider) => {
         controller: 'logoutCtrl'
     })
     .otherwise({
-        redirectTo: '/'
+        redirectTo: '/login'
     });
 }]);
 
 app.controller('loginCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    let user = Socket.getUser();
-
-    if (user) {
-        // redirect to main
-    }
-
     $scope.login = () => {
         Socket.login($scope.username, $scope.password);
     };
 }]);
 
 app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    let user = Socket.getUser();
-
-    if (user) {
-        // redirect to main
-    } else {
-        // redirect to login
-    }
-
     console.log('mainCtrl');
+
+    $scope.entries = Socket.getEntries();
+    $scope.userEntries = Socket.getUserEntries();
 }]);
 
 
@@ -59,19 +45,17 @@ app.controller('logoutCtrl', ['$scope', 'Socket', ($scope, Socket) => {
 app.service('Socket', ['$location', function($location) {
     let socket = io(SOCKET_HOST);
 
-    let entries = [];
-    let userEntries = [];
-    let user = null;
+    // just test data
+    let entries = [
+        {id:1, sensorId:1, temperatur:29, zeit: new Date()},
+        {id:2, sensorId:2, temperatur:39, zeit: new Date()},
+        {id:3, sensorId:3, temperatur:59, zeit: new Date()}];
+    let userEntries = [
+        {id:1, username: 'test', telefonNr: '0213987148', admin: 0},
+        {id:2, username: 'admin', telefonNr: '987249263', admin: 1}
+    ];
 
     socket
-    .on('login-success', (data) => {
-        $location.path('/main');
-        user = data;
-        console.log('login-success', data);
-    })
-    .on('login-error', (data) => {
-        console.log('login-error', data);
-    })
     .on('users', (data) => {
         userEntries = data.data;
         console.log('user-data', data);
@@ -117,24 +101,8 @@ app.service('Socket', ['$location', function($location) {
         socket.emit('get-data');
     };
 
-    this.setUser = (data) => {
-        user = dta;
-    };
-
-    this.getUser = () => {
-        return user;
-    };
-
     this.getUsers = () => {
         socket.emit('get-users');
-    };
-
-    this.login = (name, password) => {
-        socket.emit('login', {name: name, password: password});
-    };
-
-    this.logout = () => {
-        socket.emit('logout');
     };
 
     return this;

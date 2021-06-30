@@ -1,5 +1,26 @@
-<div ng-app="app">
-    <chart-module></chart-module>
-    <table-module></table-module>
-    <user-module></user-module>
+<div class="container-fluid">
+    main
+
+
+    <!-- table -->
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" ng-repeat="(key, value) in entries[0]">
+                    {{ key | uppercase }}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="entry in entries">
+                <td ng-repeat="(key, value) in entry">
+                    {{ key === 'zeit' ? (value | date : "medium") : value }}
+                </td>
+            </tr>
+          </tbody>
+    </table>
+
+    <!-- chart -->
+    <canvas id="chart" width="400" height="400"></canvas>
+
 </div>

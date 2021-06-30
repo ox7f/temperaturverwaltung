@@ -19,25 +19,6 @@ def connect():
         getData()
         getUsers()
 
-# client bestaetigt login
-@socketio.on('login')
-def login(data):
-    if not data['name']:
-        return send('login-error', {'message': 'no username defined'})
-
-    if not data['password']:
-        return send('login-error', {'message': 'no password defined'})
-
-    # todo: daniel - einbindung dict.py
-    data = 'todo'
-    send('login-success', {'message': 'success', 'data': data})
-
-# client loggt sich aus
-@socketio.on('logout')
-def logout():
-    session.pop('is_admin', None)
-    session.pop('logged_in', None)
-
 @socketio.on('add-temperature')
 def addTemperature(data):
     if not session['logged_in']:
