@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask, session, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, send
 
@@ -7,6 +7,12 @@ CORS(app)
 app.config['SECRET_KEY'] = 'WHKAWSF kleines Geheimnis Zwinkersmiley'
 app.config['CORS_HEADERS'] = 'Content-Type'
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
+
+# routing stuff
+
+@app.route('/api/login')
+def login():
+    return jsonify({'message': 'success', 'token': 'session token - irgendwas um zu erkennen dass user eingeloggt ist'})
 
 # socket stuff
 

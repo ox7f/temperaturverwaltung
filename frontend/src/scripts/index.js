@@ -61,7 +61,19 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
     console.log('loginCtrl');
 
     $scope.login = () => {
-        Socket.login($scope.username, $scope.password);
+        fetch(`${SOCKET_HOST}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: {
+                name: $scope.username,
+                password: $scope.password
+            }
+        })
+        .then(res => {
+            console.log('login:', res);
+        });
     };
 
     // $cookies.put(); cookie vom backend setzen?
