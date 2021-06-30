@@ -80,7 +80,8 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
 app.controller('logoutCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
     console.log('logoutCtrl');
 
-    fetch(`http://${SOCKET_HOST}/api/logout`, {
+    $scope.logout = () => {
+        fetch(`http://${SOCKET_HOST}/api/logout`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'}
         })
@@ -89,6 +90,7 @@ app.controller('logoutCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies,
             console.log('logout', text);
             // $cookies.delete(); cookie löschen
         });
+    };
 }]);
 
 app.service('Socket', ['$location', function($location) {
