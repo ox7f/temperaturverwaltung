@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="entry in entrie track by $index">
+            <tr ng-repeat="entry in entries track by $index">
                 <td ng-repeat="(key, value) in entry track by $index">
                     {{ key === 'zeit' ? (value | date : "medium") : value }}
                 </td>
@@ -28,6 +28,6 @@
     </table>
 
     <!-- chart -->
-    <canvas id="chart" width="400" height="400"></canvas>
+    <canvas id="chart" width="200" height="200"></canvas>
 
 </div>
