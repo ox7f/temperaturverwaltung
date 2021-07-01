@@ -20,6 +20,7 @@ app.controller('mainCtrl', ['$scope', ($scope) => {
     let socket = io(SOCKET_HOST);
 
     $scope.select = null;
+    $scope.options = [1, 2, 3, 4, 5];
     $scope.entries = [];
 
     socket
@@ -54,6 +55,7 @@ app.controller('mainCtrl', ['$scope', ($scope) => {
     });
 
     $scope.selectChanged = () => {
+        console.log('select changed', $scope.select);
         socket.emit('get-data', $scope.select);
     };
 }]);

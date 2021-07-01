@@ -2,9 +2,7 @@
     <!-- todo: header - user info / logout button -->
 
     <!-- Anzeige der gesamten Tabelle mit den Temperaturdaten -->
-    <select ng-model="select" ng-change="selectChanged()">
-        <option></option>
-    </select>
+    <select ng-model="select" ng-change="selectChanged()" ng-options="option as option for option in options" ng-init="select = options[0]"></select>
     <table class="table table-hover table-bordered">
         <thead>
             <tr>
@@ -14,8 +12,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="entry in entries">
-                <td ng-repeat="(key, value) in entry">
+            <tr ng-repeat="entry in entrie track by $index">
+                <td ng-repeat="(key, value) in entry track by $index">
                     {{ key === 'zeit' ? (value | date : "medium") : value }}
                 </td>
             </tr>
