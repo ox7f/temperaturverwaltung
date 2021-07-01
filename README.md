@@ -48,6 +48,7 @@ Python3
 pip
 Nodejs
 npm
+yarn (npm install -g yarn)
 
 ### Konfiguration
 
