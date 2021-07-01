@@ -1,5 +1,6 @@
 <div class="container-fluid">
     <!-- todo: header - user info / logout button -->
+    <button ng-click="logout()">Logout</button>
 
     <!-- Anzeige der gesamten Tabelle mit den Temperaturdaten -->
     <!-- Anzeige aller Sensoren mit den dazugehörigen Herstellerdaten -->
@@ -28,6 +29,6 @@
     </table>
 
     <!-- chart -->
-    <canvas id="chart" width="200" height="200" ng-if="entries.length > 0"></canvas>
+    <canvas id="chart"></canvas>
 
 </div>
