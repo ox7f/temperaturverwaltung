@@ -13,53 +13,25 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin = 'localhost')
 def login():
-    session['logged_in'] = 'user existiert in db => true';
-    session['user'] = 'aus db';
-    session['isAdmin'] = 'aus db';
+    # irgendein sicheres token generieren (jwt?)
     return {'message': 'success', 'token': 'todo: session token'}
-
-@app.route('/api/logout', methods=['POST'])
-@cross_origin(origin = 'localhost')
-def logout():
-    session.pop('logged_in', None)
-    session.pop('user', None)
-    session.pop('isAdmin', None)
 
 # socket stuff
 
-# client ruft website auf
-@socketio.on('connect')
-def connect():
-    # user bereits eingeloggt?
-    if session and session['logged_in']:
-        # eingeloggten user mit daten versorgen
-        getData()
-
 @socketio.on('add-temperature')
 def addTemperature(data):
-    if not session['logged_in']:
-        return
-
-    if (session['is_admin'] == 0):
-        return
-
     # todo: daniel - einbindung dict.py
+    data = 'todo'
     emit('temperature-added', {'message': 'success', 'data': data})
 
 @socketio.on('remove-temperature')
 def removeTemperature(data):
-    if not session['logged_in']:
-        return
-
-    if (session['is_admin'] == 0):
-        return
-
+    # todo: daniel - einbindung dict.py
+    data = 'todo'
     emit('temperature-removed', {'message': 'success', 'data': data})
 
 @socketio.on('get-data')
 def getData(data):
-    #if not session:
-    #    return
     print(data)
 
     # todo: daniel - einbindung dict.py
@@ -68,9 +40,6 @@ def getData(data):
 
 @socketio.on('get-users')
 def getUsers():
-    #if not session:
-    #    return
-
     # todo: daniel - einbindung dict.py
     data = 'todo'
     emit('users',  {'message': 'success', 'data': data})
