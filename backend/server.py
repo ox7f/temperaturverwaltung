@@ -18,17 +18,35 @@ def login():
 
 # socket stuff
 
-@socketio.on('add-temperature')
-def addTemperature(data):
+@socketio.on('add-user')
+def addUser(data):
     # todo: daniel - einbindung dict.py
     data = 'todo'
-    emit('temperature-added', {'message': 'success', 'data': data})
+    emit('user-added', {'message': 'success', 'data': data})
+
+@socketio.on('add-sensor')
+def addSensor(data):
+    # todo: daniel - einbindung dict.py
+    data = 'todo'
+    emit('sensor-added', {'message': 'success', 'data': data})
 
 @socketio.on('remove-temperature')
 def removeTemperature(data):
     # todo: daniel - einbindung dict.py
     data = 'todo'
     emit('temperature-removed', {'message': 'success', 'data': data})
+
+@socketio.on('remove-user')
+def removeUser(data):
+    # todo: daniel - einbindung dict.py
+    data = 'todo'
+    emit('user-removed', {'message': 'success', 'data': data})
+
+@socketio.on('remove-sensor')
+def removeSensor(data):
+    # todo: daniel - einbindung dict.py
+    data = 'todo'
+    emit('sensor-removed', {'message': 'success', 'data': data})
 
 @socketio.on('get-data')
 def getData(data):
