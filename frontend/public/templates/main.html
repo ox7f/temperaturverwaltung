@@ -2,6 +2,13 @@
     <!-- todo: header - user info / logout button -->
 
     <!-- Anzeige der gesamten Tabelle mit den Temperaturdaten -->
+    <!-- Anzeige aller Sensoren mit den dazugehörigen Herstellerdaten -->
+    <!-- Anzeige aller Sensoren mit den dazugehörigen Temperaturen. Sensoren ohne dazugehörige Temperaturen sollen auch angezeigt werden -->
+    <!-- Anzeige der Temperaturen mit allen Sensor- und Herstellerdaten -->
+    <!-- Anzeige der letzten 10 Temperaturwerte -->
+    <!-- Anzeige der letzten 10 Temperaturwerte absteigend sortiert nach Datum -->
+    <!-- Anzeige der höchsten Temperatur je Sensor -->
+    <!-- Anzeige der Durchschnittstemperatur je Sensor -->
     <select ng-model="select" ng-change="selectChanged()" ng-options="option as option for option in options" ng-init="select = options[0]"></select>
     <table class="table table-hover table-bordered">
         <thead>
@@ -22,13 +29,5 @@
 
     <!-- chart -->
     <canvas id="chart" width="400" height="400"></canvas>
-
-    <!-- Anzeige aller Sensoren mit den dazugehörigen Herstellerdaten -->
-    <!-- Anzeige aller Sensoren mit den dazugehörigen Temperaturen. Sensoren ohne dazugehörige Temperaturen sollen auch angezeigt werden -->
-    <!-- Anzeige der Temperaturen mit allen Sensor- und Herstellerdaten -->
-    <!-- Anzeige der letzten 10 Temperaturwerte -->
-    <!-- Anzeige der letzten 10 Temperaturwerte absteigend sortiert nach Datum -->
-    <!-- Anzeige der höchsten Temperatur je Sensor -->
-    <!-- Anzeige der Durchschnittstemperatur je Sensor -->
 
 </div>

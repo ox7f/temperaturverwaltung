@@ -19,7 +19,6 @@ app.config(['$routeProvider', ($routeProvider) => {
 app.controller('mainCtrl', ['$scope', ($scope) => {
     let socket = io(SOCKET_HOST);
 
-    $scope.select = null;
     $scope.options = [1, 2, 3, 4, 5];
     $scope.entries = [];
 
@@ -54,9 +53,12 @@ app.controller('mainCtrl', ['$scope', ($scope) => {
         }
     });
 
-    $scope.selectChanged = () => {
-        console.log('select changed', $scope.select);
-        socket.emit('get-data', $scope.select);
+    $scope.selectChanged = () => socket.emit('get-data', $scope.select);
+
+    $scope.logout = () => {
+        console.log('logout');
+        // $cookies.delete(); cookie löschen
+        // redirect auf login
     };
 }]);
 
@@ -120,17 +122,8 @@ app.controller('loginCtrl', ['$scope', '$cookies', ($scope, $cookies) => {
 }]);
 
 app.controller('logoutCtrl', ['$scope', '$cookies', ($scope, $cookies) => {
-    $scope.logout = () => {
-        fetch(`http://${SOCKET_HOST}/api/logout`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'}
-        })
-        .then(res => res.json())
-        .then(text => {
-            console.log('logout', text);
-            // $cookies.delete(); cookie löschen
-        });
-    };
+    console.log('logout');
+    // $cookies.delete(); cookie löschen
 }]);
 
 export default app;
