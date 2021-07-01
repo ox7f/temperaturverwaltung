@@ -9,7 +9,7 @@ let app = angular.module('app', [ngRoute, ngCookies]);
 
 app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
-    .when('/', { templateUrl: '/public/templates/main.html', controller: 'mainCtrl' })
+    .when('/main', { templateUrl: '/public/templates/main.html', controller: 'mainCtrl' })
     .when('/admin', { templateUrl: '/public/templates/admin.html', controller: 'adminCtrl' })
     .when('/login', { templateUrl: '/public/templates/login.html', controller: 'loginCtrl' })
     .when('/logout', { redirectTo: '/login', controller: 'logoutCtrl' })
@@ -62,7 +62,7 @@ app.controller('mainCtrl', ['$scope', '$location', ($scope, $location) => {
     $scope.logout = () => {
         console.log('logout');
         // $cookies.delete('name'); cookie löschen
-        $location.path('/login');
+        $location.path('login');
     };
 }]);
 
@@ -114,7 +114,7 @@ app.controller('adminCtrl', ['$scope', '$location', ($scope, $location) => {
     $scope.logout = () => {
         console.log('logout');
         // $cookies.delete('name'); cookie löschen
-        $location.path('/login');
+        $location.path('login');
     };
 }]);
 
@@ -123,17 +123,15 @@ app.controller('loginCtrl', ['$scope', '$cookies', '$location', ($scope, $cookie
         fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                name: $scope.username,
-                password: $scope.password
-            })
+            body: JSON.stringify({ name: $scope.username, password: $scope.password})
         })
         .then(res => res.json())
-        .then(text => {
-            console.log('login:', text);
-            // $cookies.put(); cookie vom backend setzen?
-            $location.path('/main');
-            // $location.path('/admin');
+        .then(json => {
+            if (json.message === 'success') {
+                $location.path('main');
+                // $location.path('admin');
+                // $cookies.put(); cookie vom backend setzen?
+            }
         });
     };
 }]);
