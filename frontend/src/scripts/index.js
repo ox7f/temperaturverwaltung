@@ -9,33 +9,36 @@ let app = angular.module('app', [ngRoute, ngCookies]);
 
 app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
-    .when('/', {
-        templateUrl: '/public/templates/main.html',
-        controller: 'mainCtrl'
-    })
-    .when('/admin', {
-        templateUrl: '/public/templates/admin.html',
-        controller: 'adminCtrl'
-    })
-    .when('/login', {
-        templateUrl: '/public/templates/login.html',
-        controller: 'loginCtrl'
-    })
-    .when('/logout', {
-        redirectTo: '/login',
-        controller: 'logoutCtrl'
-    })
-    .otherwise({
-        redirectTo: '/login'
-    });
+    .when('/', { templateUrl: '/public/templates/main.html', controller: 'mainCtrl' })
+    .when('/admin', { templateUrl: '/public/templates/admin.html', controller: 'adminCtrl' })
+    .when('/login', { templateUrl: '/public/templates/login.html', controller: 'loginCtrl' })
+    .when('/logout', { redirectTo: '/login', controller: 'logoutCtrl' })
+    .otherwise({ redirectTo: '/login' });
 }]);
 
-app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    console.log('mainCtrl');
+app.controller('mainCtrl', ['$scope', ($scope) => {
+    let socket = io(SOCKET_HOST);
 
-    $scope.entries = Socket.getEntries();
-    $scope.userEntries = Socket.getUserEntries();
+    $scope.select = null;
+    $scope.entries = [];
 
+    socket
+    .emit('get-data', $scope.select)
+    .on('data', (data) => {
+        console.log('table-data', data);
+        $scope.entries = data.data;
+    });
+
+    // just test data
+    let entries = [
+        {id:1, sensorId:1, temperatur:29, zeit: new Date()},
+        {id:2, sensorId:2, temperatur:39, zeit: new Date()},
+        {id:3, sensorId:3, temperatur:59, zeit: new Date()}
+    ];
+
+    $scope.entries = entries;
+
+    // https://www.chartjs.org/docs/latest/samples/scales/time-line.html
     new Chart(document.getElementById('chart'), {
         type: 'bar',
         data: {
@@ -49,17 +52,54 @@ app.controller('mainCtrl', ['$scope', 'Socket', ($scope, Socket) => {
             }]
         }
     });
+
+    $scope.selectChanged = () => {
+        socket.emit('get-data', $scope.select);
+    };
 }]);
 
-app.controller('adminCtrl', ['$scope', 'Socket', ($scope, Socket) => {
-    console.log('adminCtrl');
+app.controller('adminCtrl', ['$scope', ($scope) => {
+    let socket = io(SOCKET_HOST);
 
-    $scope.users = Socket.getUserEntries();
+    $scope.select = null;
+    $scope.entries = [];
+    $scope.userEntries = [];
+    $scope.logEntries = [];
+
+    socket
+    .emit('get-data', $scope.select)
+    .emit('get-users')
+    .on('users', (data) => {
+        console.log('user-data', data);
+        $scope.userEntries = data.data;
+    })
+    .on('data', (data) => {
+        console.log('table-data', data);
+        $scope.entries = data.data;
+    })
+    .on('logs', (data) => {
+        $scope.logEntries = data;
+    })
+    .on('temperature-added', (data) => {
+        console.log('temperature-added', data);
+        $scope.entries.push(data.data);
+    })
+    .on('temperature-removed', (data) => {
+        console.log('temperature-removed', data);
+        $scope.entries.splice(entries.indexOf(data.data), 1);
+    });
+
+    // just test data
+    userEntries = [
+        {id:1, username: 'test', telefonNr: '0213987148', admin: 0},
+        {id:2, username: 'admin', telefonNr: '987249263', admin: 1}
+    ];
+
+    $scope.users = userEntries;
+    $scope.logs = logEntries;
 }]);
 
-app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
-    console.log('loginCtrl');
-
+app.controller('loginCtrl', ['$scope', '$cookies', ($scope, $cookies) => {
     $scope.login = () => {
         fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
@@ -77,9 +117,7 @@ app.controller('loginCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, 
     };
 }]);
 
-app.controller('logoutCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies, Socket) => {
-    console.log('logoutCtrl');
-
+app.controller('logoutCtrl', ['$scope', '$cookies', ($scope, $cookies) => {
     $scope.logout = () => {
         fetch(`http://${SOCKET_HOST}/api/logout`, {
             method: 'POST',
@@ -91,72 +129,6 @@ app.controller('logoutCtrl', ['$scope', '$cookies', 'Socket', ($scope, $cookies,
             // $cookies.delete(); cookie löschen
         });
     };
-}]);
-
-app.service('Socket', ['$location', function($location) {
-    let socket = io(SOCKET_HOST);
-
-    // just test data
-    let entries = [
-        {id:1, sensorId:1, temperatur:29, zeit: new Date()},
-        {id:2, sensorId:2, temperatur:39, zeit: new Date()},
-        {id:3, sensorId:3, temperatur:59, zeit: new Date()}];
-    let userEntries = [
-        {id:1, username: 'test', telefonNr: '0213987148', admin: 0},
-        {id:2, username: 'admin', telefonNr: '987249263', admin: 1}
-    ];
-
-    socket
-    .on('users', (data) => {
-        console.log('user-data', data);
-        userEntries = data.data;
-    })
-    .on('data', (data) => {
-        console.log('table-data', data);
-        entries = data.data;
-    })
-    .on('temperature-added', (data) => {
-        console.log('temperature-added', data);
-        entries.push(data.data);
-    })
-    .on('temperature-removed', (data) => {
-        console.log('temperature-removed', data);
-        entries.splice(entries.indexOf(data.data), 1);
-    });
-
-    this.setEntries = (data) => {
-        entries = data;
-    };
-
-    this.getEntries = () => {
-        return entries;
-    };
-
-    this.setUserEntries = (data) => {
-        userEntries = data;
-    };
-
-    this.getUserEntries = () => {
-        return userEntries;
-    };
-
-    this.addEntry = (entry) => {
-        entries.push(entry);
-    };
-
-    this.removeEntry = (entry) => {
-        entries.splice(entries.indexOf(entry), 1);
-    };
-
-    this.getData = () => {
-        socket.emit('get-data');
-    };
-
-    this.getUsers = () => {
-        socket.emit('get-users');
-    };
-
-    return this;
 }]);
 
 export default app;
