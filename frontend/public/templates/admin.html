@@ -16,7 +16,7 @@
             </div>
         </form>
 
-        <ol>
+        <ol ng-if="users.length > 0">
             <li ng-repeat="user in users">
                 {{ user | json }}
             </li>
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Eingabe und Anzeige der log-Einträge -->
-    <div>
+    <div ng-if="logs.length > 0">
         <span>Logs</span>
         <ol>
             <li ng-repeat="log in logs">
