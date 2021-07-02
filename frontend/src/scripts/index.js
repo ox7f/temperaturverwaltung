@@ -1,11 +1,14 @@
 import angular from 'angular';
 import ngRoute from 'angular-route';
-import ngCookies from 'angular-cookies';
+import ngDialog from 'ng-dialog';
 
 import io from 'socket.io-client';
-import Chart from 'chart.js/auto';
 
-let app = angular.module('app', [ngRoute, ngCookies]);
+import tableModule from './components/table';
+import chartModule from './components/chart';
+import headerModule from './components/header';
+
+let app = angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule]);
 
 app.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
@@ -16,116 +19,63 @@ app.config(['$routeProvider', ($routeProvider) => {
     .otherwise({ redirectTo: '/login' });
 }]);
 
-app.controller('mainCtrl', ['$scope', 'authenticator', ($scope, authenticator) => {
-    let socket = io(SOCKET_HOST);
+app.controller('mainCtrl', ['$scope', 'Authenticator', 'Socket', ($scope, Authenticator, Socket) => {
+    // TODO - session checken -> entsprechend routen
 
+    // TODO - options anpassen -> /backend/query.json
     $scope.options = [1, 2, 3, 4, 5];
-    $scope.entries = [];
 
-    socket
-    .emit('get-data', 'SelectTemperatur')
-    .on('data', (data) => {
-        console.log('table-data', data.data);
-        $scope.$evalAsync(_ => { 
-            $scope.entries = data.data;
-        });
-    })
-    .on('new-temperature', (data) => {
-        console.log('new-temperature', data);
-        $scope.entries.push(data.data);
-    });
-
-    // https://www.chartjs.org/docs/latest/samples/scales/time-line.html
-    /*new Chart(document.getElementById('chart'), {
-        type: 'bar',
-        data: {
-            labels: $scope.entries.map(entry => entry.zeit.toLocaleTimeString()), // zeit-werte der entries
-            datasets: [{
-                label: 'LABEL',
-                data: $scope.entries.map(entry => entry.temperatur), // temp-werte der entries
-                // backgroundColor: [],
-                // borderColor: [],
-                borderWidth: 1
-            }]
-        }
-    });*/
-
-    $scope.selectChanged = _ => socket.emit('get-data', 'SelectTemperatur');
-
-    $scope.logout = _ => authenticator.logout();
+    $scope.selectChanged = () => {
+        // TODO - entries holen
+        Socket.getData('todo - name', $scope.options);
+    };
 }]);
 
-app.controller('adminCtrl', ['$scope', 'authenticator', ($scope, authenticator) => {
-    let socket = io(SOCKET_HOST);
+app.controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', 'Toolbox', ($scope, ngDialog, Authenticator, Socket, Toolbox) => {
+    // TODO - session checken -> entsprechend routen
 
-    $scope.entries = [];
-    $scope.userEntries = [];
-    $scope.sensorEntries = [];
-    $scope.logEntries = [];
+    $scope.openToolbox = (element, name) => {
+        let copy = angular.copy(element);
 
-    socket
-    .emit('get-data', $scope.select)
-    .emit('get-users')
-    .on('users', (data) => {
-        console.log('user-data', data);
-        $scope.$evalAsync(() => {
-            $scope.userEntries = data.data;
-        });
-    })
-    .on('data', (data) => {
-        console.log('table-data', data);
-        $scope.$evalAsync(() => {
-            $scope.entries = data.data;
-        });
-    })
-    .on('logs', (data) => {
-        console.log('logs', data);
-        $scope.$evalAsync(() => {
-            $scope.logEntries = data;
-        });
-    })
-    .on('user-removed', (data) => {
-        console.log('user-removed', data);
-        $scope.userEntries.splice($scope.userEntries.indexOf(data.data), 1);
-    })
-    .on('temperature-removed', (data) => {
-        console.log('temperature-removed', data);
-        $scope.entries.splice($scope.entries.indexOf(data.data), 1);
-    })
-    .on('sensor-change', (data) => {
-        console.log('sensor-changed', data);
-        $scope.sensorEntries[$scope.sensorEntries.indexOf(data.old)] = data.new;
-    });
-
-    $scope.openToolbox = (element) => {
-        // todo
+        Toolbox
+        .open(copy, name)
+        .then(data => element = data);
     };
 
     $scope.delete = (element, name) => {
-        // todo: toast mit abfrage
-        socket.emit(`remove-${name}`, element);
+        console.log('remove', name, element);
+
+        ngDialog.openConfirm({
+            template: require('/public/templates/toast/confirm-delete.html'),
+            plain: true
+        })
+        .then(confirm => {
+            console.log('yes', confirm);
+            // socket.emit('remove', {data: element, name: name});
+        })
+        .catch(deny => {
+            console.log('no', deny);
+            // nichts machen
+        });
     };
 
-    $scope.add = (element, name) => socket.emit(`add-${name}`, element);
-
-    $scope.logout = _ => authenticator.logout();
+    $scope.add = (element, name) => {
+        console.log('add', name, element);
+        // socket.emit('add', {data: element, name: name});
+    };
 }]);
 
-app.controller('loginCtrl', ['$scope', '$timeout', 'authenticator', ($scope, $timeout, authenticator) => {
+app.controller('loginCtrl', ['$scope', '$timeout', 'Authenticator', ($scope, $timeout, Authenticator) => {
     $scope.loginMessage = '';
     $scope.isLoading = false;
 
     $scope.login = (username, password) => {
-        if (!angular.isDefined(username) || username.length < 3 ||
-            !angular.isDefined(password) || password.length < 3
-        ) {
+        if (!angular.isDefined(username) || username.length < 3 || !angular.isDefined(password) || password.length < 3)
             return;
-        }
 
-        let loginPromise = authenticator.login(username, password);
         $scope.isLoading = true;
 
-        loginPromise
+        Authenticator.login(username, password)
         .then(user => {
             if (user)
                 return;
@@ -140,13 +90,12 @@ app.controller('loginCtrl', ['$scope', '$timeout', 'authenticator', ($scope, $ti
     };
 }]);
 
-app.controller('logoutCtrl', ['authenticator', (authenticator) => {
-    authenticator.logout();
+app.controller('logoutCtrl', ['Authenticator', (Authenticator) => {
+    Authenticator.logout();
 }]);
 
-app.service('authenticator', ['$cookies', '$location', function ($cookies, $location) {
-    let Service = this;
-    let User = null;
+app.service('Authenticator', ['$location', '$window', function ($location, $window) {
+    let sessionStorage = $window.sessionStorage;
 
     this.login = (name, password) => {
         return fetch(`http://${SOCKET_HOST}/api/login`, {
@@ -156,33 +105,72 @@ app.service('authenticator', ['$cookies', '$location', function ($cookies, $loca
         })
         .then(res => res.json())
         .then(json => {
-            User = json.data[0];
+            let user = json.data[0];
 
-            if (angular.isDefined(User) && User) {
+            if (angular.isDefined(user) && user) {
                 // todo: angular digest anstossen
                 $location.path('main');
 
-                $cookies.put('logged_in', true);
-                $cookies.put('is_admin', !!Number(User['Administrator']));
+                this.set('user', user);
             }
 
-            return User;
+            return user;
         });
     };
 
     this.logout = _ => {
-        $cookies.remove('logged_in');
-        $cookies.remove('is_admin');
+        this.unset('user');
+
         $location.path('login');
     };
 
-    this.isLogin = _ => $cookies.get('logged_in');
-    this.isAdmin = _ => $cookies.get('is_admin');
+    this.get = (key) => JSON.parse(sessionStorage.getItem(key));
+    this.set = (key, value) => sessionStorage.setItem(key, JSON.stringify(value));
+    this.unset = (key) => sessionStorage.removeItem(key);
 
-    this.setUser = user => User = user;
-    this.getUser = _ => User;
+    return this;
+}]);
 
-    return Service;
+app.service('Socket', ['$filter', function ($filter) {
+    let socket = io(SOCKET_HOST);
+    let entries = [],
+        logEntries = [],
+        userEntries = [],
+        sensorEntries = [];
+
+    // todo
+    socket
+    .on('get', (data) => {
+        console.log('socket get event', data);
+    })
+    .on('new', (data) => {
+        console.log('socket new event', data);
+    })
+    .on('changed', (data) => {
+        console.log('socket changed event', data);
+    })
+    .on('removed', (data) => {
+        console.log('socket removed event', data);
+    });
+
+    this.getData = (name, params) => socket.emit('get-data', {name: name, params: params});
+
+    this.getEntries = _ => entries;
+    this.getLogEntries = _ => logEntries;
+    this.getUserEntries = _ => userEntries;
+    this.getSensorEntries = _ => sensorEntries;
+
+    return this;
+}]);
+
+app.service('Toolbox', ['ngDialog', function (ngDialog) {
+    this.open = (element) => {
+        let promise = new Promise(/* TODO */);
+
+        return promise;
+    };
+
+    return this;
 }]);
 
 export default app;

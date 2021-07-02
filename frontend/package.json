@@ -34,11 +34,11 @@
   },
   "dependencies": {
     "@babel/polyfill": "latest",
-    "angular": "^1.8.2",
-    "angular-cookies": "^1.8.2",
-    "angular-route": "^1.8.2",
-    "chart.js": "^3.4.0",
     "core-js": "^3.15.1",
+    "angular": "^1.8.2",
+    "angular-route": "^1.8.2",
+    "ng-dialog": "^1.4.0",
+    "chart.js": "^3.4.0",
     "socket.io-client": "^4.1.2",
     "yarn": "^1.22.10"
   }

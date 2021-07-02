@@ -1,7 +1,6 @@
-<div class="container-fluid">
-    <!-- todo: header - user info / logout button -->
-    <button ng-click="logout()">Logout</button>
+<whkawsf-header></whkawsf-header>
 
+<div class="container-fluid">
     <!-- Anzeige der gesamten Tabelle mit den Temperaturdaten -->
     <!-- Anzeige aller Sensoren mit den dazugehörigen Herstellerdaten -->
     <!-- Anzeige aller Sensoren mit den dazugehörigen Temperaturen. Sensoren ohne dazugehörige Temperaturen sollen auch angezeigt werden -->
@@ -10,26 +9,10 @@
     <!-- Anzeige der letzten 10 Temperaturwerte absteigend sortiert nach Datum -->
     <!-- Anzeige der höchsten Temperatur je Sensor -->
     <!-- Anzeige der Durchschnittstemperatur je Sensor -->
+    
     <select ng-model="select" ng-change="selectChanged()" ng-options="option as option for option in options" ng-init="select = options[0]"></select>
 
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th scope="col" ng-repeat="(key, value) in entries[0]">
-                    {{ key | uppercase }}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="entry in entries track by $index">
-                <td ng-repeat="(key, value) in entry track by $index">
-                    {{ key === 'zeit' ? (value | date : "medium") : value }}
-                </td>
-            </tr>
-          </tbody>
-    </table>
-
-    <!-- chart -->
-    <canvas id="chart"></canvas>
+    <whkawsf-table></whkawsf-table>
+    <whkawsf-chart></whkawsf-chart>
 
 </div>

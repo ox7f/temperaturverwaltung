@@ -1,5 +1,4 @@
 <div class="container-fluid">
-    admin
 
     <!-- Eingabe und Anzeige der Benutzer -->
     <div>
@@ -12,7 +11,7 @@
               <label for="password">Passwort</label>
               <input ng-model="password" type="password" class="form-control" placeholder="Password" name="password" required minlength="3">
         
-              <button ng-click="login()" class="btn btn-primary" type="submit">Benutzer anlegen</button>
+              <button ng-click="add({name: username, password: password}, 'user')" class="btn btn-primary" type="submit">Benutzer anlegen</button>
             </div>
         </form>
 
