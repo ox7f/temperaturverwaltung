@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 02, 2021 at 10:12 AM
+-- Generation Time: Jul 02, 2021 at 12:28 PM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.3.8
 
@@ -42,7 +42,8 @@ CREATE TABLE `benutzer` (
 
 INSERT INTO `benutzer` (`BenutzerID`, `Anmeldename`, `Telefonnummer`, `Administrator`, `Passwort`) VALUES
 (1, 'test', '0123456789', b'0', 'test123'),
-(2, 'admin', '9876543210', b'1', 'admin123');
+(2, 'admin', '9876543210', b'1', 'admin123'),
+(3, 'socket', '123456789', b'0', 'socket123');
 
 -- --------------------------------------------------------
 
@@ -127,6 +128,33 @@ INSERT INTO `temperatur` (`TemperaturID`, `Zeit`, `SensorID`, `Temperatur`) VALU
 --
 
 --
+-- Indexes for table `benutzer`
+--
+ALTER TABLE `benutzer`
+  ADD PRIMARY KEY (`BenutzerID`);
+
+--
+-- Indexes for table `hersteller`
+--
+ALTER TABLE `hersteller`
+  ADD PRIMARY KEY (`HerstellerID`);
+
+--
+-- Indexes for table `log`
+--
+ALTER TABLE `log`
+  ADD PRIMARY KEY (`LogID`),
+  ADD KEY `BenutzerID` (`BenutzerID`),
+  ADD KEY `SensorID` (`SensorID`);
+
+--
+-- Indexes for table `sensor`
+--
+ALTER TABLE `sensor`
+  ADD PRIMARY KEY (`SensorID`),
+  ADD KEY `HerstellerID` (`HerstellerID`);
+
+--
 -- Indexes for table `temperatur`
 --
 ALTER TABLE `temperatur`
@@ -138,10 +166,51 @@ ALTER TABLE `temperatur`
 --
 
 --
+-- AUTO_INCREMENT for table `benutzer`
+--
+ALTER TABLE `benutzer`
+  MODIFY `BenutzerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `hersteller`
+--
+ALTER TABLE `hersteller`
+  MODIFY `HerstellerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `log`
+--
+ALTER TABLE `log`
+  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sensor`
+--
+ALTER TABLE `sensor`
+  MODIFY `SensorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `temperatur`
 --
 ALTER TABLE `temperatur`
   MODIFY `TemperaturID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `log`
+--
+ALTER TABLE `log`
+  ADD CONSTRAINT `log_ibfk_1` FOREIGN KEY (`BenutzerID`) REFERENCES `benutzer` (`BenutzerID`),
+  ADD CONSTRAINT `log_ibfk_2` FOREIGN KEY (`SensorID`) REFERENCES `sensor` (`SensorID`);
+
+--
+-- Constraints for table `sensor`
+--
+ALTER TABLE `sensor`
+  ADD CONSTRAINT `sensor_ibfk_1` FOREIGN KEY (`HerstellerID`) REFERENCES `hersteller` (`HerstellerID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

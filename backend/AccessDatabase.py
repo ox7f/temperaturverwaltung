@@ -57,6 +57,7 @@ def QueryTable(db, command):
             for j in range(0,fieldnum):
                 row[names[j]] = str(x[j])
             query[i] = row
+            row = {}
             i = i + 1
         cursor.close()
         return query
