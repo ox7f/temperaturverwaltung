@@ -64,14 +64,12 @@ h2.active {
 /* FORM TYPOGRAPHY*/
     input[type=button], input[type=reset], input[type=password]  {
     background-color: #f6f6f6;
-    border: none;
     color: white;
     padding: 15px 80px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     text-transform: uppercase;
-    font-family: "OpenSans-Regular", sans-serif;
     font-size: 13px;
     margin: 5px 20px 40px 20px;
 }
@@ -107,6 +105,7 @@ input[type=button]:active, input[type=submit]:active, input[type=reset]:active, 
 }
 
 input[type=text], input[type=password] {
+    text-transform: lowercase;
     background-color: #f6f6f6;
     border: none;
     color: #0d0d0d;
