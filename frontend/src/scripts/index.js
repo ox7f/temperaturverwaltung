@@ -58,7 +58,6 @@ app.controller('mainCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies
     $scope.selectChanged = () => socket.emit('get-data', 'SelectTemperatur');
 
     $scope.logout = () => {
-        console.log('logout');
         $cookies.delete('logged_in');
         $location.path('login');
     };
@@ -67,8 +66,8 @@ app.controller('mainCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies
 app.controller('adminCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
     console.log('cookie:', $cookies.get('logged_in'));
 
-    if (!$cookies.get('logged_in') || !$cookies.get('is_admin'))
-        $location.path('login');
+    // if (!$cookies.get('logged_in') || !$cookies.get('is_admin'))
+        // $location.path('login');
 
     let socket = io(SOCKET_HOST);
 
@@ -118,15 +117,28 @@ app.controller('adminCtrl', ['$scope', '$cookies', '$location', ($scope, $cookie
     $scope.deleteUser = (user) => socket.emit('delete-user', user);
     $scope.deleteLog = (log) => socket.emit('delete-log', log);
 
+    $scope.openToolbox = (element) => {
+
+    };
+
+    $scope.delete = (element, name) => {
+        // todo: toast mit abfrage
+        socket.emit(`remove-${name}`, element);
+    };
+
     $scope.logout = () => {
-        console.log('logout');
-        // $cookies.delete('name'); cookie löschen
+        $cookies.delete('name');
         $location.path('login');
     };
 }]);
 
 app.controller('loginCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
     $scope.login = () => {
+        console.log('login', $scope.username, $scope.password);
+        if (!angular.isDefined($scope.username) || $scope.username.length < 3 || !angular.isDefined($scope.password) && $scope.password.length < 3) {
+            return;
+        }
+
         fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -134,21 +146,22 @@ app.controller('loginCtrl', ['$scope', '$cookies', '$location', ($scope, $cookie
         })
         .then(res => res.json())
         .then(json => {
-            if (json.message === 'success') {
+            if (json.data === 'success') {
                 if (json.data && json.data.Administrator)
                     $location.path('admin');
                 else
                     $location.path('main');
 
                 $cookies.put('logged_in', true);
+                $cookies.put('is_admin', json.data.Administrator);
             }
         });
     };
 }]);
 
 app.controller('logoutCtrl', ['$cookies', ($cookies) => {
-    console.log('logout');
-    $cookies.remove('logged_in');
+    if ($cookies.get('logged_in'))
+        $cookies.remove('logged_in');
 }]);
 
 export default app;

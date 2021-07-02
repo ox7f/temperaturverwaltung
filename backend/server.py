@@ -1,4 +1,4 @@
-from flask import Flask, request, session
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, send
 from AccessDatabase import ExecuteCommand, IsAdmin, OpenDB
@@ -13,22 +13,14 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
 
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin = 'localhost')
-def login(): #<- data?  (BenutzerID, Passwort)
-    print(request.json)
-    #user exists? = bool(ExecuteCommand("LIS1","",data))
-    session['logged_in'] = True
-    session['is_admin'] = False
-
-
-    # irgendein sicheres token generieren (jwt?)
-    return {'message': 'success', 'token': 'todo: session token'}
+def login():
+    return {'data': ExecuteCommand("LIS1","",request.json)}
 
 # socket stuff
 
 @socketio.on('add-user')
 def addUser(data):
-    data = ExecuteCommand("InsertBenutzer","User",data)
-    emit('user-added', {'message': 'success', 'data': data})
+    emit('user-added', {'message': 'success', 'data': ExecuteCommand("InsertBenutzer","User",data)})
 
 @socketio.on('change-sensor')
 def changeSensor(data):

@@ -19,6 +19,8 @@
         <ol>
             <li ng-repeat="user in users">
                 {{ user | json }}
+                <i class="fa-pencil" ng-click="openToolbox(user)"></i>
+                <i class="fa-trash" ng-click="delete(user, 'user')"></i>
             </li>
         </ol>
     </div>
@@ -29,11 +31,24 @@
         <ol>
             <li ng-repeat="log in logs">
                 {{ log | json }}
+                <i class="fa-pencil" ng-click="openToolbox(log)"></i>
+                <i class="fa-trash" ng-click="delete(log, 'log')"></i>
             </li>
         </ol>
     </div>
 
     <!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
+    <div>
+        <span>Sensor</span>
+        <ol>
+            <li ng-repeat="sensor in sensorEntries">
+                {{ sensor | json }}
+                <i class="fa-pencil" ng-click="openToolbox(sensor)"></i>
+                <i class="fa-trash" ng-click="delete(sensor, 'sensor')"></i>
+            </li>
+        </ol>
+    </div>
+
     <!-- Löschen von Temperaturdaten -->
     <!-- Ändern und Löschen von Sensordaten. -->
 
