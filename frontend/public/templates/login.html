@@ -1,12 +1,12 @@
 <div class="wrapper">
-  <div id="formContent">
-    <div class="tab-title">
-        <a class="h2">Account Login</a>
+  <div class="formContent">
+    <div>
+        <a class="tab-title">Account Login</a>
     </div>
     <form>
-      <input ng-model="username" for="username" type="text" id="Username" name="uname" placeholder="username" required>
-      <input ng-model="password" for="password" type="password" id="Password" name="password" placeholder="password" required>
-      <input ng-click="login()" type="submit" value="Log In">
+      <input ng-model="username" for="username" type="text" class="login_uname" name="uname" placeholder="username" required>
+      <input ng-model="password" for="password" type="password" class="login_password" name="password" placeholder="password" required>
+      <input ng-click="login()" type="submit" class="login_submit" value="Log In">
     </form>
   </div>
 </div>

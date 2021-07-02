@@ -12,12 +12,10 @@ a {
 
 .tab-title{
     padding: 10px;
-}
-
-a.h2 {
     font-family: "OpenSans-Regular", sans-serif;
     text-align: center;
     text-transform: uppercase;
+    font-weight: bold;
     display:inline-block;
     margin: 10px 8px 10px 8px; 
     color: #111111;
@@ -25,7 +23,7 @@ a.h2 {
 
 /* STRUCTURE */
 .wrapper {
-    display: grid;
+    display: flex;
     align-items: center;
     flex-direction: column; 
     justify-content: center;
@@ -35,7 +33,7 @@ a.h2 {
     padding: 15%;
 }
 
-#formContent {
+.formContent {
     -webkit-border-radius: 10px 10px 10px 10px;
     border-radius: 10px 10px 10px 10px;
     background: #fff;
@@ -50,31 +48,19 @@ a.h2 {
     border-color: #cccccc;
 }
 
-/* TABS */
-h2.inactive {
-    color: #cccccc;
-}
-
-h2.active {
-    color: #0d0d0d;
-    border-bottom: 2px solid #5fbae9;
-}
-
-
 /* FORM TYPOGRAPHY*/
-    input[type=button], input[type=reset], input[type=password]  {
+    .login_submit, .login_uname, .login_password  {
     background-color: #f6f6f6;
     color: white;
     padding: 15px 80px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    text-transform: uppercase;
     font-size: 13px;
     margin: 5px 20px 40px 20px;
 }
 
-input[type=submit] {
+.login_submit {
     background-color: #5fbae9;
     border: none;
     color: white;
@@ -88,15 +74,15 @@ input[type=submit] {
     margin: 5px 20px 40px 20px;
 }
 
-input[type=button]:hover, input[type=reset]:hover, input[type=password]:hover  {
+.login_uname:hover, .login_password:hover  {
     background-color: #f6f6f6;
 }
 
-input[type=submit]:hover {
+.login_submit:hover {
     background-color: #5fbae9;
 }
 
-input[type=button]:active, input[type=submit]:active, input[type=reset]:active, input[type=password]:active {
+.login_submit:active, .login_uname:active, .login_password:active {
     -moz-transform: scale(0.95);
     -webkit-transform: scale(0.95);
     -o-transform: scale(0.95);
@@ -104,7 +90,7 @@ input[type=button]:active, input[type=submit]:active, input[type=reset]:active, 
     transform: scale(0.95);
 }
 
-input[type=text], input[type=password] {
+.login_uname, .login_password {
     text-transform: lowercase;
     background-color: #f6f6f6;
     border: none;
@@ -121,11 +107,11 @@ input[type=text], input[type=password] {
     border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus, input[type=password]:focus {
+.login_uname:focus, .login_password:focus {
     border-bottom: 2px solid #5fbae9;
 }
 
-input[type=text]:placeholder, input[type=password]:placeholder {
+.login_uname:placeholder, .login_password:placeholder {
     color: #cccccc;
 }
 

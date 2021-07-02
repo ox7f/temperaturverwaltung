@@ -67,9 +67,9 @@ app.controller('mainCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies
 app.controller('adminCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
     console.log('cookie:', $cookies.get('logged_in'));
 
-    if (!$cookies.get('logged_in') || !$cookies.get('is_admin'))
+  /*  if (!$cookies.get('logged_in') || !$cookies.get('is_admin'))
         $location.path('login');
-
+*/
     let socket = io(SOCKET_HOST);
 
     $scope.entries = [];
