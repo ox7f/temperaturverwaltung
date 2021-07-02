@@ -1,9 +1,10 @@
 import random
 from threading import Timer
 
-from flask import Flask, request
+from flask import Flask, request, session
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, send
+from AccessDatabase import ExecuteCommand, IsAdmin, OpenDB
 
 app = Flask(__name__)
 CORS(app)
@@ -31,10 +32,13 @@ Timer(30, generateData).start()
 # routing stuff
 
 @app.route('/api/login', methods=['POST'])
-@cross_origin(origin='localhost')
-def login():
+@cross_origin(origin = 'localhost')
+def login(): #<- data?  (BenutzerID, Passwort)
     print(request.json)
-    # user exists?
+    #user exists? = bool(ExecuteCommand("LIS1","",data))
+    session['logged_in'] = True
+    session['is_admin'] = False
+
 
     # irgendein sicheres token generieren (jwt?)
     return {'message': 'success', 'token': 'todo: session token'}
@@ -43,40 +47,40 @@ def login():
 
 @socketio.on('add-user')
 def addUser(data):
-    # todo: daniel - einbindung dict.py
-    data = 'todo'
+    data = ExecuteCommand("InsertBenutzer","User",data)
     emit('user-added', {'message': 'success', 'data': data})
 
 @socketio.on('change-sensor')
 def changeSensor(data):
-    # todo: daniel - einbindung dict.py
-    data = 'todo'
+    data = ExecuteCommand("UpdateSensor","User",data)
     emit('sensor-changed', {'message': 'success', 'data': data})
 
 @socketio.on('remove-temperature')
 def removeTemperature(data):
-    # todo: daniel - einbindung dict.py
-    data = 'todo'
+    data = ExecuteCommand("DeleteTemperatur","User",data)
     emit('temperature-removed', {'message': 'success', 'data': data})
 
 @socketio.on('remove-user')
 def removeUser(data):
-    # todo: daniel - einbindung dict.py
-    data = 'todo'
+    data = ExecuteCommand("DeleteBenutzer","User",data)
     emit('user-removed', {'message': 'success', 'data': data})
+
+@socketio.on('remove-sensor')
+def removeSensor(data):
+    data = ExecuteCommand("DeleteSensor","User",data)
+    emit('sensor-removed', {'message': 'success', 'data': data})
 
 @socketio.on('get-data')
 def getData(data):
     print(data)
 
-    # todo: daniel - einbindung dict.py
-    data = 'todo'
+    data = ExecuteCommand(data,"User","")
     emit('data', {'message': 'success', 'data': data})
 
 @socketio.on('get-users')
 def getUsers():
-    # todo: daniel - einbindung dict.py
-    data = 'todo'
+    data = ExecuteCommand("SelectBenutzer","User","")
+
     emit('users',  {'message': 'success', 'data': data})
 
 if __name__ == '__main__':
