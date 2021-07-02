@@ -16,31 +16,29 @@ app.config(['$routeProvider', ($routeProvider) => {
     .otherwise({ redirectTo: '/login' });
 }]);
 
-app.controller('mainCtrl', ['$scope', '$location', ($scope, $location) => {
+app.controller('mainCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
+    console.log('cookie:', $cookies.get('logged_in'));
+
+    if (!$cookies.get('logged_in'))
+        $location.path('login');
+
     let socket = io(SOCKET_HOST);
 
     $scope.options = [1, 2, 3, 4, 5];
     $scope.entries = [];
 
     socket
-    .emit('get-data', $scope.select)
+    .emit('get-data', 'SelectTemperatur')
     .on('data', (data) => {
-        console.log('table-data', data);
-        // $scope.entries = data.data;
+        console.log('table-data', data.data);
+        $scope.$evalAsync(() => { 
+            $scope.entries = data.data;
+        });
     })
     .on('new-temperature', (data) => {
         console.log('new-temperature', data);
         $scope.entries.push(data.data);
     });
-
-    // just test data
-    let entries = [
-        {id:1, sensorId:1, temperatur:29, zeit: new Date()},
-        {id:2, sensorId:2, temperatur:39, zeit: new Date()},
-        {id:3, sensorId:3, temperatur:59, zeit: new Date()}
-    ];
-
-    $scope.entries = entries;
 
     // https://www.chartjs.org/docs/latest/samples/scales/time-line.html
     /*new Chart(document.getElementById('chart'), {
@@ -57,16 +55,21 @@ app.controller('mainCtrl', ['$scope', '$location', ($scope, $location) => {
         }
     });*/
 
-    $scope.selectChanged = () => socket.emit('get-data', $scope.select);
+    $scope.selectChanged = () => socket.emit('get-data', 'SelectTemperatur');
 
     $scope.logout = () => {
         console.log('logout');
-        // $cookies.delete('name'); cookie löschen
+        $cookies.delete('logged_in');
         $location.path('login');
     };
 }]);
 
-app.controller('adminCtrl', ['$scope', '$location', ($scope, $location) => {
+app.controller('adminCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
+    console.log('cookie:', $cookies.get('logged_in'));
+
+    if (!$cookies.get('logged_in') || !$cookies.get('is_admin'))
+        $location.path('login');
+
     let socket = io(SOCKET_HOST);
 
     $scope.entries = [];
@@ -79,15 +82,21 @@ app.controller('adminCtrl', ['$scope', '$location', ($scope, $location) => {
     .emit('get-users')
     .on('users', (data) => {
         console.log('user-data', data);
-        $scope.userEntries = data.data;
+        $scope.$evalAsync(() => {
+            $scope.userEntries = data.data;
+        });
     })
     .on('data', (data) => {
         console.log('table-data', data);
-        $scope.entries = data.data;
+        $scope.$evalAsync(() => {
+            $scope.entries = data.data;
+        });
     })
     .on('logs', (data) => {
         console.log('logs', data);
-        $scope.logEntries = data;
+        $scope.$evalAsync(() => {
+            $scope.logEntries = data;
+        });
     })
     .on('user-removed', (data) => {
         console.log('user-removed', data);
@@ -102,14 +111,12 @@ app.controller('adminCtrl', ['$scope', '$location', ($scope, $location) => {
         $scope.sensorEntries[$scope.sensorEntries.indexOf(data.old)] = data.new;
     });
 
-    // just test data
-    userEntries = [
-        {id:1, username: 'test', telefonNr: '0213987148', admin: 0},
-        {id:2, username: 'admin', telefonNr: '987249263', admin: 1}
-    ];
+    $scope.addUser = (user) => socket.emit('add-user', user);
+    $scope.changeSensor = (sensor) => socket.emit('changed-sensor', sensor);
 
-    $scope.users = userEntries;
-    $scope.logs = logEntries;
+    $scope.deleteTemperatur = (temperatur) => socket.emit('delete-temperatur', temperatur);
+    $scope.deleteUser = (user) => socket.emit('delete-user', user);
+    $scope.deleteLog = (log) => socket.emit('delete-log', log);
 
     $scope.logout = () => {
         console.log('logout');
@@ -128,9 +135,12 @@ app.controller('loginCtrl', ['$scope', '$cookies', '$location', ($scope, $cookie
         .then(res => res.json())
         .then(json => {
             if (json.message === 'success') {
-                $location.path('main');
-                // $location.path('admin');
-                // $cookies.put(); cookie vom backend setzen?
+                if (json.data && json.data.Administrator)
+                    $location.path('admin');
+                else
+                    $location.path('main');
+
+                $cookies.put('logged_in', true);
             }
         });
     };
@@ -138,7 +148,7 @@ app.controller('loginCtrl', ['$scope', '$cookies', '$location', ($scope, $cookie
 
 app.controller('logoutCtrl', ['$cookies', ($cookies) => {
     console.log('logout');
-    // $cookies.delete(); cookie löschen
+    $cookies.remove('logged_in');
 }]);
 
 export default app;
