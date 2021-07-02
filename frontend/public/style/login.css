@@ -1,44 +1,38 @@
 /* BASIC */
-
-html {
-    background-color: #56baed;
-}
-
-body {
-    font-family: "Poppins", sans-serif;
-    height: 100vh;
+html, body {
+    font-family: "OpenSans-Regular", sans-serif;
+    background-color: white;
 }
 
 a {
-    color: #92badd;
-    display:inline-block;
+    display: inline-block;
     text-decoration: none;
     font-weight: 400;
 }
 
-.Tab-Title{
+.tab-title{
     padding: 10px;
 }
 
-h2 {
+a.h2 {
+    font-family: "OpenSans-Regular", sans-serif;
     text-align: center;
-    font-size: 16px;
-    font-weight: 600;
     text-transform: uppercase;
     display:inline-block;
-    margin: 40px 8px 10px 8px; 
-    color: #cccccc;
+    margin: 10px 8px 10px 8px; 
+    color: #111111;
 }
 
 /* STRUCTURE */
 .wrapper {
-    display: flex;
+    display: grid;
     align-items: center;
     flex-direction: column; 
     justify-content: center;
     width: 100%;
-    min-height: 100%;
-    padding: 20px;
+    height: 100%;
+    position: absolut;
+    padding: 15%;
 }
 
 #formContent {
@@ -50,18 +44,10 @@ h2 {
     max-width: 450px;
     position: relative;
     padding: 0px;
-    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
     text-align: center;
-}
-
-#formFooter {
-    background-color: #f6f6f6;
-    border-top: 1px solid #dce8f1;
-    padding: 25px;
-    text-align: center;
-    -webkit-border-radius: 0 0 10px 10px;
-    border-radius: 0 0 10px 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #cccccc;
 }
 
 /* TABS */
@@ -85,11 +71,8 @@ h2.active {
     text-decoration: none;
     display: inline-block;
     text-transform: uppercase;
+    font-family: "OpenSans-Regular", sans-serif;
     font-size: 13px;
-    -webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
-    box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
-    -webkit-border-radius: 5px 5px 5px 5px;
-    border-radius: 5px 5px 5px 5px;
     margin: 5px 20px 40px 20px;
 }
 
@@ -121,64 +104,12 @@ input[type=text] {
     border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus {
-    background-color: #fff;
+input[type=text]:focus, {
     border-bottom: 2px solid #5fbae9;
 }
 
 input[type=text]:placeholder {
     color: #cccccc;
-}
-
-@-webkit-keyframes fadeInDown {
-    0% {
-        opacity: 0;
-        -webkit-transform: translate3d(0, -100%, 0);
-        transform: translate3d(0, -100%, 0);
-    }
-    100% {
-        opacity: 1;
-        -webkit-transform: none;
-        transform: none;
-    }
-}
-
-@keyframes fadeInDown {
-    0% {
-        opacity: 0;
-        -webkit-transform: translate3d(0, -100%, 0);
-        transform: translate3d(0, -100%, 0);
-    }
-    100% {
-        opacity: 1;
-        -webkit-transform: none;
-        transform: none;
-    }
-}
-
-/* Simple CSS3 Fade-in Animation */
-@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-/* Simple CSS3 Fade-in Animation */
-.underlineHover:after {
-    display: block;
-    left: 0;
-    bottom: -10px;
-    width: 0;
-    height: 2px;
-    background-color: #56baed;
-    content: "";
-    transition: width 0.2s;
-}
-
-.underlineHover:hover {
-    color: #0d0d0d;
-}
-
-.underlineHover:hover:after{
-    width: 100%;
 }
 
 /* OTHERS */
