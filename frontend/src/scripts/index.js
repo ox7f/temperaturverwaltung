@@ -16,12 +16,7 @@ app.config(['$routeProvider', ($routeProvider) => {
     .otherwise({ redirectTo: '/login' });
 }]);
 
-app.controller('mainCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
-    console.log('cookie:', $cookies.get('logged_in'));
-
-    if (!$cookies.get('logged_in'))
-        $location.path('login');
-
+app.controller('mainCtrl', ['$scope', 'authenticator', ($scope, authenticator) => {
     let socket = io(SOCKET_HOST);
 
     $scope.options = [1, 2, 3, 4, 5];
@@ -31,7 +26,7 @@ app.controller('mainCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies
     .emit('get-data', 'SelectTemperatur')
     .on('data', (data) => {
         console.log('table-data', data.data);
-        $scope.$evalAsync(() => { 
+        $scope.$evalAsync(_ => { 
             $scope.entries = data.data;
         });
     })
@@ -55,20 +50,12 @@ app.controller('mainCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies
         }
     });*/
 
-    $scope.selectChanged = () => socket.emit('get-data', 'SelectTemperatur');
+    $scope.selectChanged = _ => socket.emit('get-data', 'SelectTemperatur');
 
-    $scope.logout = () => {
-        $cookies.delete('logged_in');
-        $location.path('login');
-    };
+    $scope.logout = _ => authenticator.logout();
 }]);
 
-app.controller('adminCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
-    console.log('cookie:', $cookies.get('logged_in'));
-
-    // if (!$cookies.get('logged_in') || !$cookies.get('is_admin'))
-        // $location.path('login');
-
+app.controller('adminCtrl', ['$scope', 'authenticator', ($scope, authenticator) => {
     let socket = io(SOCKET_HOST);
 
     $scope.entries = [];
@@ -110,15 +97,8 @@ app.controller('adminCtrl', ['$scope', '$cookies', '$location', ($scope, $cookie
         $scope.sensorEntries[$scope.sensorEntries.indexOf(data.old)] = data.new;
     });
 
-    $scope.addUser = (user) => socket.emit('add-user', user);
-    $scope.changeSensor = (sensor) => socket.emit('changed-sensor', sensor);
-
-    $scope.deleteTemperatur = (temperatur) => socket.emit('delete-temperatur', temperatur);
-    $scope.deleteUser = (user) => socket.emit('delete-user', user);
-    $scope.deleteLog = (log) => socket.emit('delete-log', log);
-
     $scope.openToolbox = (element) => {
-
+        // todo
     };
 
     $scope.delete = (element, name) => {
@@ -126,42 +106,83 @@ app.controller('adminCtrl', ['$scope', '$cookies', '$location', ($scope, $cookie
         socket.emit(`remove-${name}`, element);
     };
 
-    $scope.logout = () => {
-        $cookies.delete('name');
-        $location.path('login');
-    };
+    $scope.add = (element, name) => socket.emit(`add-${name}`, element);
+
+    $scope.logout = _ => authenticator.logout();
 }]);
 
-app.controller('loginCtrl', ['$scope', '$cookies', '$location', ($scope, $cookies, $location) => {
-    $scope.login = () => {
-        console.log('login', $scope.username, $scope.password);
-        if (!angular.isDefined($scope.username) || $scope.username.length < 3 || !angular.isDefined($scope.password) && $scope.password.length < 3) {
+app.controller('loginCtrl', ['$scope', '$timeout', 'authenticator', ($scope, $timeout, authenticator) => {
+    $scope.loginMessage = '';
+    $scope.isLoading = false;
+
+    $scope.login = (username, password) => {
+        if (!angular.isDefined(username) || username.length < 3 ||
+            !angular.isDefined(password) || password.length < 3
+        ) {
             return;
         }
 
-        fetch(`http://${SOCKET_HOST}/api/login`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ name: $scope.username, password: $scope.password})
-        })
-        .then(res => res.json())
-        .then(json => {
-            if (json.data === 'success') {
-                if (json.data && json.data.Administrator)
-                    $location.path('admin');
-                else
-                    $location.path('main');
+        let loginPromise = authenticator.login(username, password);
+        $scope.isLoading = true;
 
-                $cookies.put('logged_in', true);
-                $cookies.put('is_admin', json.data.Administrator);
-            }
+        loginPromise
+        .then(user => {
+            if (user)
+                return;
+
+            $scope.$evalAsync(_ => {
+                $scope.isLoading = false;
+                $scope.loginMessage = 'Login fehlgeschlagen!';
+            });
+
+            $timeout(_ => $scope.loginMessage = '', 5000);
         });
     };
 }]);
 
-app.controller('logoutCtrl', ['$cookies', ($cookies) => {
-    if ($cookies.get('logged_in'))
+app.controller('logoutCtrl', ['authenticator', (authenticator) => {
+    authenticator.logout();
+}]);
+
+app.service('authenticator', ['$cookies', '$location', function ($cookies, $location) {
+    let Service = this;
+    let User = null;
+
+    this.login = (name, password) => {
+        return fetch(`http://${SOCKET_HOST}/api/login`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name: name, password: password })
+        })
+        .then(res => res.json())
+        .then(json => {
+            User = json.data[0];
+
+            if (angular.isDefined(User) && User) {
+                // todo: angular digest anstossen
+                $location.path('main');
+
+                $cookies.put('logged_in', true);
+                $cookies.put('is_admin', !!Number(User['Administrator']));
+            }
+
+            return User;
+        });
+    };
+
+    this.logout = _ => {
         $cookies.remove('logged_in');
+        $cookies.remove('is_admin');
+        $location.path('login');
+    };
+
+    this.isLogin = _ => $cookies.get('logged_in');
+    this.isAdmin = _ => $cookies.get('is_admin');
+
+    this.setUser = user => User = user;
+    this.getUser = _ => User;
+
+    return Service;
 }]);
 
 export default app;

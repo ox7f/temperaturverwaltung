@@ -6,7 +6,9 @@
     <form>
       <input ng-model="username" for="username" type="text" class="login_uname" name="uname" placeholder="username" required>
       <input ng-model="password" for="password" type="password" class="login_password" name="password" placeholder="password" required>
-      <input ng-click="login()" type="submit" class="login_submit" value="Log In">
+      <input ng-click="login(username, password)" type="submit" class="login_submit" value="Log In">
+      <div class="loader" ng-if="isLoading">Loading...</div>
     </form>
+    <span id="login-message" ng-if="loginMessage">{{ loginMessage }}</span>
   </div>
 </div>
