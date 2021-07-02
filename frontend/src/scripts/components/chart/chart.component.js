@@ -3,8 +3,8 @@ import Chart from 'chart.js/auto';
 
 class ChartComponent {
     constructor(Socket, $scope) {
-        this.Socket = Socket;
         $scope.entries = Socket.getEntries();
+        $scope.$watch(_ => Socket.getEntries(), (newVal) => $scope.entries = newVal, true);
 
         // https://www.chartjs.org/docs/latest/samples/scales/time-line.html
         new Chart(document.getElementById('chart'), {

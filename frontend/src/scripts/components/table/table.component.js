@@ -3,9 +3,7 @@ import template from './table.html';
 class TableComponent {
     constructor(Socket, $scope) {
         $scope.entries = Socket.getEntries();
-
-        $scope.params = this.params;
-        $scope.$watch(_ => Socket.getEntries(), (newVal) => this.entries = newVal, true);
+        $scope.$watch(_ => Socket.getEntries(), (newVal) => $scope.entries = newVal, true);
     }
 }
 
