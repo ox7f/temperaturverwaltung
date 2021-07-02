@@ -1,6 +1,3 @@
-import random
-from threading import Timer
-
 from flask import Flask, request, session
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, send
@@ -11,23 +8,6 @@ CORS(app)
 app.config['SECRET_KEY'] = 'WHKAWSF kleines Geheimnis Zwinkersmiley'
 app.config['CORS_HEADERS'] = 'Content-Type'
 socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080')
-
-# generate random temp values
-def generateData():
-    # das zeug noch in die db eintragen
-    data = {
-        'id': random.randint(0, 9000),
-        'temperatur': random.randint(0, 90),
-        'sensorId': random.randint(0, 2),
-        'zeit': '1623999490.7021'
-        }
-
-    with app.app_context():
-        socketio.emit('new-temperature', {'message': 'success', 'data': data})
-
-    Timer(30, generateData).start()
-
-Timer(30, generateData).start()
 
 # routing stuff
 
@@ -82,6 +62,8 @@ def getUsers():
     data = ExecuteCommand("SelectBenutzer","User","")
 
     emit('users',  {'message': 'success', 'data': data})
+
+import sensorSimulator
 
 if __name__ == '__main__':
     socketio.run(app, port=1337, debug=True)
