@@ -2,7 +2,8 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
-from AccessDatabase import ExecuteCommand, IsAdmin, OpenDB
+
+from AccessDatabase import ExecuteCommand
 
 # Webserver in­i­ti­a­li­sie­ren
 app = Flask(__name__)
@@ -18,37 +19,52 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080', async_mod
 
 # Login Endpunkt
 @app.route('/api/login', methods=['POST'])
-@cross_origin(origin = 'localhost')
+@cross_origin(origin='localhost')
 def login():
-    print('login try?')
-    # return User oder {}
-    return {'data': ExecuteCommand("LIS1","",request.json)}
+    return {'data': ExecuteCommand('LIS1', '', request.json)}
 
 # socket stuff
 
 @socketio.on('get-data')
 def getEvent(data):
-    # data.name => SelectTemperatur/SelectBenutzer/SelectLog/SelectSensor/(SelectHersteller)
-    # data.params => queryName sensor+hersteller, nur temperaturen usw.
-    emit('data', {'data': ExecuteCommand(data.name, 'User', '')})
+    print('get-data', data)
+
+    emit('data', {
+        'name': data,
+        'data': ExecuteCommand(data, 'User', '')
+    })
 
 @socketio.on('add-data')
 def addEvent(data):
-    # data.name => InsertTemperatur/InsertBenutzer/InsertLog/InsertSensor/(InsertHersteller)
-    # data.params => benutzer/sensor/log, element halt.
-    emit('added', {'message': ExecuteCommand(data.name, 'User', data.params), 'data': data})
+    print('add-data', data)
+
+    emit('added', {
+        'name': data['name'],
+        'new': data['params'],
+        'message': ExecuteCommand(data['name'], 'User', data['params'])
+    })
 
 @socketio.on('modify-date')
 def modifyEvent(data):
-    # data.name => UpdateTemperatur/UpdateBenutzer/UpdateLog/UpdateSensor/(UpdateHersteller)
-    emit('changed', {'message': ExecuteCommand(data.name, 'User', data.params), 'data': data})
+    print('modify-data', data)
+
+    emit('changed', {
+        'name': data['name'],
+        'old': data['params'],
+        'new': ExecuteCommand(data['name'], 'User', data['params'])
+    })
 
 @socketio.on('remove-data')
 def removeEvent(data):
-    # data.name => DeleteTemperatur/DeleteBenutzer/DeleteLog/DeleteSensor/(DeleteHersteller)
-    emit('removed', {'message': ExecuteCommand(data.name, 'User', data.params), 'data': data})
+    print('remove-data', data)
 
-import sensorSimulator
+    emit('removed', {
+        'name': data['name'],
+        'old': data['params'],
+        'message': ExecuteCommand(data['name'], 'User', data['params'])
+    })
+
+#import sensorSimulator
 
 if __name__ == '__main__':
     # Webserver starten

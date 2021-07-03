@@ -1,5 +1,4 @@
-# todo: simulate sensor
-
+# Dependencies
 from __main__ import socketio, app, ExecuteCommand
 import threading
 import random
@@ -21,7 +20,7 @@ def simulateSensor():
         'params': {
             'TemperaturID': 0,
             'Zeit': 0,
-            'SensorID': random.randint(0, 3),
+            'SensorID': random.randint(1, 3),
             'Temperatur': random.uniform(25.5, 105.5)
         }
     }
@@ -29,7 +28,11 @@ def simulateSensor():
     print(data)
 
     with app.app_context():
-        socketio.emit('added', {'message': ExecuteCommand(data['name'], 'User', data['params']), 'data': data})
+        socketio.emit('added', {
+            'name': data['name'],
+            'data': data['params'],
+            'message': ExecuteCommand(data['name'], 'User', data['params']),
+        })
 
 event = threading.Event()
 
