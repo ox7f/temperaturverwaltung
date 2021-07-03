@@ -1,27 +1,37 @@
 # todo: simulate sensor
 
-from __main__ import socketio, app
-import sched, time
-import functools
+from __main__ import socketio, app, ExecuteCommand
+import threading
+import random
 
-s = sched.scheduler(time.time, time.sleep)
+class ThreadJob(threading.Thread):
+    def __init__(self,callback,event,interval):
+        self.callback = callback
+        self.event = event
+        self.interval = interval
+        super(ThreadJob,self).__init__()
 
-def setInterval(sec):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*argv, **kw):
-            setInterval(sec)(func)
-            func(*argv, **kw)
-        s.enter(sec, 1, wrapper, ())
-        return wrapper
-    s.run()
-    return decorator
+    def run(self):
+        while not self.event.wait(self.interval):
+            self.callback()
 
-@setInterval(sec=5)
 def simulateSensor():
-    print('simulate sensor')
+    data = {
+        'name': 'InsertTemperatur',
+        'params': {
+            'TemperaturID': 0,
+            'Zeit': 0,
+            'SensorID': random.randint(0, 3),
+            'Temperatur': random.uniform(25.5, 105.5)
+        }
+    }
+
+    print(data)
 
     with app.app_context():
-        socketio.emit('new-temperatur', {'message': 'message', 'data': 'test'})
+        socketio.emit('added', {'message': ExecuteCommand(data['name'], 'User', data['params']), 'data': data})
 
-#simulateSensor()
+event = threading.Event()
+
+t = ThreadJob(simulateSensor, event, 10)
+t.start()
