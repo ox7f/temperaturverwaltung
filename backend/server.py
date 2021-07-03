@@ -64,7 +64,7 @@ def removeEvent(data):
         'message': ExecuteCommand(data['name'], 'User', data['params'])
     })
 
-#import sensorSimulator
+import sensorSimulator
 
 if __name__ == '__main__':
     # Webserver starten

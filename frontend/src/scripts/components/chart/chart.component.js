@@ -1,21 +1,27 @@
-import template from './chart.html';
 import Chart from 'chart.js/auto';
 
-class ChartComponent {
-    constructor(Socket, $scope) {
-        $scope.entries = Socket.getEntries();
-        $scope.$watch(_ => Socket.getEntries(), (newVal) => $scope.entries = newVal, true);
+import template from './chart.html';
 
+class ChartComponent {
+    constructor($scope, Socket) {
+        // TODO - Entries aktualisieren
+        $scope.$watch(_ => Socket.getTemperaturEntries(), (newValue) => {
+            // TODO - https://www.chartjs.org/docs/master/developers/updates.html
+            this.updateChart(newValue);
+        });
+    }
+
+    updateChart(entries) {
         // https://www.chartjs.org/docs/latest/samples/scales/time-line.html
         new Chart(document.getElementById('chart'), {
             type: 'bar',
             data: {
-                labels: $scope.entries.map(entry => entry.zeit.toLocaleTimeString()), // zeit-werte der entries
+                labels: entries.map(entry => new Date(entry.Zeit).toLocaleTimeString()), // zeit-werte der entries
                 datasets: [{
                     label: 'LABEL',
-                    data: $scope.entries.map(entry => entry.temperatur), // temp-werte der entries
-                    // backgroundColor: [],
-                    // borderColor: [],
+                    data: entries.map(entry => entry.Temperatur), // temp-werte der entries
+                    backgroundColor: ['green'],
+                    borderColor: [],
                     borderWidth: 1
                 }]
             }

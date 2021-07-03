@@ -8,64 +8,56 @@ import tableModule from './components/table';
 import chartModule from './components/chart';
 import headerModule from './components/header';
 
-let app = angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule]);
+angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule])
 
-app.config(['$routeProvider', ($routeProvider) => {
+.config(['$routeProvider', ($routeProvider) => {
     $routeProvider
     .when('/main', { templateUrl: '/public/templates/main.html', controller: 'mainCtrl' })
     .when('/admin', { templateUrl: '/public/templates/admin.html', controller: 'adminCtrl' })
     .when('/login', { templateUrl: '/public/templates/login.html', controller: 'loginCtrl' })
     .when('/logout', { redirectTo: '/login', controller: 'logoutCtrl' })
     .otherwise({ redirectTo: '/login' });
-}]);
+}])
 
-app.controller('mainCtrl', ['$scope', 'Authenticator', 'Socket', ($scope, Authenticator, Socket) => {
+.controller('mainCtrl', ['$scope', 'Authenticator', 'Socket', ($scope, Authenticator, Socket) => {
     // TODO - session checken -> entsprechend routen
+    
+    // TODO - daten abrufen
+    Socket.getData('SelectTemperatur');
 
-    // TODO - options anpassen -> /backend/query.json
-    $scope.options = [1, 2, 3, 4, 5];
+}])
 
-    $scope.selectChanged = () => {
-        // TODO - entries holen
-        Socket.getData('todo - name', $scope.options);
-    };
-}]);
-
-app.controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', 'Toolbox', ($scope, ngDialog, Authenticator, Socket, Toolbox) => {
+.controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', ($scope, ngDialog, Authenticator, Socket) => {
     // TODO - session checken -> entsprechend routen
 
     $scope.openToolbox = (element, name) => {
+        // TODO
         let copy = angular.copy(element);
-
-        Toolbox
-        .open(copy, name)
-        .then(data => element = data);
+        console.log('open Toolbox');
     };
 
     $scope.delete = (element, name) => {
-        console.log('remove', name, element);
-
         ngDialog.openConfirm({
             template: require('/public/templates/toast/confirm-delete.html'),
+            disableAnimation: true,
             plain: true
         })
         .then(confirm => {
-            console.log('yes', confirm);
-            // socket.emit('remove', {data: element, name: name});
+            socket.emit('remove-data', {data: element, name: name});
         })
-        .catch(deny => {
-            console.log('no', deny);
-            // nichts machen
-        });
+        .catch(deny => { /* do nothing */});
     };
 
     $scope.add = (element, name) => {
-        console.log('add', name, element);
-        // socket.emit('add', {data: element, name: name});
-    };
-}]);
+        if (!angular.isDefined(element) || !angular.isDefined(name))
+            return;
 
-app.controller('loginCtrl', ['$scope', '$timeout', 'Authenticator', ($scope, $timeout, Authenticator) => {
+        console.log('add', {name:name, element:element});
+        // socket.emit('add-data', {data: element, name: name});
+    };
+}])
+
+.controller('loginCtrl', ['$scope', '$timeout', 'Authenticator', ($scope, $timeout, Authenticator) => {
     $scope.loginMessage = '';
     $scope.isLoading = false;
 
@@ -85,16 +77,16 @@ app.controller('loginCtrl', ['$scope', '$timeout', 'Authenticator', ($scope, $ti
                 $scope.loginMessage = 'Login fehlgeschlagen!';
             });
 
-            $timeout(_ => $scope.loginMessage = '', 5000);
+            $timeout(_ => $scope.loginMessage = '', 3000);
         });
     };
-}]);
+}])
 
-app.controller('logoutCtrl', ['Authenticator', (Authenticator) => {
+.controller('logoutCtrl', ['Authenticator', (Authenticator) => {
     Authenticator.logout();
-}]);
+}])
 
-app.service('Authenticator', ['$location', '$window', function ($location, $window) {
+.service('Authenticator', ['$location', '$window', function($location, $window) {
     let sessionStorage = $window.sessionStorage;
 
     this.login = (name, password) => {
@@ -129,48 +121,73 @@ app.service('Authenticator', ['$location', '$window', function ($location, $wind
     this.unset = (key) => sessionStorage.removeItem(key);
 
     return this;
-}]);
+}])
 
-app.service('Socket', ['$filter', function ($filter) {
+.service('Socket', ['$rootScope', function($rootScope) {
     let socket = io(SOCKET_HOST);
-    let entries = [],
-        logEntries = [],
-        userEntries = [],
-        sensorEntries = [];
 
-    // todo
+    let entries = {
+        temperatur: [],
+        log: [],
+        benutzer: [],
+        sensor: [],
+        hersteller: []
+    };
+
     socket
-    .on('get', (data) => {
+    .on('data', (data) => {
         console.log('socket get event', data);
+
+        let name = data.name.replace('Select', '').toLowerCase();
+        entries[name] = Object.values(data.data);
+
+        $rootScope.$apply();
     })
-    .on('new', (data) => {
-        console.log('socket new event', data);
+    .on('added', (data) => {
+        console.log('socket added event', data);
+
+        if (data.message !== 'Success')
+            return;
+
+        let name = data.name.replace('Insert', '').toLowerCase();
+        entries[name].push(data.new);
+
+        $rootScope.$apply();
     })
-    .on('changed', (data) => {
+    .on('modified', (data) => {
         console.log('socket changed event', data);
+
+        if (data.message !== 'Success')
+            return;
+
+        let name = data.name.replace('Update', '').toLowerCase();
+        entries[name][entries[data.name].indexOf(data.old)] = data.new;
+
+        $rootScope.$apply();
     })
     .on('removed', (data) => {
         console.log('socket removed event', data);
+
+        if (data.message !== 'Success')
+            return;
+
+        let name = data.name.replace('Delete', '').toLowerCase();
+        entries[name].splice(entries[data.name].indexOf(data.old), 1);
+
+        $rootScope.$apply();
     });
 
-    this.getData = (name, params) => socket.emit('get-data', {name: name, params: params});
+    this.getData = (name) => socket.emit('get-data', name);
+    this.addData = (name, params) => socket.emit('add-data', {name: name, params: params});
+    this.modifyData = (name, params) => socket.emit('modify-data', {name: name, params: params});
+    this.removeData = (name, params) => socket.emit('remove-data', {name: name, params: params});
 
     this.getEntries = _ => entries;
-    this.getLogEntries = _ => logEntries;
-    this.getUserEntries = _ => userEntries;
-    this.getSensorEntries = _ => sensorEntries;
+    this.getLogEntries = _ => entries.log;
+    this.getUserEntries = _ => entries.benutzer;
+    this.getSensorEntries = _ => entries.sensor;
+    this.getHerstellerEntries = _ => entries.hersteller;
+    this.getTemperaturEntries = _ => entries.temperatur;
 
     return this;
 }]);
-
-app.service('Toolbox', ['ngDialog', function (ngDialog) {
-    this.open = (element) => {
-        let promise = new Promise(/* TODO */);
-
-        return promise;
-    };
-
-    return this;
-}]);
-
-export default app;

@@ -1,9 +1,13 @@
 import template from './table.html';
 
 class TableComponent {
-    constructor(Socket, $scope) {
-        $scope.entries = Socket.getEntries();
-        $scope.$watch(_ => Socket.getEntries(), (newVal) => $scope.entries = newVal, true);
+    constructor($scope, Socket) {
+        // TODO - Entries aktualisieren
+        $scope.entries = [];
+
+        $scope.$watch(_ => Socket.getTemperaturEntries(), (newValue) => {
+            $scope.entries = newValue;
+        });
     }
 }
 
