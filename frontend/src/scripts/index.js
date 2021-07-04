@@ -21,10 +21,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     .otherwise({ redirectTo: '/login' });
 }])
 
-.controller('mainCtrl', ['$scope', 'Authenticator', 'Socket', ($scope, Authenticator, Socket) => {
-    // TODO - session checken -> entsprechend routen
+.controller('mainCtrl', ['$scope', '$location', 'Authenticator', 'Socket', ($scope, $location, Authenticator, Socket) => {
+    if (!Authenticator.get('user'))
+        $location.path('login');
     
-    // TODO - daten abrufen
     Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
     $scope.data = {
@@ -33,26 +33,15 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         hersteller: []
     };
 
-    $scope.$watch(_ => Socket.get('sensor'), (newValue) => {
-        console.log('sensor update', newValue);
-        $scope.data.sensor = newValue;
-    });
-
-    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
-        console.log('temperatur update', newValue);
-        $scope.data.temperatur = newValue;
-    });
-
-    $scope.$watchCollection(_ =>  Socket.get('hersteller'), (newValue) => {
-        console.log('hersteller update', newValue);
-        $scope.data.hersteller = newValue;
-    });
+    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => { $scope.data.sensor = newValue; });
+    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => { $scope.data.temperatur = newValue; });
+    $scope.$watchCollection(_ =>  Socket.get('hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
 }])
 
-.controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', ($scope, ngDialog, Authenticator, Socket) => {
-    // TODO - session checken -> entsprechend routen
+.controller('adminCtrl', ['$scope', '$location', 'ngDialog', 'Authenticator', 'Socket', ($scope, $location, ngDialog, Authenticator, Socket) => {
+    if (!Authenticator.get('user'))
+        $location.path('login');
 
-    // TODO - daten abrufen
     Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
 
     $scope.data = {
@@ -63,31 +52,13 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         log: []
     };
 
-    $scope.$watch(_ => Socket.get('benutzer'), (newValue) => {
-        console.log('benutzer update', newValue);
-        $scope.data.user = newValue;
-    });
+    $scope.$watchCollection(_ => Socket.get('benutzer'), (newValue) => { $scope.data.user = newValue; });
+    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => { $scope.data.sensor = newValue; });
+    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => { $scope.data.temperatur = newValue; });
+    $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
+    $scope.$watchCollection(_ => Socket.get('log'), (newValue) => { $scope.data.log = newValue; });
 
-    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => {
-        console.log('sensor update', newValue);
-        $scope.data.sensor = newValue;
-    });
-
-    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
-        console.log('temperatur update', newValue);
-        $scope.data.temperatur = newValue;
-    });
-
-    $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => {
-        console.log('hersteller update', newValue);
-        $scope.data.hersteller = newValue;
-    });
-
-    $scope.$watchCollection(_ => Socket.get('log'), (newValue) => {
-        console.log('log update', newValue);
-        $scope.data.log = newValue;
-    });
-
+    // TODO
     $scope.openToolbox = (element, name) => {
         $scope.copy = angular.copy(element);
 
@@ -103,6 +74,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         .catch(deny => { /* do nothing */});
     };
 
+    // TODO
     $scope.delete = (element, name) => {
         ngDialog.openConfirm({
             template: require('/public/templates/ngDialog/confirm-delete.html'),
@@ -116,6 +88,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         .catch(deny => { /* do nothing */});
     };
 
+    // TODO
     $scope.add = (element, name) => {
         if (!angular.isDefined(element) || !angular.isDefined(name))
             return;
@@ -125,7 +98,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     };
 }])
 
-.controller('loginCtrl', ['$scope', '$timeout', 'Authenticator', ($scope, $timeout, Authenticator) => {
+.controller('loginCtrl', ['$scope', '$location', '$timeout', 'Authenticator', ($scope, $location, $timeout, Authenticator) => {
     $scope.loginMessage = '';
     $scope.isLoading = false;
 
@@ -138,7 +111,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         Authenticator.login(username, password)
         .then(user => {
             if (user)
-                return;
+                $location.path('main');
 
             $scope.$evalAsync(_ => {
                 $scope.isLoading = false;
@@ -167,12 +140,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         .then(json => {
             let user = json.data[0];
 
-            if (angular.isDefined(user) && user) {
-                // todo: angular digest anstossen
-                $location.path('main');
-
+            if (angular.isDefined(user) && user)
                 this.set('user', user);
-            }
 
             return user;
         });
