@@ -177,7 +177,13 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $rootScope.$apply();
     });
 
-    this.socketGet = (name) => socket.emit('get-data', name);
+    this.socketGet = (name) => {
+        if (typeof name === 'string')
+            socket.emit('get-data', name);
+        else if (name === 'object')
+            name.map(n => socket.emit('get-data', n));
+    };
+
     this.socketAdd = (name, params) => socket.emit('add-data', {name: name, params: params});
     this.socketModify = (name, params) => socket.emit('modify-data', {name: name, params: params});
     this.socketRemove = (name, params) => socket.emit('remove-data', {name: name, params: params});
