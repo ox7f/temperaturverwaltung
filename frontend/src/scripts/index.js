@@ -27,11 +27,31 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     // TODO - daten abrufen
     Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
-    $scope.sensoren = [];
+    $scope.allSensoren = [];
+    $scope.allTemperaturen = [];
+    $scope.allHersteller = [];
 
-    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => {
-        $scope.sensoren = newValue;
+    $scope.$watch(_ => Socket.get('sensor'), (newValue) => {
+        $scope.allSensoren = newValue;
     });
+
+    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
+        $scope.allTemperaturen = newValue;
+
+        // $scope.filteredTemperaturen = newValue.filter((t) => {
+        //     return $scope.sensor.SensorID === t.SensorID;
+        // });
+    });
+
+    $scope.$watchCollection(_ =>  Socket.get('hersteller'), (newValue) => {
+        $scope.allHersteller = newValue;
+
+        // $scope.filteredHersteller = newValue.filter((h) => {
+        //     return $scope.sensor.SensorID === h.HerstellerID;
+        // });
+    });
+
+
 }])
 
 .controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', ($scope, ngDialog, Authenticator, Socket) => {
@@ -224,4 +244,11 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     this.get = (key) => entries[key];
 
     return this;
-}]);
+}])
+
+.filter('custom', function() {
+    return (data, sensor) => {
+        // TODO 
+        console.log('customFilter', data, sensor);
+    };
+});
