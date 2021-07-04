@@ -3,7 +3,7 @@
 <whkawsf-sensor 
     ng-repeat="sensor in sensoren"
     sensor="sensor"
-    hersteller="hersteller"
+    hersteller="filteredHersteller[sensor.HerstellerID]"
     entries="filteredTemperaturen[sensor.SensorID]">
 </whkawsf-sensor>
 

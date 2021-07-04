@@ -32,6 +32,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     $scope.hersteller = [];
 
     $scope.filteredTemperaturen = [];
+    $scope.filteredHersteller = [];
 
     $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
         $scope.temperaturen = newValue;
@@ -44,12 +45,21 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
     $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => {
         $scope.hersteller = newValue;
+        getFilteredHersteller();
     });
 
     let getFilteredTemperaturen = _ => {
         $scope.sensoren.forEach((s) => {
             $scope.filteredTemperaturen[s.SensorID] = $scope.temperaturen.filter((t) => {
                 return t.SensorID == s.SensorID;
+            });
+        });
+    };
+
+    let getFilteredHersteller = _ => {
+        $scope.sensoren.forEach((s) => {
+            $scope.filteredHersteller[s.HerstellerID] = $scope.hersteller.filter((h) => {
+                return s.HerstellerID == h.HerstellerID;
             });
         });
     };
