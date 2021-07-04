@@ -43,7 +43,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $location.path('login');
 
     if (JSON.parse(Authenticator.get('user')).Administrator == 0)
-        $location.path('login');
+        $location.path('main');
 
     Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
 
