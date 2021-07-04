@@ -32,9 +32,9 @@ def getEvent(data):
     if type(data) == list:
         for event in data:
             emit('data', {
-                    'name': event,
-                    'data': ExecuteCommand(event, 'User', '')
-                })
+                'name': event,
+                'data': ExecuteCommand(event, 'User', '')
+            })
     else:
         emit('data', {
             'name': data,

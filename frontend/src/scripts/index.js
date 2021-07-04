@@ -46,7 +46,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $scope.hersteller = newValue;
     });
 
-    let getFilteredTemperaturen = () => {
+    let getFilteredTemperaturen = _ => {
         $scope.sensoren.forEach((s) => {
             $scope.filteredTemperaturen[s.SensorID] = $scope.temperaturen.filter((t) => {
                 return t.SensorID == s.SensorID;
