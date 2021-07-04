@@ -18,7 +18,7 @@
         </form> -->
 
         <ol>
-            <li ng-repeat="user in users">
+            <li ng-repeat="user in data.user">
                 {{ user | json }}
                 <i class="fas fa-edit" ng-click="openToolbox(user)"></i>
                 <i class="fas fa-trash-alt" ng-click="delete(user, 'user')"></i>
@@ -30,7 +30,7 @@
     <div>
         <span>Logs</span>
         <ol>
-            <li ng-repeat="log in logs">
+            <li ng-repeat="log in data.log">
                 {{ log | json }}
                 <i class="fas fa-edit" ng-click="openToolbox(log)"></i>
                 <i class="fas fa-trash-alt" ng-click="delete(log, 'log')"></i>
@@ -42,7 +42,7 @@
     <div>
         <span>Sensoren</span>
         <ol>
-            <li ng-repeat="sensor in sensoren">
+            <li ng-repeat="sensor in data.sensor">
                 {{ sensor | json }}
                 <i class="fas fa-edit" ng-click="openToolbox(sensor)"></i>
                 <i class="fas fa-trash-alt" ng-click="delete(sensor, 'sensor')"></i>
