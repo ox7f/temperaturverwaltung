@@ -29,10 +29,17 @@ def login():
 def getEvent(data):
     print('get-data', data)
 
-    emit('data', {
-        'name': data,
-        'data': ExecuteCommand(data, 'User', '')
-    })
+    if type(data) == list:
+        for event in data:
+            emit('data', {
+                    'name': event,
+                    'data': ExecuteCommand(event, 'User', '')
+                })
+    else:
+        emit('data', {
+            'name': data,
+            'data': ExecuteCommand(data, 'User', '')
+        })
 
 @socketio.on('add-data')
 def addEvent(data):

@@ -1,0 +1,12 @@
+<div>
+    <ul>
+        <li ng-repeat="(key, value) in copy">
+            {{ key }} : {{ value }}
+        </li>
+    </ul>
+
+    <div class="ngdialog-buttons">
+        <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">Cancel</button>
+        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm(copy)">Save</button>
+    </div>
+</div>

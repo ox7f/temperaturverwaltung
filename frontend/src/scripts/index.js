@@ -30,15 +30,48 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 .controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', ($scope, ngDialog, Authenticator, Socket) => {
     // TODO - session checken -> entsprechend routen
 
+    // TODO - daten abrufen
+    Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
+
+    $scope.users = [];
+    $scope.logs = [];
+    $scope.sensoren = [];
+
+    $scope.$watch(_ => Socket.get('benutzer'), (newValue) => {
+        $scope.users = newValue;
+        console.log('benutzer update', newValue);
+    }, true);
+
+    $scope.$watch(_ => Socket.get('log'), (newValue) => {
+        $scope.logs = newValue;
+        console.log('log update', newValue);
+    }, true);
+
+    $scope.$watch(_ => Socket.get('sensor'), (newValue) => {
+        $scope.sensoren = newValue;
+        console.log('sensor update', newValue);
+    }, true);
+
     $scope.openToolbox = (element, name) => {
         // TODO
-        let copy = angular.copy(element);
+        $scope.copy = angular.copy(element);
         console.log('open Toolbox');
+
+        ngDialog.openConfirm({
+            template: require('/public/templates/ngDialog/toolbox.html'),
+            controller: ($scope) => {
+                console.log('toolbox cotrnoller');
+            },
+            scope: $scope,
+            plain: true,
+        })
+        .then(confirm => console.log('toolbox confirmed', confirm))
+        .catch(deny => { /* do nothing */});
     };
 
     $scope.delete = (element, name) => {
         ngDialog.openConfirm({
-            template: require('/public/templates/toast/confirm-delete.html'),
+            template: require('/public/templates/ngDialog/confirm-delete.html'),
             disableAnimation: true,
             plain: true
         })
@@ -177,13 +210,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $rootScope.$apply();
     });
 
-    this.socketGet = (name) => {
-        if (typeof name === 'string')
-            socket.emit('get-data', name);
-        else if (name === 'object')
-            name.map(n => socket.emit('get-data', n));
-    };
-
+    this.socketGet = (name) => socket.emit('get-data', name);
     this.socketAdd = (name, params) => socket.emit('add-data', {name: name, params: params});
     this.socketModify = (name, params) => socket.emit('modify-data', {name: name, params: params});
     this.socketRemove = (name, params) => socket.emit('remove-data', {name: name, params: params});

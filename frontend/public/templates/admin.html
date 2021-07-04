@@ -1,9 +1,11 @@
+<whkawsf-header></whkawsf-header>
+
 <div class="container-fluid">
 
     <!-- Eingabe und Anzeige der Benutzer -->
     <div>
         <span>Users</span>
-        <form>
+        <!-- <form>
             <div class="form-group">
               <label for="username">Benutzername</label>
               <input ng-model="username" type="text" class="form-control" placeholder="Username" name="uname" required minlength="3">
@@ -13,7 +15,7 @@
         
               <button ng-click="add({name: username, password: password}, 'user')" class="btn btn-primary" type="submit">Benutzer anlegen</button>
             </div>
-        </form>
+        </form> -->
 
         <ol>
             <li ng-repeat="user in users">
@@ -38,9 +40,9 @@
 
     <!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
     <div>
-        <span>Sensor</span>
+        <span>Sensoren</span>
         <ol>
-            <li ng-repeat="sensor in sensorEntries">
+            <li ng-repeat="sensor in sensoren">
                 {{ sensor | json }}
                 <i class="fas fa-edit" ng-click="openToolbox(sensor)"></i>
                 <i class="fas fa-trash-alt" ng-click="delete(sensor, 'sensor')"></i>
