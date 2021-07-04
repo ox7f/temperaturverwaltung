@@ -55,17 +55,16 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     $scope.openToolbox = (element, name) => {
         // TODO
         $scope.copy = angular.copy(element);
-        console.log('open Toolbox');
 
         ngDialog.openConfirm({
             template: require('/public/templates/ngDialog/toolbox.html'),
-            controller: ($scope) => {
-                console.log('toolbox cotrnoller');
-            },
             scope: $scope,
             plain: true,
         })
-        .then(confirm => console.log('toolbox confirmed', confirm))
+        .then(confirm => {
+            console.log('toolbox confirmed', confirm);
+            // Socket.socketModify(name, confirm);
+        })
         .catch(deny => { /* do nothing */});
     };
 
