@@ -8,7 +8,9 @@ import tableModule from './components/table';
 import chartModule from './components/chart';
 import headerModule from './components/header';
 
-angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule])
+import sensorModule from './components/sensor';
+
+angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule, sensorModule])
 
 .config(['$routeProvider', ($routeProvider) => {
     $routeProvider
@@ -23,8 +25,34 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     // TODO - session checken -> entsprechend routen
     
     // TODO - daten abrufen
-    Socket.socketGet('SelectTemperatur');
+    Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
+    $scope.sensoren = [];
+    $scope.temperaturen = [];
+    $scope.hersteller = [];
+
+    $scope.filteredTemperaturen = [];
+
+    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
+        $scope.temperaturen = newValue;
+        getFilteredTemperaturen();
+    });
+
+    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => {
+        $scope.sensoren = newValue;
+    });
+
+    $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => {
+        $scope.hersteller = newValue;
+    });
+
+    let getFilteredTemperaturen = () => {
+        $scope.sensoren.forEach((s) => {
+            $scope.filteredTemperaturen[s.SensorID] = $scope.temperaturen.filter((t) => {
+                return t.SensorID == s.SensorID;
+            });
+        });
+    };
 }])
 
 .controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', ($scope, ngDialog, Authenticator, Socket) => {
@@ -40,17 +68,17 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     $scope.$watch(_ => Socket.get('benutzer'), (newValue) => {
         $scope.users = newValue;
         console.log('benutzer update', newValue);
-    }, true);
+    });
 
-    $scope.$watch(_ => Socket.get('log'), (newValue) => {
+    $scope.$watchCollection(_ => Socket.get('log'), (newValue) => {
         $scope.logs = newValue;
         console.log('log update', newValue);
-    }, true);
+    });
 
-    $scope.$watch(_ => Socket.get('sensor'), (newValue) => {
+    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => {
         $scope.sensoren = newValue;
         console.log('sensor update', newValue);
-    }, true);
+    });
 
     $scope.openToolbox = (element, name) => {
         // TODO

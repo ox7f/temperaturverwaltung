@@ -1,16 +1,10 @@
 <whkawsf-header></whkawsf-header>
 
-<div class="container-fluid">
-    <!-- Anzeige der gesamten Tabelle mit den Temperaturdaten -->
-    <!-- Anzeige aller Sensoren mit den dazugehörigen Herstellerdaten -->
-    <!-- Anzeige aller Sensoren mit den dazugehörigen Temperaturen. Sensoren ohne dazugehörige Temperaturen sollen auch angezeigt werden -->
-    <!-- Anzeige der Temperaturen mit allen Sensor- und Herstellerdaten -->
-    <!-- Anzeige der letzten 10 Temperaturwerte -->
-    <!-- Anzeige der letzten 10 Temperaturwerte absteigend sortiert nach Datum -->
-    <!-- Anzeige der höchsten Temperatur je Sensor -->
-    <!-- Anzeige der Durchschnittstemperatur je Sensor -->
+<whkawsf-sensor 
+    ng-repeat="sensor in sensoren"
+    sensor="sensor"
+    hersteller="hersteller"
+    entries="filteredTemperaturen[sensor.SensorID]">
+</whkawsf-sensor>
 
-    <whkawsf-table></whkawsf-table>
-    <whkawsf-chart></whkawsf-chart>
-
-</div>
+<!-- <whkawsf-chart></whkawsf-chart> -->

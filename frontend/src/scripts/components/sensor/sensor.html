@@ -1,0 +1,12 @@
+{{ sensor.SensorID }}
+<div>
+    <p>Messwere:</p>
+    <span ng-repeat="entry in entries">
+        {{ entry | json }}
+    </span>
+
+    <p>Herstellerinfo</p>
+    <span>{{ hersteller | json }}</span>
+</div>
+
+<hr>
