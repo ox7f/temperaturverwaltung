@@ -81,7 +81,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     $scope.delete = (element, name) => {
         ngDialog.openConfirm({
             template: require('/public/templates/ngDialog/confirm-delete.html'),
-            disableAnimation: true,
+            scope: $scope,
             plain: true
         })
         .then(confirm => {
