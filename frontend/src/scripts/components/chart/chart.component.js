@@ -5,10 +5,10 @@ import template from './chart.html';
 class ChartComponent {
     constructor($scope, Socket) {
         // TODO - Entries aktualisieren
-        $scope.$watch(_ => Socket.getTemperaturEntries(), (newValue) => {
+        $scope.$watch(_ => Socket.get('temperatur'), (newValue) => {
             // TODO - https://www.chartjs.org/docs/master/developers/updates.html
-            this.updateChart(newValue);
-        });
+            // this.updateChart(newValue);
+        }, true);
     }
 
     updateChart(entries) {

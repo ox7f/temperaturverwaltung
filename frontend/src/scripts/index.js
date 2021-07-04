@@ -23,7 +23,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     // TODO - session checken -> entsprechend routen
     
     // TODO - daten abrufen
-    Socket.getData('SelectTemperatur');
+    Socket.socketGet('SelectTemperatur');
 
 }])
 
@@ -42,9 +42,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             disableAnimation: true,
             plain: true
         })
-        .then(confirm => {
-            socket.emit('remove-data', {data: element, name: name});
-        })
+        .then(confirm => Socket.socketRemove(name, element))
         .catch(deny => { /* do nothing */});
     };
 
@@ -53,7 +51,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             return;
 
         console.log('add', {name:name, element:element});
-        // socket.emit('add-data', {data: element, name: name});
+        Socket.socketAdd(name, element);
     };
 }])
 
@@ -112,18 +110,17 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
     this.logout = _ => {
         this.unset('user');
-
         $location.path('login');
     };
 
-    this.get = (key) => JSON.parse(sessionStorage.getItem(key));
+    this.get = (key) => sessionStorage.getItem(key);
     this.set = (key, value) => sessionStorage.setItem(key, JSON.stringify(value));
     this.unset = (key) => sessionStorage.removeItem(key);
 
     return this;
 }])
 
-.service('Socket', ['$rootScope', function($rootScope) {
+.service('Socket', ['$rootScope', 'Authenticator', function($rootScope, Authenticator) {
     let socket = io(SOCKET_HOST);
 
     let entries = {
@@ -163,6 +160,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         let name = data.name.replace('Update', '').toLowerCase();
         entries[name][entries[data.name].indexOf(data.old)] = data.new;
 
+        if (name === 'benutzer')
+            Authenticator.set('user', data.new);
+
         $rootScope.$apply();
     })
     .on('removed', (data) => {
@@ -177,17 +177,12 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $rootScope.$apply();
     });
 
-    this.getData = (name) => socket.emit('get-data', name);
-    this.addData = (name, params) => socket.emit('add-data', {name: name, params: params});
-    this.modifyData = (name, params) => socket.emit('modify-data', {name: name, params: params});
-    this.removeData = (name, params) => socket.emit('remove-data', {name: name, params: params});
+    this.socketGet = (name) => socket.emit('get-data', name);
+    this.socketAdd = (name, params) => socket.emit('add-data', {name: name, params: params});
+    this.socketModify = (name, params) => socket.emit('modify-data', {name: name, params: params});
+    this.socketRemove = (name, params) => socket.emit('remove-data', {name: name, params: params});
 
-    this.getEntries = _ => entries;
-    this.getLogEntries = _ => entries.log;
-    this.getUserEntries = _ => entries.benutzer;
-    this.getSensorEntries = _ => entries.sensor;
-    this.getHerstellerEntries = _ => entries.hersteller;
-    this.getTemperaturEntries = _ => entries.temperatur;
+    this.get = (key) => entries[key];
 
     return this;
 }]);

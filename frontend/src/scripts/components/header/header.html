@@ -2,4 +2,5 @@
     <button ng-click="logout()">Logout</button>
     Name: {{ user.Anmeldename }}
     Admin: {{ user.Administrator }}
+    <button ng-if="user.Administrator > 0" ng-click="toAdmin()">Admin</button>
 </div>

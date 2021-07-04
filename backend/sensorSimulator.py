@@ -30,8 +30,8 @@ def simulateSensor():
     with app.app_context():
         socketio.emit('added', {
             'name': data['name'],
-            'data': data['params'],
-            'message': ExecuteCommand(data['name'], 'User', data['params']),
+            'new': data['params'],
+            'message': ExecuteCommand(data['name'], 'User', data['params'])
         })
 
 event = threading.Event()
