@@ -245,4 +245,22 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
         return data;
     };
+})
+
+.filter('greatest', function() {
+    return (data) => {
+
+        // TODO - return biggest number
+
+        return data[0];
+    };
+})
+
+.filter('average', function() {
+    return (data) => {
+
+        // TODO - return average
+
+        return data[0];
+    };
 });

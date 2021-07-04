@@ -5,6 +5,12 @@ Sensor: {{ data.sensor | json }}
         {{ temperatur | json }}
     </span>
 
+    <p>hoechster Messwert:</p>
+    <span>{{ data.temperatur | greatest | json }}</span>
+
+    <p>durchschnitts Messwert:</p>
+    <span>{{ data.temperatur | average | json }}</span>
+
     <p>Herstellerinfo</p>
     <span>{{ data.hersteller | json }}</span>
 </div>
