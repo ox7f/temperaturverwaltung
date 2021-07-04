@@ -42,6 +42,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     if (!Authenticator.get('user'))
         $location.path('login');
 
+    if (JSON.parse(Authenticator.get('user')).Administrator == 0)
+        $location.path('login');
+
     Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
 
     $scope.data = {
