@@ -27,31 +27,26 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     // TODO - daten abrufen
     Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
-    $scope.allSensoren = [];
-    $scope.allTemperaturen = [];
-    $scope.allHersteller = [];
+    $scope.data = {
+        sensor: [],
+        temperatur: [],
+        hersteller: []
+    };
 
     $scope.$watch(_ => Socket.get('sensor'), (newValue) => {
-        $scope.allSensoren = newValue;
+        console.log('sensor update', newValue);
+        $scope.data.sensor = newValue;
     });
 
     $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
-        $scope.allTemperaturen = newValue;
-
-        // $scope.filteredTemperaturen = newValue.filter((t) => {
-        //     return $scope.sensor.SensorID === t.SensorID;
-        // });
+        console.log('temperatur update', newValue);
+        $scope.data.temperatur = newValue;
     });
 
     $scope.$watchCollection(_ =>  Socket.get('hersteller'), (newValue) => {
-        $scope.allHersteller = newValue;
-
-        // $scope.filteredHersteller = newValue.filter((h) => {
-        //     return $scope.sensor.SensorID === h.HerstellerID;
-        // });
+        console.log('hersteller update', newValue);
+        $scope.data.hersteller = newValue;
     });
-
-
 }])
 
 .controller('adminCtrl', ['$scope', 'ngDialog', 'Authenticator', 'Socket', ($scope, ngDialog, Authenticator, Socket) => {
@@ -60,27 +55,40 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     // TODO - daten abrufen
     Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
 
-    $scope.users = [];
-    $scope.logs = [];
-    $scope.sensoren = [];
+    $scope.data = {
+        user: [],
+        sensor: [],
+        temperatur: [],
+        hersteller: [],
+        log: []
+    };
 
     $scope.$watch(_ => Socket.get('benutzer'), (newValue) => {
-        $scope.users = newValue;
         console.log('benutzer update', newValue);
-    });
-
-    $scope.$watchCollection(_ => Socket.get('log'), (newValue) => {
-        $scope.logs = newValue;
-        console.log('log update', newValue);
+        $scope.data.user = newValue;
     });
 
     $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => {
-        $scope.sensoren = newValue;
         console.log('sensor update', newValue);
+        $scope.data.sensor = newValue;
+    });
+
+    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
+        console.log('temperatur update', newValue);
+        $scope.data.temperatur = newValue;
+    });
+
+    $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => {
+        console.log('hersteller update', newValue);
+        $scope.data.hersteller = newValue;
+    });
+
+    $scope.$watchCollection(_ => Socket.get('log'), (newValue) => {
+        console.log('log update', newValue);
+        $scope.data.log = newValue;
     });
 
     $scope.openToolbox = (element, name) => {
-        // TODO
         $scope.copy = angular.copy(element);
 
         ngDialog.openConfirm({
@@ -101,7 +109,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             disableAnimation: true,
             plain: true
         })
-        .then(confirm => Socket.socketRemove(name, element))
+        .then(confirm => {
+            console.log('confirmed delete', confirm);
+            // Socket.socketRemove(name, element);
+        })
         .catch(deny => { /* do nothing */});
     };
 
@@ -110,7 +121,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             return;
 
         console.log('add', {name:name, element:element});
-        Socket.socketAdd(name, element);
+        // Socket.socketAdd(name, element);
     };
 }])
 
@@ -247,8 +258,18 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 }])
 
 .filter('custom', function() {
-    return (data, sensor) => {
-        // TODO 
-        console.log('customFilter', data, sensor);
+    return (data, params) => {
+        let returnVar = data;
+
+        if (params.name === 'hersteller') {
+            returnVar = data.filter((d) => {
+                return d.HerstellerID === params.sensor.HerstellerID;
+            })[0];
+        }
+
+        // TODO fuer temperaturen
+        // console.log('customFilter', returnVar);
+
+        return returnVar;
     };
 });

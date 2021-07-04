@@ -1,10 +1,10 @@
 <whkawsf-header></whkawsf-header>
 
 <whkawsf-sensor
-    ng-repeat="sensor in allSensoren"
+    ng-repeat="sensor in data.sensor"
     sensor="sensor"
-    hersteller="allHersteller | custom: sensor"
-    temperaturen="allTemperaturen | custom: sensor">
+    hersteller="data.hersteller | custom:{sensor:sensor, name:'hersteller'}"
+    temperatur="data.temperatur | custom:{sensor:sensor, name:'temperatur'}"></whkawsf-sensor>
 </whkawsf-sensor>
 
 <!-- <whkawsf-chart></whkawsf-chart> -->

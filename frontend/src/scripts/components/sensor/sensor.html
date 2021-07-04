@@ -1,12 +1,12 @@
-SensorID: {{ sensor.SensorID }}
+Sensor: {{ data.sensor | json }}
 <div>
     <p>Messwerte:</p>
-    <span ng-repeat="temperatur in temperaturen">
+    <span ng-repeat="temperatur in data.temperatur">
         {{ temperatur | json }}
     </span>
 
     <p>Herstellerinfo</p>
-    <span>{{ hersteller | json }}</span>
+    <span>{{ data.hersteller | json }}</span>
 </div>
 
 <hr>

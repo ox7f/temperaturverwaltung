@@ -2,20 +2,23 @@ import template from './sensor.html';
 
 class SensorComponent {
     constructor($scope, Socket) {
-        $scope.sensor = this.sensor;
-        $scope.hersteller = this.hersteller;
-        $scope.temperaturen = this.temperaturen;
+        $scope.data = {
+            sensor: this.sensor,
+            hersteller: this.hersteller,
+            temperatur: this.temperatur
+        };
         
         $scope.$watch(_ => this.sensor, (newValue) => {
-            $scope.sensor = newValue;
+            $scope.data.sensor = newValue;
         });
 
         $scope.$watch(_ => this.hersteller, (newValue) => {
-            $scope.hersteller = newValue;
+            $scope.data.hersteller = newValue;
         });
 
-        $scope.$watchCollection(_ => this.temperaturen, (newValue) => {
-            $scope.temperaturen = newValue;
+        $scope.$watchCollection(_ => this.temperatur, (newValue) => {
+            console.log('watcher temperatur', newValue);
+            $scope.data.temperatur = newValue;
         });
     }
 }
@@ -25,7 +28,7 @@ export const SensorComponentDefinition = {
     bindings: {
         sensor: '=',
         hersteller: '=',
-        temperaturen: '='
+        temperatur: '='
     },
     template,
     controller: SensorComponent
