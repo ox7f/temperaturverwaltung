@@ -17,7 +17,6 @@ class SensorComponent {
         });
 
         $scope.$watchCollection(_ => this.temperatur, (newValue) => {
-            console.log('watcher temperatur', newValue);
             $scope.data.temperatur = newValue;
         });
     }

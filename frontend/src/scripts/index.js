@@ -259,17 +259,18 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .filter('custom', function() {
     return (data, params) => {
-        let returnVar = data;
 
         if (params.name === 'hersteller') {
-            returnVar = data.filter((d) => {
+            return data.filter((d) => {
                 return d.HerstellerID === params.sensor.HerstellerID;
             })[0];
+
+        } else if (params.name === 'temperatur') {
+            // return  data.filter((d) => {
+            //     return d.SensorID === params.sensor.SensorID;
+            // });
         }
 
-        // TODO fuer temperaturen
-        // console.log('customFilter', returnVar);
-
-        return returnVar;
+        return data;
     };
 });
