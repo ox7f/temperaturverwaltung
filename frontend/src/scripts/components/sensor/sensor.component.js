@@ -1,31 +1,47 @@
 import template from './sensor.html';
 
 class SensorComponent {
-    constructor($scope) {
-        $scope.hersteller = this.hersteller;
-        $scope.entries = this.entries;
+    constructor($scope, Socket) {
+        this.allHersteller = [];
+        this.allTemperatur = [];
+
         $scope.sensor = this.sensor;
 
-        $scope.$watch(_ => this.entries, (newValue) => {
-            $scope.entries = newValue;
-        }, true);
+        $scope.filteredTemperaturen = [];
+        $scope.filteredHersteller = [];
 
         $scope.$watch(_ => this.sensor, (newValue) => {
             $scope.sensor = newValue;
-        }, true);
+        });
 
-        $scope.$watch(_ => this.hersteller, (newValue) => {
-            $scope.hersteller = newValue;
-        }, true);
+        $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
+            this.allTemperatur = newValue;
+            getFilteredTemperaturen();
+        });
+
+        $scope.$watchCollection(_ =>  Socket.get('hersteller'), (newValue) => {
+            this.allHersteller = newValue;
+            getFilteredHersteller();
+        });
+        
+        let getFilteredTemperaturen = _ => {
+            $scope.filteredTemperaturen = this.allTemperatur.filter((t) => {
+                return $scope.sensor.SensorID === t.SensorID;
+            });
+        };
+    
+        let getFilteredHersteller = _ => {
+            $scope.filteredHersteller = this.allHersteller.filter((h) => {
+                return $scope.sensor.HerstellerID === h.HerstellerID;
+            });
+        };
     }
 }
 
 export const SensorComponentDefinition = {
     restrict: 'E',
     bindings: {
-        entries: '=',
-        sensor: '=',
-        hersteller: '='
+        sensor: '='
     },
     template,
     controller: SensorComponent

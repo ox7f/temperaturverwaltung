@@ -5,9 +5,9 @@ class TableComponent {
         // TODO - Entries aktualisieren
         $scope.entries = [];
 
-        $scope.$watch(_ => Socket.get('temperatur'), (newValue) => {
+        $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
             $scope.entries = newValue;
-        }, true);
+        });
     }
 }
 

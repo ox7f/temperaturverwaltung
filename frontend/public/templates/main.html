@@ -1,10 +1,5 @@
 <whkawsf-header></whkawsf-header>
 
-<whkawsf-sensor 
-    ng-repeat="sensor in sensoren"
-    sensor="sensor"
-    hersteller="filteredHersteller[sensor.HerstellerID]"
-    entries="filteredTemperaturen[sensor.SensorID]">
-</whkawsf-sensor>
+<whkawsf-sensor ng-repeat="sensor in sensoren" sensor="sensor"></whkawsf-sensor>
 
 <!-- <whkawsf-chart></whkawsf-chart> -->
