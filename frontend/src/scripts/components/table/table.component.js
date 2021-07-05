@@ -36,7 +36,7 @@ class TableComponent {
             }
         ];
 
-        $scope.entries = this.ebntries;
+        $scope.entries = this.entries;
 
         $scope.$watchCollection(_ => this.entries, (newValue) => {
             $scope.entries = newValue;
