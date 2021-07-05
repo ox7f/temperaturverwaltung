@@ -3,19 +3,10 @@ import template from './table.html';
 class TableComponent {
     constructor($scope) {
         // TODO - filter bauen
-        $scope.filterOptions = [
-            {
-                label: 'TemperaturID',
-            },
-            {
-                label: 'Zeit'
-            },
-            {
-                label: 'Temperatur'
-            }
-        ];
+        $scope.filterOptions = ['TemperaturID', 'Zeit', 'Temperatur'];
 
         $scope.filterChange = () => {
+            $scope.$evalAsync();
             console.log('new filterSetting:', $scope.selectedFilter);
         };
 
