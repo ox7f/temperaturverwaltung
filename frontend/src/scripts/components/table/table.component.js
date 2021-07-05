@@ -3,12 +3,21 @@ import template from './table.html';
 class TableComponent {
     constructor($scope) {
         // TODO - filter bauen
-        $scope.filter = null;
         $scope.filterOptions = [
-            {},
-            {},
-            {}
+            {
+                label: 'TemperaturID',
+            },
+            {
+                label: 'Zeit'
+            },
+            {
+                label: 'Temperatur'
+            }
         ];
+
+        $scope.filterChange = () => {
+            console.log('new filterSetting:', $scope.selectedFilter);
+        };
 
         $scope.entries = this.ebntries;
 

@@ -1,13 +1,7 @@
 Sensor: {{ data.sensor | json }}
 <div>
-    <select ng-model="filter" ng-options="option as option for option in filterOptions"></select>
-
     <p>Messwerte:</p>
-
     <whkawsf-table entries="data.temperatur"></whkawsf-table>
-    <!-- <span ng-repeat="temperatur in data.temperatur">
-        {{ temperatur | json }}
-    </span> -->
 
     <p>hoechster Messwert:</p>
     <span>{{ data.temperatur | greatest | json }}</span>
