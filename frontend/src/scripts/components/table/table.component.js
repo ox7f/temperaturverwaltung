@@ -1,11 +1,18 @@
 import template from './table.html';
 
 class TableComponent {
-    constructor($scope, Socket) {
-        // TODO - Entries aktualisieren
-        $scope.entries = [];
+    constructor($scope) {
+        // TODO - filter bauen
+        $scope.filter = null;
+        $scope.filterOptions = [
+            {},
+            {},
+            {}
+        ];
 
-        $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => {
+        $scope.entries = this.ebntries;
+
+        $scope.$watchCollection(_ => this.entries, (newValue) => {
             $scope.entries = newValue;
         });
     }
@@ -13,7 +20,9 @@ class TableComponent {
 
 export const TableComponentDefinition = {
     restrict: 'E',
-    bindings: {},
+    bindings: {
+        entries: '='
+    },
     template,
     controller: TableComponent
 };
