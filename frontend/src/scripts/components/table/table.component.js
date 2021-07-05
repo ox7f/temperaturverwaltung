@@ -36,11 +36,6 @@ class TableComponent {
             }
         ];
 
-        $scope.filterChange = () => {
-            $scope.$evalAsync
-            console.log('new filterSetting:', $scope.selectedFilter);
-        };
-
         $scope.entries = this.ebntries;
 
         $scope.$watchCollection(_ => this.entries, (newValue) => {
