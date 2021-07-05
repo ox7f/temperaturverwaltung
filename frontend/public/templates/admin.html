@@ -1,56 +1,58 @@
 <whkawsf-header></whkawsf-header>
 
-<div class="container-fluid">
+<div class="admin_main_container">
+    <div class="container-fluid">
 
-    <!-- Eingabe und Anzeige der Benutzer -->
-    <div>
-        <span>Users</span>
-        <!-- <form>
-            <div class="form-group">
-              <label for="username">Benutzername</label>
-              <input ng-model="username" type="text" class="form-control" placeholder="Username" name="uname" required minlength="3">
-        
-              <label for="password">Passwort</label>
-              <input ng-model="password" type="password" class="form-control" placeholder="Password" name="password" required minlength="3">
-        
-              <button ng-click="add({name: username, password: password}, 'user')" class="btn btn-primary" type="submit">Benutzer anlegen</button>
-            </div>
-        </form> -->
+        <!-- Eingabe und Anzeige der Benutzer -->
+        <div>
+            <span>Users</span>
+            <!-- <form>
+                <div class="form-group">
+                <label for="username">Benutzername</label>
+                <input ng-model="username" type="text" class="form-control" placeholder="Username" name="uname" required minlength="3">
+            
+                <label for="password">Passwort</label>
+                <input ng-model="password" type="password" class="form-control" placeholder="Password" name="password" required minlength="3">
+            
+                <button ng-click="add({name: username, password: password}, 'user')" class="btn btn-primary" type="submit">Benutzer anlegen</button>
+                </div>
+            </form> -->
 
-        <ol>
-            <li ng-repeat="user in data.user">
-                {{ user | json }}
-                <i class="fas fa-edit" ng-click="openToolbox(user, 'updateUser')"></i>
-                <i class="fas fa-trash-alt" ng-click="delete(user, 'deleteUser')"></i>
-            </li>
-        </ol>
+            <ol>
+                <li ng-repeat="user in data.user">
+                    {{ user | json }}
+                    <i class="fas fa-edit" ng-click="openToolbox(user, 'updateUser')"></i>
+                    <i class="fas fa-trash-alt" ng-click="delete(user, 'deleteUser')"></i>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Eingabe und Anzeige der log-Einträge -->
+        <div>
+            <span>Logs</span>
+            <ol>
+                <li ng-repeat="log in data.log">
+                    {{ log | json }}
+                    <i class="fas fa-edit" ng-click="openToolbox(log, 'updateLog')"></i>
+                    <i class="fas fa-trash-alt" ng-click="delete(log, 'deleteLog')"></i>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
+        <div>
+            <span>Sensoren</span>
+            <ol>
+                <li ng-repeat="sensor in data.sensor">
+                    {{ sensor | json }}
+                    <i class="fas fa-edit" ng-click="openToolbox(sensor, 'updateSensor')"></i>
+                    <i class="fas fa-trash-alt" ng-click="delete(sensor, 'deleteSensor')"></i>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Löschen von Temperaturdaten -->
+        <!-- Ändern und Löschen von Sensordaten. -->
+
     </div>
-
-    <!-- Eingabe und Anzeige der log-Einträge -->
-    <div>
-        <span>Logs</span>
-        <ol>
-            <li ng-repeat="log in data.log">
-                {{ log | json }}
-                <i class="fas fa-edit" ng-click="openToolbox(log, 'updateLog')"></i>
-                <i class="fas fa-trash-alt" ng-click="delete(log, 'deleteLog')"></i>
-            </li>
-        </ol>
-    </div>
-
-    <!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
-    <div>
-        <span>Sensoren</span>
-        <ol>
-            <li ng-repeat="sensor in data.sensor">
-                {{ sensor | json }}
-                <i class="fas fa-edit" ng-click="openToolbox(sensor, 'updateSensor')"></i>
-                <i class="fas fa-trash-alt" ng-click="delete(sensor, 'deleteSensor')"></i>
-            </li>
-        </ol>
-    </div>
-
-    <!-- Löschen von Temperaturdaten -->
-    <!-- Ändern und Löschen von Sensordaten. -->
-
 </div>

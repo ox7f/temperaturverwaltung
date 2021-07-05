@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* HEADER */
+.header-container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+/* NAVBAR */ 
+.navbar-brand {
+    font-size: 1.75rem;
+}
+
+/* MAIN */
+.main-container {
+    padding: 25px;
+}
+
+.cat-heading {
+    font-size: 1.25rem;
+}
