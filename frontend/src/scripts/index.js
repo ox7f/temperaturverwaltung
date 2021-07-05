@@ -249,6 +249,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .filter('greatest', function() {
     return (data) => {
+        if (!angular.isDefined(data) || data.length === 0)
+            return 'Keine Messwerte!';
+
         let maxTemperatur = 0;
 
         data.forEach((d) => {
@@ -267,6 +270,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .filter('average', function() {
     return (data) => {
+        if (!angular.isDefined(data) || data.length === 0)
+            return 'Keine Messwerte!';
+
         let total = 0,
             count = 0,
             avgTemperatur = 0;

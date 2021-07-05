@@ -36,6 +36,10 @@ class TableComponent {
             }
         ];
 
+        $scope.customOrderBy = (value) => {
+            return Number(value[$scope.selectedFilter.label]);
+        };
+
         $scope.entries = this.entries;
 
         $scope.$watchCollection(_ => this.entries, (newValue) => {
