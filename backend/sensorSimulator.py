@@ -1,5 +1,5 @@
 # Dependencies
-from __main__ import socketio, app, ExecuteCommand
+from __main__ import socketio, app, ExecuteCommand, OpenDB
 import threading
 import random
 
@@ -15,8 +15,10 @@ class ThreadJob(threading.Thread):
             self.callback()
 
 def simulateSensor():
+
+    name = 'InsertTemperatur'
     data = {
-        'name': 'InsertTemperatur',
+        'name': name,
         'params': {
             'TemperaturID': 0,
             'Zeit': 0,
@@ -24,17 +26,31 @@ def simulateSensor():
             'Temperatur': random.uniform(25.5, 105.5)
         }
     }
-
-    print(data)
+    message = ExecuteCommand(data['name'], 'User', data['params'])
 
     with app.app_context():
+        db = OpenDB()
+
+        cursor = db.cursor()
+        cursor.execute('SELECT * FROM temperatur ORDER BY TemperaturID DESC LIMIT 1')
+        data = cursor.fetchone()
+
+        cursor.close()
+
+        new = {
+            'TemperaturID': data[0],
+            'Zeit': data[1].__str__(),
+            'SensorID': data[2],
+            'Temperatur': data[3]
+        }
+
         socketio.emit('added', {
-            'name': data['name'],
-            'new': data['params'],
-            'message': ExecuteCommand(data['name'], 'User', data['params'])
+            'name': name,
+            'new': new,
+            'message': message
         })
 
 event = threading.Event()
 
-t = ThreadJob(simulateSensor, event, 10)
+t = ThreadJob(simulateSensor, event, 30)
 t.start()
