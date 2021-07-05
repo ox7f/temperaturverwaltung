@@ -72,7 +72,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         })
         .then(confirm => {
             console.log('toolbox confirmed', confirm);
-            // Socket.socketModify(name, confirm);
+            Socket.socketModify(name, confirm);
         })
         .catch(deny => { /* do nothing */});
     };
@@ -86,7 +86,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         })
         .then(confirm => {
             console.log('confirmed delete', confirm);
-            // Socket.socketRemove(name, element);
+            Socket.socketRemove(name, element);
         })
         .catch(deny => { /* do nothing */});
     };
@@ -97,7 +97,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             return;
 
         console.log('add', {name:name, element:element});
-        // Socket.socketAdd(name, element);
+        Socket.socketAdd(name, element);
     };
 }])
 
@@ -249,18 +249,40 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .filter('greatest', function() {
     return (data) => {
+        let maxTemperatur = 0;
 
-        // TODO - return biggest number
+        data.forEach((d) => {
+            if (!angular.isDefined(d) || !angular.isDefined(d.Temperatur))
+                return;
 
-        return data[0];
+            let wert = Number(d.Temperatur);
+
+            if (wert > maxTemperatur)
+                maxTemperatur = wert;
+        });
+
+        return maxTemperatur + ' °C';
     };
 })
 
 .filter('average', function() {
     return (data) => {
+        let total = 0,
+            count = 0,
+            avgTemperatur = 0;
 
-        // TODO - return average
+        data.forEach((d) => {
+            if (!angular.isDefined(d) || !angular.isDefined(d.Temperatur))
+                return;
 
-        return data[0];
+            let wert = Number(d.Temperatur);
+            
+            total += wert;
+            count++;
+        });
+
+        avgTemperatur = total / count;
+
+        return avgTemperatur + ' °C';
     };
 });
