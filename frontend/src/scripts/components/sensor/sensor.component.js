@@ -27,7 +27,7 @@ export const SensorComponentDefinition = {
     bindings: {
         sensor: '=',
         hersteller: '=',
-        temperatur: '='
+        temperatur: '=*'
     },
     template,
     controller: SensorComponent

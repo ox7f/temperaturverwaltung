@@ -1,16 +1,15 @@
-Sensor: {{ data.sensor | json }}
+<p>Sensor: {{ data.sensor.SensorID }}</p>
+<p>Adresse: {{ data.sensor.Adresse }}</p>
+<p>Serverschrank: {{ data.sensor.Serverschrank }}</p>
+<p>MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
+
 <div>
     <p>Messwerte:</p>
     <whkawsf-table entries="data.temperatur"></whkawsf-table>
 
-    <p>hoechster Messwert:</p>
-    <span>{{ data.temperatur | greatest | json }}</span>
-
-    <p>durchschnitts Messwert:</p>
-    <span>{{ data.temperatur | average | json }}</span>
-
-    <p>Herstellerinfo</p>
-    <span>{{ data.hersteller | json }}</span>
+    <p>h&ouml;chster Messwert: {{ data.temperatur | greatest }}</p>
+    <p>durchschnitts Messwert: {{ data.temperatur | average }}</p>
+    <p>Herstellerinfo: {{ data.hersteller.Name }}</p>
 </div>
 
 <hr>

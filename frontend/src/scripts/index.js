@@ -238,9 +238,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             })[0];
 
         } else if (params.name === 'temperatur') {
-            // return  data.filter((d) => {
-            //     return d.SensorID === params.sensor.SensorID;
-            // });
+            return data.filter((d) => {
+                return d.SensorID === params.sensor.SensorID;
+            });
         }
 
         return data;
