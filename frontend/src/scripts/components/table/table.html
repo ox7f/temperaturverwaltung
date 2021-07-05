@@ -1,6 +1,6 @@
 <select
     ng-model="selectedFilter"
-    ng-options="option as option for option in filterOptions"
+    ng-options="option as option.name for option in filterOptions"
     ng-init="selectedFilter=filterOptions[0]"
     ng-change="filterChange()">
 </select>
@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries | limitTo: 10 | orderBy: selectedFilter">
+        <tr ng-repeat="entry in entries | limitTo: 10 | orderBy: selectedFilter.label:selectedFilter.option">
             <td ng-repeat="(key, value) in entry">
                 <!-- sensorId ausblenden -->
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
