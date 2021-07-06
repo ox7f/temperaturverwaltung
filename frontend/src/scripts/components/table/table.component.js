@@ -1,3 +1,4 @@
+import angular from 'angular';
 import template from './table.html';
 
 class TableComponent {
@@ -36,6 +37,12 @@ class TableComponent {
         ];
 
         $scope.customOrderBy = (value) => {
+            if (!angular.isDefined(value) || !value || value === null)
+                return;
+
+            if (!angular.isDefined(value[$scope.selectedFilter.label]) || !value[$scope.selectedFilter.label] || value[$scope.selectedFilter.label] === null)
+                return;
+
             if (value[$scope.selectedFilter.label].includes('-') || value[$scope.selectedFilter.label].includes('-')) {
                 let date = new Date(value.Zeit);
                 return date.getTime();
