@@ -6,7 +6,7 @@
 
 </br>
 
-<table class="table table-hover table-bordered">
+<table class="table table-hover table-bordered" ng-if="entries.length > 0">
     <thead>
         <tr>
             <th scope="col" ng-repeat="(key, value) in entries[0]" ng-if="key !== 'SensorID'">
