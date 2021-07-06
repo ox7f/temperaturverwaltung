@@ -37,6 +37,11 @@ class TableComponent {
         ];
 
         $scope.customOrderBy = (value) => {
+            if (value.Zeit.includes('-') || value.Zeit.includes('-')) {
+                let date = new Date(value.Zeit);
+                return date.getTime();
+            }
+
             return Number(value[$scope.selectedFilter.label]);
         };
 
