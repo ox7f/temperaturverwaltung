@@ -32,10 +32,9 @@ def MaxTempChanged(db, placeholder):
         return False
 
 def SetPlaceholder(program, input_dict):
-    placeholder = [program,"","","","",""]
+    placeholder = [program,"","","","","","","",""]
     i = 0
     for x in input_dict:
-        if x != "hash":
             i = i + 1
             placeholder[i] = input_dict[x]
     return placeholder
