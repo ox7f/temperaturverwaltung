@@ -7,11 +7,6 @@
 <p>Adresse: {{ data.sensor.Adresse }}, Serverschrank: {{ data.sensor.Serverschrank }}, MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
 
 <div>
-    <p>Messwerte:</p>
-    <whkawsf-table entries="data.temperatur"></whkawsf-table>
-
-    <br>
-
     <div>
         <p class="cat-heading">Messwerte:</p>
         <span ng-if="data.temperatur.length === 0">Keine Messwerte!</span>
