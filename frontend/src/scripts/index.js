@@ -198,29 +198,50 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         if (data.message !== 'Success')
             return;
 
+        let tempArr = [];
         let name = data.name.replace('Update', '').toLowerCase();
 
-        entries[name] = entries[name].map((val) => {
-            switch(name){
+        entries[name].forEach((val) => {
+            let needsAdjustment = false;
+
+            switch(name) {
                 case 'temperatur':
-                    if (val.TemperaturID === data.data.TemperaturID)
-                       return data.data;
+                    if (val.TemperaturID === data.data.TemperaturID) {
+                        needsAdjustment = true;
+                        tempArr.push(data.data);
+                    }
+                    break;
                 case 'log':
-                    if (val.LogID === data.data.LogID)
-                        return data.data;
+                    if (val.LogID === data.data.LogID) {
+                        needsAdjustment = true;
+                        tempArr.push(data.data);
+                    }
+                    break;
                 case 'hersteller':
-                    if (val.HerstellerID === data.data.HerstellerID)
-                        return data.data;
+                    if (val.HerstellerID === data.data.HerstellerID) {
+                        needsAdjustment = true;
+                        tempArr.push(data.data);
+                    }
+                    break;
                 case 'sensor':
-                    if (val.SensorID === data.data.SensorID)
-                        return data.data;
+                    if (val.SensorID === data.data.SensorID) {
+                        needsAdjustment = true;
+                        tempArr.push(data.data);
+                    }
+                    break;
                 case 'benutzer':
-                    if (val.BenutzerID === data.data.BenutzerID)
-                        return data.data;
+                    if (val.BenutzerID === data.data.BenutzerID) {
+                        needsAdjustment = true;
+                        tempArr.push(data.data);
+                    }
+                    break;
             };
 
-            return val;
+            if (!needsAdjustment)
+                tempArr.push(val);
         });
+
+        entries[name] = tempArr;
 
         if (name === 'benutzer' && data.data.BenutzerID === JSON.parse(Authenticator.get('user')).BenutzerID)
             Authenticator.set('user', data.data);
