@@ -9,10 +9,6 @@
 <p>MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
 
 <div>
-    <p class="cat-heading">Messwerte:</p>
-    <p ng-if="data.temperatur.length === 0">Keine Messwerte!</p>
-    <whkawsf-table delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
-
     <p class="cat-heading">h&ouml;chster Messwert: </p>
     <p>{{ data.temperatur | greatest }}</p>
 
@@ -21,6 +17,11 @@
     
     <p class="cat-heading">Herstellerinfo: </p>
     <p>{{ data.hersteller.Name }}</p>
+
+    <p class="cat-heading">Messwerte:</p>
+    <p ng-if="data.temperatur.length === 0">Keine Messwerte!</p>
+
+    <whkawsf-table delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
 </div>
 
 <hr>
