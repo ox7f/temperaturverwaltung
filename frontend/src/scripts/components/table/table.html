@@ -11,12 +11,16 @@
             <th scope="col" ng-repeat="(key, value) in entries[0]" ng-if="key !== 'SensorID'">
                 {{ key | uppercase }}
             </th>
+            <th scope="col" ng-if="isAdmin">Delete</th>
         </tr>
     </thead>
     <tbody>
         <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: 5">
             <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
+            </td>
+            <td ng-if="isAdmin">
+                <i class="fas fa-trash-alt" ng-click="delete(entry, 'deleteLog')"></i>
             </td>
         </tr>
       </tbody>
