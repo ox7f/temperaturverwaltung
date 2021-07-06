@@ -7,20 +7,30 @@
 <p>Adresse: {{ data.sensor.Adresse }}, Serverschrank: {{ data.sensor.Serverschrank }}, MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
 
 <div>
-    <p>Messwerte:</p>
-    <whkawsf-table entries="data.temperatur"></whkawsf-table>
+    <div>
+        <p class="cat-heading">Messwerte:</p>
+        <whkawsf-table entries="data.temperatur"></whkawsf-table>
+
+        <br>
+
+        <p class="cat-heading">hoechster Messwert:</p>
+        <span>{{ data.temperatur | greatest | json }}</span>
+
+        <br>
+
+        <p class="cat-heading">durchschnitts Messwert:</p>
+        <span>{{ data.temperatur | average | json }}</span>
+
+        <br>
+
+        <p class="cat-heading">Herstellerinfo:</p>
+        <span>{{ data.hersteller | json }}</span>
+    </div>
 
     <br>
 
     <div>
-        <p class="cat-heading">Messwerte:</p>
-        <whkawsf-table>
-            {{ temperatur | json }}
-        </whkawsf-table>
-
-        <br>
-
-        <p class="cat-heading">h&ouml;chster Messwert:</p>
+        <p class="cat-heading">h&ouml;chster Messwert:</p> 
         <span>{{ data.temperatur | greatest }}</span>
 
         <br>
