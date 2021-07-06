@@ -1,58 +1,42 @@
 <whkawsf-header></whkawsf-header>
 
-<div class="admin_main_container">
-    <div class="container-fluid">
+<div class="admin-container">
 
-        <!-- Eingabe und Anzeige der Benutzer -->
-        <div>
-            <span>Users</span>
-            <!-- <form>
-                <div class="form-group">
-                <label for="username">Benutzername</label>
-                <input ng-model="username" type="text" class="form-control" placeholder="Username" name="uname" required minlength="3">
-            
-                <label for="password">Passwort</label>
-                <input ng-model="password" type="password" class="form-control" placeholder="Password" name="password" required minlength="3">
-            
-                <button ng-click="add({name: username, password: password}, 'user')" class="btn btn-primary" type="submit">Benutzer anlegen</button>
-                </div>
-            </form> -->
+    <!-- Eingabe und Anzeige der Benutzer -->
+    <p class="cat-h1-heading">Users</p>
+    <ol>
+        <li ng-repeat="user in data.user">
+            {{ user | json }}
+            <i class="fas fa-edit" ng-click="openToolbox(user, 'UpdateBenutzer')"></i>
+            <i class="fas fa-trash-alt" ng-click="delete(user, 'DeleteBenutzer')"></i>
+        </li>
+    </ol>
 
-            <ol>
-                <li ng-repeat="user in data.user">
-                    {{ user | json }}
-                    <i class="fas fa-edit" ng-click="openToolbox(user, 'UpdateBenutzer')"></i>
-                    <i class="fas fa-trash-alt" ng-click="delete(user, 'DeleteBenutzer')"></i>
-                </li>
-            </ol>
-        </div>
+    <!-- Eingabe und Anzeige der log-Einträge -->
+    <p class="cat-h1-heading">Logs</p>
+    <ol>
+        <li ng-repeat="log in data.log">
+            {{ log | json }}
+            <i class="fas fa-edit" ng-click="openToolbox(log, 'UpdateLog')"></i>
+            <i class="fas fa-trash-alt" ng-click="delete(log, 'DeleteLog')"></i>
+        </li>
+    </ol>
 
-        <!-- Eingabe und Anzeige der log-Einträge -->
-        <div>
-            <span>Logs</span>
-            <ol>
-                <li ng-repeat="log in data.log">
-                    {{ log | json }}
-                    <i class="fas fa-edit" ng-click="openToolbox(log, 'UpdateLog')"></i>
-                    <i class="fas fa-trash-alt" ng-click="delete(log, 'DeleteLog')"></i>
-                </li>
-            </ol>
-        </div>
-
-        <!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
-        <div class="sensor-container" ng-repeat="sensor in data.sensor">
-            <whkawsf-sensor
-                user='user'
-                sensor="sensor"
-                toolbox="openToolbox"
-                delete="delete"
-                hersteller="data.hersteller | custom:{sensor:sensor, name:'hersteller'}"
-                temperatur="data.temperatur | custom:{sensor:sensor, name:'temperatur'}"
-            ></whkawsf-sensor>
-        </div>
-
-        <!-- Löschen von Temperaturdaten -->
-        <!-- Ändern und Löschen von Sensordaten. -->
-
-    </div>
 </div>
+    
+<!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
+<div class="sensor-container" ng-repeat="sensor in data.sensor">
+    <whkawsf-sensor
+        user='user'
+        sensor="sensor"
+        toolbox="openToolbox"
+        delete="delete"
+        hersteller="data.hersteller | custom:{sensor:sensor, name:'hersteller'}"
+        temperatur="data.temperatur | custom:{sensor:sensor, name:'temperatur'}"
+    ></whkawsf-sensor>
+</div>
+
+<!-- Löschen von Temperaturdaten -->
+<!-- Ändern und Löschen von Sensordaten. -->
+
+
