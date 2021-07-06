@@ -66,6 +66,12 @@ ul {
     padding: 0px 25px 0px 25px;
 }
 
+table {
+    display: block;
+    height: 350px;
+    overflow-y: scroll;
+}
+
 /* SELECT */
 select {
   -webkit-appearance: none;
