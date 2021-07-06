@@ -20,24 +20,19 @@
 
         <br>
 
-        <p class="cat-heading">hoechster Messwert:</p>
-        <span>{{ data.temperatur | greatest | json }}</span>
+        <p class="cat-heading">h&ouml;chster Messwert:</p>
+        <span>{{ data.temperatur | greatest }}</span>
 
         <br>
 
         <p class="cat-heading">durchschnitts Messwert:</p>
-        <span>{{ data.temperatur | average | json }}</span>
+        <span>{{ data.temperatur | average }}</span>
 
         <br>
 
         <p class="cat-heading">Herstellerinfo:</p>
-        <span>{{ data.hersteller | json }}</span>
+        <span>{{ data.hersteller.Name }}</span>
     </div>
-
-    <p>h&ouml;chster Messwert: {{ data.temperatur | greatest }}</p>
-    <p>durchschnitts Messwert: {{ data.temperatur | average }}</p>
-    <p>Herstellerinfo: {{ data.hersteller.Name }}</p>
-
 </div>
 
 <hr>
