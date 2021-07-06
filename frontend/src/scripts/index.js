@@ -5,12 +5,11 @@ import ngDialog from 'ng-dialog';
 import io from 'socket.io-client';
 
 import tableModule from './components/table';
-import chartModule from './components/chart';
 import headerModule from './components/header';
 
 import sensorModule from './components/sensor';
 
-angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule, sensorModule])
+angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModule])
 
 .config(['$routeProvider', ($routeProvider) => {
     $routeProvider
@@ -68,7 +67,6 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
     $scope.$watchCollection(_ => Socket.get('log'), (newValue) => { $scope.data.log = newValue; });
 
-    // TODO
     $scope.openToolbox = (element, name) => {
         $scope.copy = angular.copy(element);
 
@@ -84,7 +82,6 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         .catch(deny => { /* do nothing */});
     };
 
-    // TODO
     $scope.delete = (element, name) => {
         ngDialog.openConfirm({
             template: require('/public/templates/ngDialog/confirm-delete.html'),
@@ -98,7 +95,6 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         .catch(deny => { /* do nothing */});
     };
 
-    // TODO
     $scope.add = (element, name) => {
         if (!angular.isDefined(element) || !angular.isDefined(name))
             return;
