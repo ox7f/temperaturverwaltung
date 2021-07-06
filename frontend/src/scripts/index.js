@@ -270,6 +270,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .filter('greatest', function() {
     return (data, sensor) => {
+        data = data.filter((d) => {
+            return d.SensorID === sensor.SensorID;
+        });
+
         if (!angular.isDefined(data) || data.length === 0)
             return 'Keine Messwerte!';
 
@@ -295,6 +299,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .filter('average', function() {
     return (data, sensor) => {
+        data = data.filter((d) => {
+            return d.SensorID === sensor.SensorID;
+        });
+
         if (!angular.isDefined(data) || data.length === 0)
             return 'Keine Messwerte!';
 
