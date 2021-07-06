@@ -1,4 +1,5 @@
 <select
+    ng-show="entries.length > 0"
     ng-model="selectedFilter"
     ng-options="option as option.name for option in filterOptions"
     ng-init="selectedFilter=filterOptions[0]">
@@ -16,7 +17,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option">
+        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option" ng-if="entry.SensorID == sensor.SensorID">
             <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>

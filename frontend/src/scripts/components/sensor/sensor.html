@@ -25,7 +25,7 @@
     <p class="cat-heading">Messwerte:</p>
     <p ng-if="data.temperatur.length === 0">Keine Messwerte!</p>
 
-    <whkawsf-table delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
+    <whkawsf-table sensor="data.sensor" delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
 </div>
 
 <hr>

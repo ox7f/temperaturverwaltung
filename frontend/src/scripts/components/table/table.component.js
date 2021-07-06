@@ -52,10 +52,12 @@ class TableComponent {
         };
 
         $scope.isAdmin = !!Number(this.user);
+        $scope.sensor = this.sensor;
         $scope.entries = this.entries;
         $scope.delete = this.delete;
 
         $scope.$watch(_ => this.user, (newValue) => { $scope.isAdmin = !!Number(newValue); });
+        $scope.$watch(_ => this.sensor, (newValue) => { $scope.sensor = newValue; });
         $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
         $scope.$watchCollection(_ => this.entries, (newValue) => { $scope.entries = newValue; });
     }
@@ -66,7 +68,8 @@ export const TableComponentDefinition = {
     bindings: {
         delete: '=',
         entries: '=',
-        user: '='
+        user: '=',
+        sensor: '='
     },
     template,
     controller: TableComponent
