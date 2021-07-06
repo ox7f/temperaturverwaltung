@@ -11,7 +11,7 @@
     <thead>
         <tr>
             <th scope="col" ng-repeat="(key, value) in entries[0]" ng-if="key !== 'SensorID'">
-                {{ key | uppercase }}
+                {{ key.toLowerCase().includes('id') ? '#' : key | uppercase }}
             </th>
             <th scope="col" ng-if="isAdmin">Delete</th>
         </tr>
