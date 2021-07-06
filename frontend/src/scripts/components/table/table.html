@@ -1,9 +1,10 @@
 <select
     ng-model="selectedFilter"
     ng-options="option as option.name for option in filterOptions"
-    ng-init="selectedFilter=filterOptions[0]"
-    ng-change="filterChange()">
+    ng-init="selectedFilter=filterOptions[0]">
 </select>
+
+</br>
 
 <table class="table table-hover table-bordered">
     <thead>
