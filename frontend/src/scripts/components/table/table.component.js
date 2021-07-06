@@ -40,8 +40,8 @@ class TableComponent {
             if (!angular.isDefined(value) || !value || value === null)
                 return;
 
-            if (!angular.isDefined(value[$scope.selectedFilter.label]) || !value[$scope.selectedFilter.label] || value[$scope.selectedFilter.label] === null)
-                return;
+            if (typeof value[$scope.selectedFilter.label] === 'number')
+                return value;
 
             if (value[$scope.selectedFilter.label].includes('-') || value[$scope.selectedFilter.label].includes('-')) {
                 let date = new Date(value.Zeit);
