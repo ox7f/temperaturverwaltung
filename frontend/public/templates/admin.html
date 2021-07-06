@@ -21,8 +21,8 @@
             <ol>
                 <li ng-repeat="user in data.user">
                     {{ user | json }}
-                    <i class="fas fa-edit" ng-click="openToolbox(user, 'updateUser')"></i>
-                    <i class="fas fa-trash-alt" ng-click="delete(user, 'deleteUser')"></i>
+                    <i class="fas fa-edit" ng-click="openToolbox(user, 'UpdateUser')"></i>
+                    <i class="fas fa-trash-alt" ng-click="delete(user, 'DeleteUser')"></i>
                 </li>
             </ol>
         </div>
@@ -33,8 +33,8 @@
             <ol>
                 <li ng-repeat="log in data.log">
                     {{ log | json }}
-                    <i class="fas fa-edit" ng-click="openToolbox(log, 'updateLog')"></i>
-                    <i class="fas fa-trash-alt" ng-click="delete(log, 'deleteLog')"></i>
+                    <i class="fas fa-edit" ng-click="openToolbox(log, 'UpdateLog')"></i>
+                    <i class="fas fa-trash-alt" ng-click="delete(log, 'DeleteLog')"></i>
                 </li>
             </ol>
         </div>
