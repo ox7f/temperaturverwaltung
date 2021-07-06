@@ -2,7 +2,6 @@ import template from './table.html';
 
 class TableComponent {
     constructor($scope) {
-        // TODO - filter bauen
         $scope.filterOptions = [
             {
                 name: 'ID aufsteigend',
@@ -47,9 +46,7 @@ class TableComponent {
 
         $scope.entries = this.entries;
 
-        $scope.$watchCollection(_ => this.entries, (newValue) => {
-            $scope.entries = newValue;
-        });
+        $scope.$watchCollection(_ => this.entries, (newValue) => { $scope.entries = newValue; });
     }
 }
 

@@ -21,6 +21,10 @@
         <p class="cat-heading">durchschnitts Messwert:</p>
         <span>{{ data.temperatur | average | json }}</span>
 
+        <span ng-if="data.temperatur.length === 0">Keine Messwerte!</span>
+        <whkawsf-table entries="data.temperatur"></whkawsf-table>
+
+
         <br>
 
         <p class="cat-heading">Herstellerinfo:</p>
