@@ -8,24 +8,20 @@
 
 <div>
     <div>
-        <p class="cat-heading">Messwerte:</p>
-        <span ng-if="data.temperatur.length === 0">Keine Messwerte!</span>
-        <whkawsf-table delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
 
-        </br>
+            <p class="cat-heading">Messwerte:</p>
+            <p ng-if="data.temperatur.length === 0">Keine Messwerte!</p>
+            <whkawsf-table delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
 
-        <p class="cat-heading">h&ouml;chster Messwert:</p>
-        <span>{{ data.temperatur | greatest | json }}</span>
+            <p class="cat-heading">h&ouml;chster Messwert: </p>
+            <p>{{ data.temperatur | greatest }}</p>
 
-        </br>
-
-        <p class="cat-heading">durchschnitts Messwert:</p>
-        <span>{{ data.temperatur | average }}</span>
-
-        </br>
-
-        <p class="cat-heading">Herstellerinfo:</p>
-        <span>{{ data.hersteller.Name }}</span>
+            <p class="cat-heading">durschnittlicher Messwert: </p> 
+            <p>{{ data.temperatur | average }}</p>
+            
+            <p class="cat-heading">Herstellerinfo: </p>
+            <p>{{ data.hersteller.Name }}</p>
+        
     </div>
 </div>
 
