@@ -44,8 +44,12 @@ class TableComponent {
             return Number(value[$scope.selectedFilter.label]);
         };
 
+        $scope.isAdmin = !!Number(this.user);
         $scope.entries = this.entries;
+        $scope.delete = this.delete;
 
+        $scope.$watch(_ => this.user, (newValue) => { $scope.isAdmin = !!Number(newValue); });
+        $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
         $scope.$watchCollection(_ => this.entries, (newValue) => { $scope.entries = newValue; });
     }
 }
@@ -53,7 +57,9 @@ class TableComponent {
 export const TableComponentDefinition = {
     restrict: 'E',
     bindings: {
-        entries: '='
+        delete: '=',
+        entries: '=',
+        user: '='
     },
     template,
     controller: TableComponent

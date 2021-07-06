@@ -1,7 +1,7 @@
 <div class="main-container">
 
 <div>
-    <p class="cat-heading">Sensor: {{ data.sensor.SensorID }}</p>
+    <p ng-click="openToolbox(data.sensor, 'UpdateSensor')" class="cat-heading">Sensor: {{ data.sensor.SensorID }}</p>
 </div>
 
 <p>Adresse: {{ data.sensor.Adresse }}, Serverschrank: {{ data.sensor.Serverschrank }}, MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
@@ -9,8 +9,8 @@
 <div>
     <div>
         <p class="cat-heading">Messwerte:</p>
-        <whkawsf-table entries="data.temperatur"></whkawsf-table>
         <span ng-if="data.temperatur.length === 0">Keine Messwerte!</span>
+        <whkawsf-table delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
 
         </br>
 

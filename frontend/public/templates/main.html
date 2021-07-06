@@ -2,6 +2,7 @@
 
 <whkawsf-sensor
     ng-repeat="sensor in data.sensor"
+    user='user'
     sensor="sensor"
     hersteller="data.hersteller | custom:{sensor:sensor, name:'hersteller'}"
     temperatur="data.temperatur | custom:{sensor:sensor, name:'temperatur'}">

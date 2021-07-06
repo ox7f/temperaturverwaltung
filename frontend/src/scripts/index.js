@@ -27,11 +27,15 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     
     Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
+    $scope.user = JSON.parse(Authenticator.get('user'));
+
     $scope.data = {
         sensor: [],
         temperatur: [],
         hersteller: []
     };
+
+    $scope.$watchCollection(_ => Authenticator.get('sensor'), (newValue) => { $scope.user = JSON.parse(newValue); });
 
     $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => { $scope.data.sensor = newValue; });
     $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => { $scope.data.temperatur = newValue; });
@@ -47,6 +51,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
     Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
 
+    $scope.user = JSON.parse(Authenticator.get('user'));
     $scope.data = {
         user: [],
         sensor: [],
@@ -54,6 +59,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         hersteller: [],
         log: []
     };
+
+    $scope.$watchCollection(_ => Authenticator.get('user'), (newValue) => { $scope.user = JSON.parse(newValue); });
 
     $scope.$watchCollection(_ => Socket.get('benutzer'), (newValue) => { $scope.data.user = newValue; });
     $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => { $scope.data.sensor = newValue; });
