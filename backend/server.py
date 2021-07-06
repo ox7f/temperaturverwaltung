@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 
-from AccessDatabase import ExecuteCommand
+from AccessDatabase import ExecuteCommand, OpenDB
 
 # Webserver in­i­ti­a­li­sie­ren
 app = Flask(__name__)

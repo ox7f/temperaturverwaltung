@@ -1,15 +1,22 @@
+<select
+    ng-model="selectedFilter"
+    ng-options="option as option.name for option in filterOptions"
+    ng-init="selectedFilter=filterOptions[0]"
+    ng-change="filterChange()">
+</select>
+
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
-            <th scope="col" ng-repeat="(key, value) in entries[0]">
+            <th scope="col" ng-repeat="(key, value) in entries[0]" ng-if="key !== 'SensorID'">
                 {{ key | uppercase }}
             </th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries track by $index">
-            <td ng-repeat="(key, value) in entry track by $index">
-                {{ key === 'zeit' ? (value | date : "medium") : value }}
+        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option">
+            <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
+                {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
         </tr>
       </tbody>

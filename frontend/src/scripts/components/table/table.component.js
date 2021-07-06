@@ -3,14 +3,44 @@ import template from './table.html';
 class TableComponent {
     constructor($scope) {
         // TODO - filter bauen
-        $scope.filter = null;
         $scope.filterOptions = [
-            {},
-            {},
-            {}
+            {
+                name: 'ID aufsteigend',
+                label: 'TemperaturID',
+                option: false
+            },
+            {
+                name: 'ID absteigend',
+                label: 'TemperaturID',
+                option: true
+            },
+            {
+                name: 'Zeit aufsteigend',
+                label: 'Zeit',
+                option: false
+            },
+            {
+                name: 'Zeit absteigend',
+                label: 'Zeit',
+                option: true
+            },
+            {
+                name: 'Temperatur aufsteigend',
+                label: 'Temperatur',
+                option: false
+            },
+            {
+                name: 'Temperatur absteigend',
+                label: 'Temperatur',
+                option: true
+            }
         ];
 
-        $scope.entries = this.ebntries;
+        $scope.customOrderBy = (value) => {
+            return Number(value[$scope.selectedFilter.label]);
+        };
+
+        $scope.entries = this.entries;
 
         $scope.$watchCollection(_ => this.entries, (newValue) => {
             $scope.entries = newValue;

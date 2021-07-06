@@ -5,9 +5,16 @@ Sensor: {{ data.sensor | json }}
 <div>
     <select ng-model="filter" ng-options="option as option for option in filterOptions"></select>
 
-    <p>Messwerte:</p>
+<p>Sensor: {{ data.sensor.SensorID }}</p>
+<p>Adresse: {{ data.sensor.Adresse }}</p>
+<p>Serverschrank: {{ data.sensor.Serverschrank }}</p>
+<p>MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
 
+
+<div>
+    <p>Messwerte:</p>
     <whkawsf-table entries="data.temperatur"></whkawsf-table>
+
     <!-- <span ng-repeat="temperatur in data.temperatur">
         {{ temperatur | json }}
     </span> -->
@@ -40,6 +47,10 @@ Sensor: {{ data.sensor | json }}
         <p class="cat-heading">Herstellerinfo:</p>
         <span>{{ data.hersteller | json }}</span>
     </div>
+
+    <p>h&ouml;chster Messwert: {{ data.temperatur | greatest }}</p>
+    <p>durchschnitts Messwert: {{ data.temperatur | average }}</p>
+    <p>Herstellerinfo: {{ data.hersteller.Name }}</p>
 
 </div>
 
