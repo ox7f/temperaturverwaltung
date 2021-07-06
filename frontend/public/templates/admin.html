@@ -50,6 +50,15 @@
                 </li>
             </ol>
         </div>
+        <whkawsf-sensor
+            ng-repeat="sensor in data.sensor"
+            user='user'
+            sensor="sensor"
+            toolbox="openToolbox"
+            delete="delete"
+            hersteller="data.hersteller | custom:{sensor:sensor, name:'hersteller'}"
+            temperatur="data.temperatur | custom:{sensor:sensor, name:'temperatur'}"
+        ></whkawsf-sensor>
 
         <!-- Löschen von Temperaturdaten -->
         <!-- Ändern und Löschen von Sensordaten. -->
