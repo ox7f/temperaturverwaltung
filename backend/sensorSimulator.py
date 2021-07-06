@@ -36,5 +36,5 @@ def simulateSensor():
 
 event = threading.Event()
 
-t = ThreadJob(simulateSensor, event, 10)
+t = ThreadJob(simulateSensor, event, 3600)
 t.start()
