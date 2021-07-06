@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+ul {
+    list-style: none;
+}
+
 /* HEADER */
 .header-container {
     position: relative;
