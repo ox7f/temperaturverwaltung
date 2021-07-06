@@ -38,10 +38,10 @@ def simulateSensor():
         cursor.close()
 
         new = {
-            'TemperaturID': data[0],
+            'TemperaturID': data[0].__str__(),
             'Zeit': data[1].__str__(),
-            'SensorID': data[2],
-            'Temperatur': data[3]
+            'SensorID': data[2].__str__(),
+            'Temperatur': data[3].__str__()
         }
 
         socketio.emit('added', {

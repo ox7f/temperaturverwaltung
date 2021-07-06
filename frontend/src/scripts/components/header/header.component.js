@@ -1,12 +1,8 @@
 import template from './header.html';
 
 class HeaderComponent {
-    constructor(Authenticator, $scope, $location) {
-        $scope.user = JSON.parse(Authenticator.get('user'));
-        
-        $scope.$watch(_ => Authenticator.get('user'), (newValue) => {
-            $scope.user = JSON.parse(newValue);
-        });
+    constructor($scope, $location) {
+        $scope.user = this.user;
 
         $scope.logout = _ => Authenticator.logout();
 
@@ -15,12 +11,16 @@ class HeaderComponent {
                 $location.path('admin');
             });
         };
+
+        $scope.$watch(_ => this.user, (newValue) => { $scope.user = newValue; });
     }
 }
 
 export const HeaderComponentDefinition = {
     restrict: 'E',
-    bindings: {},
+    bindings: {
+        user: '='
+    },
     template,
     controller: HeaderComponent
 };

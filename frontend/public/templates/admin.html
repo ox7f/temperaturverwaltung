@@ -1,42 +1,66 @@
-<whkawsf-header></whkawsf-header>
+<whkawsf-header user="user"></whkawsf-header>
 
 <div class="admin-container">
 
     <!-- Eingabe und Anzeige der Benutzer -->
-    <p class="cat-h1-heading">Users</p>
+    <p class="cat-h1-heading">Benutzer</p>
     <ol>
         <li ng-repeat="benutzer in data.user" ng-if="user.BenutzerID != benutzer.BenutzerID">
             {{ benutzer | json }}
-            <i class="fas fa-edit" ng-click="openToolbox(benutzer, 'UpdateBenutzer')"></i>
-            <i class="fas fa-trash-alt" ng-click="delete(benutzer, 'DeleteBenutzer')"></i>
+            <i class="fas fa-edit cursor" ng-click="openToolbox(benutzer, 'UpdateBenutzer')"></i>
+            <i class="fas fa-trash-alt cursor" ng-click="delete(benutzer, 'DeleteBenutzer')"></i>
         </li>
     </ol>
+    <p class="cat-h1-heading">Benutzer anlegen</p>
+    <input ng-model="new['Anmeldename']" placeholder="Benutzername" />
+    <input ng-model="new['Passwort']" placeholder="Passwort" />
+    <input ng-model="new['Telefonnummer']" placeholder="TelefonNr" />
+    <input ng-model="new['Administrator']" placeholder="Administrator" />
+    <i class="fas fa-plus cursor" ng-click="add(new, 'InsertBenutzer')"></i>
 
     <!-- Eingabe und Anzeige der log-Einträge -->
     <p class="cat-h1-heading">Logs</p>
     <ol>
         <li ng-repeat="log in data.log">
             {{ log | json }}
-            <i class="fas fa-edit" ng-click="openToolbox(log, 'UpdateLog')"></i>
-            <i class="fas fa-trash-alt" ng-click="delete(log, 'DeleteLog')"></i>
+            <i class="fas fa-edit cursor" ng-click="openToolbox(log, 'UpdateLog')"></i>
+            <i class="fas fa-trash-alt cursor" ng-click="delete(log, 'DeleteLog')"></i>
         </li>
     </ol>
 
+    <!-- Eingabe und Anzeige der Hersteller-Einträge -->
+    <p class="cat-h1-heading">Hersteller</p>
+    <ol>
+        <li ng-repeat="hersteller in data.hersteller">
+            {{ hersteller | json }}
+            <i class="fas fa-edit cursor" ng-click="openToolbox(hersteller, 'UpdateHersteller')"></i>
+            <i class="fas fa-trash-alt cursor" ng-click="delete(hersteller, 'DeleteHersteller')"></i>
+        </li>
+    </ol>
+    <p class="cat-h1-heading">Hersteller anlegen</p>
+    <input ng-model="new['Name']" placeholder="Name" />
+    <i class="fas fa-plus cursor" ng-click="add(new, 'InsertHersteller')"></i>
+
+    <p class="cat-h1-heading">Sensor anlegen</p>
+    <input ng-model="new['Serverschrank']" placeholder="Serverschrank" />
+    <input ng-model="new['Adresse']" placeholder="Adresse" />
+    <input ng-model="new['Maximaltemperatur']" placeholder="Maximaltemperatur" />
+    <input ng-model="new['HerstellerID']" placeholder="HerstellerID" />
+    <i class="fas fa-plus cursor" ng-click="add(new, 'InsertSensor')"></i>
+
 </div>
-    
+
 <!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
+<!-- Ändern und Löschen von Sensordaten. -->
+<!-- Löschen von Temperaturdaten -->
 <div class="sensor-container" ng-repeat="sensor in data.sensor">
     <whkawsf-sensor
-        user='user'
+        path="path"
+        user="user"
         sensor="sensor"
         toolbox="openToolbox"
         delete="delete"
-        hersteller="data.hersteller | custom:{sensor:sensor, name:'hersteller'}"
-        temperatur="data.temperatur | custom:{sensor:sensor, name:'temperatur'}"
+        hersteller="data.hersteller | custom:sensor"
+        temperatur="data.temperatur"
     ></whkawsf-sensor>
 </div>
-
-<!-- Löschen von Temperaturdaten -->
-<!-- Ändern und Löschen von Sensordaten. -->
-
-

@@ -22,7 +22,7 @@
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
             <td ng-if="isAdmin">
-                <i class="fas fa-trash-alt" ng-click="delete(entry, 'DeleteTemperatur')"></i>
+                <i class="fas fa-trash-alt cursor" ng-click="delete(entry, 'DeleteTemperatur')"></i>
             </td>
         </tr>
       </tbody>

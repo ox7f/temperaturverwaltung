@@ -7,6 +7,10 @@ ul {
     list-style: none;
 }
 
+.cursor {
+    cursor: pointer;
+}
+
 /* HEADER */
 .header-container {
     position: relative;
