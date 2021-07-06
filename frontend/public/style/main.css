@@ -31,21 +31,26 @@
     padding: 25px 0px 0px
 }
 
-/* Select */
+.sensor-container {
+    display: inline-flex;
+    width: 33%;
+}
+
+/* SELECT */
 select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    border: 0;
-    margin: 0px 0px 5px 0px;
-    width: 20em;
-    height: 3em;
-    line-height: 3;
-    background: #5fbae9;
-    border-radius: .25em;
-    padding: 0 .5em;
-    color: #f6f6f6;
-    cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  border: 0;
+  margin: 0px 0px 5px 0px;
+  width: 20em;
+  height: 3em;
+  line-height: 3;
+  background: #5fbae9;
+  border-radius: .25em;
+  padding: 0 .5em;
+  color: #f6f6f6;
+  cursor: pointer;
 }
 
 .select::after {
@@ -60,4 +65,3 @@ select {
     -o-transition: .25s all ease;
     transition: .25s all ease;
 }
-

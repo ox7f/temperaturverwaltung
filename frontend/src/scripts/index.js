@@ -207,7 +207,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             return;
 
         let name = data.name.replace('Update', '').toLowerCase();
-        entries[name][entries[data.name].indexOf(data.old)] = data.new;
+        entries[name][entries[name].indexOf(data.old)] = data.new;
 
         if (name === 'benutzer')
             Authenticator.set('user', data.new);
@@ -221,7 +221,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             return;
 
         let name = data.name.replace('Delete', '').toLowerCase();
-        entries[name].splice(entries[data.name].indexOf(data.old), 1);
+        entries[name].splice(entries[name].indexOf(data.old), 1);
+
+        console.log(entries[name][0], data.old);
+        console.log('removed entry?', entries[name].indexOf(data.old));
 
         $rootScope.$apply();
     });
@@ -245,9 +248,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             })[0];
 
         } else if (params.name === 'temperatur') {
-            return data.filter((d) => {
-                return d.SensorID === params.sensor.SensorID;
-            });
+            // return data.filter((d) => {
+            //     return d.SensorID === params.sensor.SensorID;
+            // });
         }
 
         return data;

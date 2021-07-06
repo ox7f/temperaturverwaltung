@@ -16,12 +16,12 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: 5">
+        <tr ng-repeat="entry in entries">
             <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
             <td ng-if="isAdmin">
-                <i class="fas fa-trash-alt" ng-click="delete(entry, 'DeleteLog')"></i>
+                <i class="fas fa-trash-alt" ng-click="delete(entry, 'DeleteTemperatur')"></i>
             </td>
         </tr>
       </tbody>

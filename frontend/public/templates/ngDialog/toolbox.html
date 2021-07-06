@@ -1,7 +1,8 @@
 <div>
     <ul>
         <li ng-repeat="(key, value) in copy">
-            {{ key }} : {{ value }}
+            {{ key }}: <input ng-if="!key.toLowerCase().includes('key')" ng-model="copy[key]" placeholder="{{ value }}" />
+            <input ng-if="key.toLowerCase().includes('key')" ng-model="copy[key]" placeholder="{{ value }}" readonly />
         </li>
     </ul>
 
