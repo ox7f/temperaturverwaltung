@@ -36,6 +36,18 @@
     width: 33%;
 }
 
+@media only screen and (max-width: 1100px) {
+    .sensor-container {
+        display: inline;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .sensor-container {
+        display: none;
+    }
+}
+
 /* SELECT */
 select {
   -webkit-appearance: none;
