@@ -264,6 +264,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
                 maxTemperatur = wert;
         });
 
+        maxTemperatur = Math.round(maxTemperatur * 100) / 100;
+
         return maxTemperatur + ' °C';
     };
 })
@@ -288,6 +290,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         });
 
         avgTemperatur = total / count;
+        avgTemperatur = Math.round(avgTemperatur * 100) / 100;
 
         return avgTemperatur + ' °C';
     };
