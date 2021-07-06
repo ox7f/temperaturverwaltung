@@ -51,14 +51,14 @@ def addEvent(data):
         'message': ExecuteCommand(data['name'], 'User', data['params'])
     })
 
-@socketio.on('modify-date')
+@socketio.on('modify-data')
 def modifyEvent(data):
     print('modify-data', data)
 
-    emit('changed', {
+    emit('modified', {
         'name': data['name'],
-        'old': data['params'],
-        'new': ExecuteCommand(data['name'], 'User', data['params'])
+        'data': data['params'],
+        'message': ExecuteCommand(data['name'], 'User', data['params'])
     })
 
 @socketio.on('remove-data')
