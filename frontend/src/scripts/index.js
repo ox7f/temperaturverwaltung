@@ -24,6 +24,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 .controller('mainCtrl', ['$scope', '$location', 'Authenticator', 'Socket', ($scope, $location, Authenticator, Socket) => {
     if (!Authenticator.get('user'))
         $location.path('login');
+
+    if (Authenticator.get('user') && Authenticator.get('user') === 'undefined')
+        $location.path('login');
     
     Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
@@ -44,6 +47,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .controller('adminCtrl', ['$scope', '$location', 'ngDialog', 'Authenticator', 'Socket', ($scope, $location, ngDialog, Authenticator, Socket) => {
     if (!Authenticator.get('user'))
+        $location.path('login');
+
+    if (Authenticator.get('user') && Authenticator.get('user') === 'undefined')
         $location.path('login');
 
     if (Authenticator.get('user') && JSON.parse(Authenticator.get('user')).Administrator == 0)
@@ -193,30 +199,26 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         let name = data.name.replace('Update', '').toLowerCase();
 
         entries[name] = entries[name].map((val) => {
-            console.log(val, data);
 
             switch(name){
                 case 'temperatur':
-                    if (val.TemperaturID !== data.data.TemperaturID)
-                        val = data.data;
-                    break;
+                    if (val.TemperaturID === data.data.TemperaturID)
+                       return data.data;
                 case 'log':
-                    if (val.LogID !== data.data.LogID)
-                        val = data.data;
-                    break;
+                    if (val.LogID === data.data.LogID)
+                        return data.data;
                 case 'hersteller':
-                    if (val.HerstellerID !== data.data.HerstellerID)
-                        val = data.data;
-                    break;
+                    if (val.HerstellerID === data.data.HerstellerID)
+                        return data.data;
                 case 'sensor':
-                    if (val.SensorID !== data.data.SensorID)
-                        val = data.data;
-                    break;
+                    if (val.SensorID === data.data.SensorID)
+                        return data.data;
                 case 'benutzer':
-                    if (val.BenutzerID !== data.data.BenutzerID)
-                        val = data.data;
-                    break;
+                    if (val.BenutzerID === data.data.BenutzerID)
+                        return data.data;
             };
+
+            return val;
         });
 
         console.log('entries modified', entries[name]);

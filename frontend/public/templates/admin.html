@@ -5,10 +5,10 @@
     <!-- Eingabe und Anzeige der Benutzer -->
     <p class="cat-h1-heading">Users</p>
     <ol>
-        <li ng-repeat="user in data.user">
-            {{ user | json }}
-            <i class="fas fa-edit" ng-click="openToolbox(user, 'UpdateBenutzer')"></i>
-            <i class="fas fa-trash-alt" ng-click="delete(user, 'DeleteBenutzer')"></i>
+        <li ng-repeat="benutzer in data.user" ng-if="user.BenutzerID != benutzer.BenutzerID">
+            {{ benutzer | json }}
+            <i class="fas fa-edit" ng-click="openToolbox(benutzer, 'UpdateBenutzer')"></i>
+            <i class="fas fa-trash-alt" ng-click="delete(benutzer, 'DeleteBenutzer')"></i>
         </li>
     </ol>
 
