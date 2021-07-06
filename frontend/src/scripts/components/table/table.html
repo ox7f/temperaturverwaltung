@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option">
+        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: 5">
             <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
