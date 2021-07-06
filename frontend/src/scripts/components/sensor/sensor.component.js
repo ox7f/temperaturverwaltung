@@ -31,7 +31,7 @@ export const SensorComponentDefinition = {
         user: '=',
         sensor: '=',
         hersteller: '=',
-        temperatur: '=*'
+        temperatur: '='
     },
     template,
     controller: SensorComponent

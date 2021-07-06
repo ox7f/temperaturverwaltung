@@ -21,8 +21,8 @@
             <ol>
                 <li ng-repeat="user in data.user">
                     {{ user | json }}
-                    <i class="fas fa-edit" ng-click="openToolbox(user, 'UpdateBenutzer')"></i>
-                    <i class="fas fa-trash-alt" ng-click="delete(user, 'DeleteBenutzer')"></i>
+                    <i class="fas fa-edit" ng-click="openToolbox(user, 'updateUser')"></i>
+                    <i class="fas fa-trash-alt" ng-click="delete(user, 'deleteUser')"></i>
                 </li>
             </ol>
         </div>
@@ -33,23 +33,13 @@
             <ol>
                 <li ng-repeat="log in data.log">
                     {{ log | json }}
-                    <i class="fas fa-edit" ng-click="openToolbox(log, 'UpdateLog')"></i>
-                    <i class="fas fa-trash-alt" ng-click="delete(log, 'DeleteLog')"></i>
+                    <i class="fas fa-edit" ng-click="openToolbox(log, 'updateLog')"></i>
+                    <i class="fas fa-trash-alt" ng-click="delete(log, 'deleteLog')"></i>
                 </li>
             </ol>
         </div>
 
         <!-- Eingabe, Protokollierung und Anzeige der vorzugebenden Maximaltemperatur -->
-        <div>
-            <span>Sensoren</span>
-            <ol>
-                <li ng-repeat="sensor in data.sensor">
-                    {{ sensor | json }}
-                    <i class="fas fa-edit" ng-click="openToolbox(sensor, 'UpdateSensor')"></i>
-                    <i class="fas fa-trash-alt" ng-click="delete(sensor, 'DeleteSensor')"></i>
-                </li>
-            </ol>
-        </div>
         <whkawsf-sensor
             ng-repeat="sensor in data.sensor"
             user='user'

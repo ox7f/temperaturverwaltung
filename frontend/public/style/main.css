@@ -31,32 +31,50 @@
     padding: 25px 0px 0px
 }
 
-/* Select */
+/* Reset Select */
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
-    border: 0;
-    margin: 0px 0px 5px 0px;
+    appearance: none;
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background: #f6f6f6;
+    background-image: none;
+  }
+
+  /* Custom Select */
+  .select {
+    position: relative;
+    display: flex;
     width: 20em;
     height: 3em;
     line-height: 3;
-    background: #5fbae9;
+    background: #f6f6f6;
+    overflow: hidden;
     border-radius: .25em;
-    padding: 0 .5em;
-    color: #f6f6f6;
-    cursor: pointer;
-}
+  }
 
-.select::after {
-position: absolute;
-top: 0;
-right: 0;
-padding: 0 1em;
-background: #5fbae9;
-cursor: pointer;
-pointer-events: none;
--webkit-transition: .25s all ease;
--o-transition: .25s all ease;
-transition: .25s all ease;
-}
+  select {
+    flex: 1;
+    padding: 0 .5em;
+    color:#5fbae9;
+    cursor: pointer;
+    margin: 0px 0px 5px 0px;
+    border: solid;
+  }
+  /* Arrow */
+  .select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 1em;
+    background: #f6f6f6;
+    cursor: pointer;
+    pointer-events: none;
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+  }
