@@ -10,10 +10,11 @@ class SensorComponent {
             temperatur: this.temperatur
         };
 
-        $scope.openToolbox = this.toolbox || null;
-        $scope.delete = this.delete || null;
+        $scope.openToolbox = this.toolbox;
+        $scope.delete = this.delete;
         
         $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
+        $scope.$watch(_ => this.toolbox, (newValue) => { $scope.openToolbox = newValue; });
 
         $scope.$watch(_ => this.sensor, (newValue) => { $scope.data.sensor = newValue; });
         $scope.$watch(_ => this.hersteller, (newValue) => { $scope.data.hersteller = newValue; });
