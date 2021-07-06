@@ -129,7 +129,7 @@ def ExecuteCommand(program, user, data):
         else:
             if IsAdmin(db,user):
                 if  program in ["7cU","InsertSensor","UpdateSensor"]:
-                    return ModifyDataWithLog(db,placeholder)
+                    return ModifyDataWithLog(db,placeholder,user)
                 else:
                     modify_result = ModifyData(db,command)
                     if modify_result == "Success":
