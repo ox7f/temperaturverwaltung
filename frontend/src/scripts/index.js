@@ -24,6 +24,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 .controller('mainCtrl', ['$scope', '$location', 'Authenticator', 'Socket', ($scope, $location, Authenticator, Socket) => {
     if (!Authenticator.get('user'))
         $location.path('login');
+
+    if (Authenticator.get('user') && Authenticator.get('user') === 'undefined')
+        $location.path('login');
     
     Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
@@ -44,6 +47,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
 .controller('adminCtrl', ['$scope', '$location', 'ngDialog', 'Authenticator', 'Socket', ($scope, $location, ngDialog, Authenticator, Socket) => {
     if (!Authenticator.get('user'))
+        $location.path('login');
+
+    if (Authenticator.get('user') && Authenticator.get('user') === 'undefined')
         $location.path('login');
 
     if (Authenticator.get('user') && JSON.parse(Authenticator.get('user')).Administrator == 0)
@@ -68,7 +74,6 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
     $scope.$watchCollection(_ => Socket.get('log'), (newValue) => { $scope.data.log = newValue; });
 
-    // TODO
     $scope.openToolbox = (element, name) => {
         $scope.copy = angular.copy(element);
 
@@ -77,33 +82,24 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             scope: $scope,
             plain: true,
         })
-        .then(confirm => {
-            console.log('toolbox confirmed', confirm);
-            Socket.socketModify(name, confirm);
-        })
+        .then(confirm => Socket.socketModify(name, confirm))
         .catch(deny => { /* do nothing */});
     };
 
-    // TODO
     $scope.delete = (element, name) => {
         ngDialog.openConfirm({
             template: require('/public/templates/ngDialog/confirm-delete.html'),
             scope: $scope,
             plain: true
         })
-        .then(confirm => {
-            console.log('confirmed delete', confirm);
-            Socket.socketRemove(name, element);
-        })
+        .then(confirm => Socket.socketRemove(name, element))
         .catch(deny => { /* do nothing */});
     };
 
-    // TODO
     $scope.add = (element, name) => {
         if (!angular.isDefined(element) || !angular.isDefined(name))
             return;
 
-        console.log('add', {name:name, element:element});
         Socket.socketAdd(name, element);
     };
 }])
@@ -182,17 +178,13 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
     socket
     .on('data', (data) => {
-        console.log('socket get event', data);
-
         let name = data.name.replace('Select', '').toLowerCase();
         entries[name] = Object.values(data.data);
 
         $rootScope.$apply();
     })
     .on('added', (data) => {
-        console.log('socket added event', data);
-
-        if (data.message !== 'Success')
+         if (data.message !== 'Success')
             return;
 
         let name = data.name.replace('Insert', '').toLowerCase();
@@ -201,13 +193,35 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $rootScope.$apply();
     })
     .on('modified', (data) => {
-        console.log('socket changed event', data);
-
         if (data.message !== 'Success')
             return;
 
         let name = data.name.replace('Update', '').toLowerCase();
-        entries[name][entries[name].indexOf(data.old)] = data.new;
+
+        entries[name] = entries[name].map((val) => {
+
+            switch(name){
+                case 'temperatur':
+                    if (val.TemperaturID === data.data.TemperaturID)
+                       return data.data;
+                case 'log':
+                    if (val.LogID === data.data.LogID)
+                        return data.data;
+                case 'hersteller':
+                    if (val.HerstellerID === data.data.HerstellerID)
+                        return data.data;
+                case 'sensor':
+                    if (val.SensorID === data.data.SensorID)
+                        return data.data;
+                case 'benutzer':
+                    if (val.BenutzerID === data.data.BenutzerID)
+                        return data.data;
+            };
+
+            return val;
+        });
+
+        console.log('entries modified', entries[name]);
 
         if (name === 'benutzer')
             Authenticator.set('user', data.new);
@@ -215,16 +229,24 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $rootScope.$apply();
     })
     .on('removed', (data) => {
-        console.log('socket removed event', data);
-
         if (data.message !== 'Success')
             return;
 
         let name = data.name.replace('Delete', '').toLowerCase();
-        entries[name].splice(entries[name].indexOf(data.old), 1);
-
-        console.log(entries[name][0], data.old);
-        console.log('removed entry?', entries[name].indexOf(data.old));
+        entries[name] = entries[name].filter((val) => {
+            switch(name) {
+                case 'temperatur':
+                    return val.TemperaturID !== data.old.TemperaturID;
+                case 'log':
+                    return val.LogID !== data.old.LogID;
+                case 'hersteller':
+                    return val.HerstellerID !== data.old.HerstellerID;
+                case 'sensor':
+                    return val.SensorID !== data.old.SensorID;
+                case 'benutzer':
+                    return val.BenutzerID !== data.old.BenutzerID;
+            };
+        });
 
         $rootScope.$apply();
     });
