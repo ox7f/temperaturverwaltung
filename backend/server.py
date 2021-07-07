@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 
-from AccessDatabase import ExecuteCommand, OpenDB
+from AccessDatabase import ExecuteCommand, OpenDB, getLatest
 
 # Webserver in­i­ti­a­li­sie­ren
 app = Flask(__name__)
@@ -45,12 +45,13 @@ def getEvent(data):
 def addEvent(data):
     print('add-data', data)
 
-    # TODO - neues element aus db ziehen => zurückballern
+    # TODO - message = {}?
+    message = ExecuteCommand(data['name'], data['params']['benutzer'], data['params'])
 
     emit('added', {
         'name': data['name'],
-        'new': data['params'],
-        'message': ExecuteCommand(data['name'], data['params']['benutzer'], data['params'])
+        'new': getLatest(data['name'].replace('Insert', '')),
+        'message': message
     })
 
 @socketio.on('modify-data')

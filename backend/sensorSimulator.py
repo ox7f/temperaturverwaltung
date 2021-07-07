@@ -1,5 +1,5 @@
 # Dependencies
-from __main__ import socketio, app, ExecuteCommand, OpenDB
+from __main__ import socketio, app, ExecuteCommand, getLatest
 import threading
 import random
 
@@ -29,24 +29,9 @@ def simulateSensor():
     message = ExecuteCommand(data['name'], 'User', data['params'])
 
     with app.app_context():
-        db = OpenDB()
-
-        cursor = db.cursor()
-        cursor.execute('SELECT * FROM temperatur ORDER BY TemperaturID DESC LIMIT 1')
-        data = cursor.fetchone()
-
-        cursor.close()
-
-        new = {
-            'TemperaturID': data[0].__str__(),
-            'Zeit': data[1].__str__(),
-            'SensorID': data[2].__str__(),
-            'Temperatur': data[3].__str__()
-        }
-
         socketio.emit('added', {
             'name': name,
-            'new': new,
+            'new': getLatest(name),
             'message': message
         }) 
 

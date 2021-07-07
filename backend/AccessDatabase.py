@@ -128,3 +128,22 @@ def ExecuteCommand(program, user, data):
                         return modify_result[0:7]
     else:
         return "ERROR: Programmierfehler"
+
+def getLatest(name):
+    db = OpenDB()
+
+    element = {}
+    idName = name + 'ID'
+
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM ' + name + ' ORDER BY ' + idName + ' DESC LIMIT 1')
+    result = cursor.fetchone()
+
+    n = 0
+    for i in cursor.description:
+        element[i[0]] = result[n]
+        n = n + 1
+
+    cursor.close()
+
+    return element
