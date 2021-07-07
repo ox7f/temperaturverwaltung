@@ -363,4 +363,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
         return avgTemperatur + ' °C';
     };
+})
+
+.filter('toNumber', function() {
+    return (value) => {
+        return Number(value);
+    };
 });
