@@ -57,7 +57,7 @@ def addEvent(data):
 def modifyEvent(data):
     print('modify-data', data)
 
-    # todo: message hat ja alles sensoren und nicht nur den einen modifizierten
+    # TODO: new hat ja alles sensoren und nicht nur den einen modifizierten
     emit('modified', {
         'name': data['name'],
         'old': data['params'],
