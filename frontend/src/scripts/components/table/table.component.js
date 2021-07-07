@@ -72,7 +72,11 @@ class TableComponent {
         $scope.$watch(_ => this.path, (newValue) => { $scope.path = newValue; });
         $scope.$watch(_ => this.sensor, (newValue) => { $scope.sensor = newValue; });
         $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
-        $scope.$watchCollection(_ => this.entries, (newValue) => { $scope.entries = newValue; });
+        $scope.$watchCollection(_ => this.entries, (newValue) => {
+            $scope.entries = newValue.filter((nv) => {
+                return nv.SensorID === $scope.sensor.SensorID;
+            });
+        });
     }
 }
 

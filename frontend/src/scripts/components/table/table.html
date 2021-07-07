@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value" ng-if="entry.SensorID == sensor.SensorID">
+        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value">
             <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
