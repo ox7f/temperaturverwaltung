@@ -23,7 +23,13 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value" ng-if="entry.SensorID == sensor.SensorID">
+        <tr
+            ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value"
+            ng-class="{
+                'red': (entry.Temperatur | toNumber) > (sensor.MaximalTemperatur | toNumber),
+                'yellow': (entry.Temperatur | toNumber) <= (sensor.MaximalTemperatur | toNumber) && (entry.Temperatur | toNumber) > (sensor.MaximalTemperatur | toNumber) - 20,
+                'green': (entry.Temperatur | toNumber) <= (sensor.MaximalTemperatur | toNumber) - 20
+            }">
             <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
