@@ -21,7 +21,7 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080', async_mod
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin='localhost')
 def login():
-    return {'data': ExecuteCommand('LIS1', '', request.json)}
+    return {'data': ExecuteCommand('LIS', '', request.json)}
 
 # socket stuff
 

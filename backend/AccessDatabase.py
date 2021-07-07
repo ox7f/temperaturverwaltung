@@ -16,9 +16,6 @@ def GetCommand(program):
         commands = json.loads(commands)
     return commands.get(program,"ERROR")
 
-def IsAdmin(db, user):
-    return bool(QueryTable(db,GetCommand("LIS3").format(p1 = user)))
-
 def MaxTempChanged(db, placeholder):
     Changed = False
     try:
@@ -105,8 +102,9 @@ def ModifyData(db, command):
     try:
         cursor = db.cursor()
         cursor.execute(command)
+        LastID = cursor.lastrowid
         cursor.close()
-        return "Success"
+        return "Success" + str(LastID)
     except Exception as e:
         return "ERROR: " + str(e)
 
@@ -122,8 +120,11 @@ def ExecuteCommand(program, user, data):
                 return ModifyDataWithLog(db,placeholder,user)
             else:
                 modify_result = ModifyData(db,command)
-                if modify_result == "Success":
+                if modify_result[0:7] == "Success":
                     db.commit()
-                return modify_result
+                    if program[0:6] == "Insert":
+                        return QueryTable(db,GetCommand("Select" + program[6:] + "AfterModify").format(p1 = modify_result[8:]))
+                    else:                        
+                        return modify_result[0:7]
     else:
         return "ERROR: Programmierfehler"
