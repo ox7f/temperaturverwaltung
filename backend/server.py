@@ -45,10 +45,12 @@ def getEvent(data):
 def addEvent(data):
     print('add-data', data)
 
+    # TODO - neues element aus db ziehen => zurückballern
+
     emit('added', {
         'name': data['name'],
         'new': data['params'],
-        'message': ExecuteCommand(data['name'], 'User', data['params'])
+        'message': ExecuteCommand(data['name'], data['params']['benutzer'], data['params'])
     })
 
 @socketio.on('modify-data')
@@ -58,7 +60,7 @@ def modifyEvent(data):
     emit('modified', {
         'name': data['name'],
         'data': data['params'],
-        'message': ExecuteCommand(data['name'], 'User', data['params'])
+        'message': ExecuteCommand(data['name'], data['params']['benutzer'], data['params'])
     })
 
 @socketio.on('remove-data')
@@ -68,7 +70,7 @@ def removeEvent(data):
     emit('removed', {
         'name': data['name'],
         'old': data['params'],
-        'message': ExecuteCommand(data['name'], 'User', data['params'])
+        'message': ExecuteCommand(data['name'], data['params']['benutzer'], data['params'])
     })
 
 import sensorSimulator

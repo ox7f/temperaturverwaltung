@@ -17,7 +17,7 @@ def GetCommand(program):
     return commands.get(program,"ERROR")
 
 def IsAdmin(db, user):
-    return QueryTable(db,GetCommand("LIS3").format(p1 = user))
+    return bool(QueryTable(db,GetCommand("LIS3").format(p1 = user)))
 
 def MaxTempChanged(db, placeholder):
     Changed = False
@@ -43,13 +43,12 @@ def FillPlaceholder(command, placeholder):
     return command.format(p1 = placeholder[1],p2 = placeholder[2],p3 = placeholder[3],p4 = placeholder[4],p5 = placeholder[5])
    
 def ModifyDataWithLog(db, placeholder, user):
-    user = QueryTable(db, GetCommand("LIS2").format(p1 = user))[0]["BenutzerID"]
     Changed = MaxTempChanged(db,placeholder)
     if placeholder[0] == "7cU":
         modify_result = ModifyData(db,FillPlaceholder(GetCommand(placeholder[0]),placeholder))
         if modify_result == "Success":
             if Changed:
-                modify_result = ModifyData(db,GetCommand("InsertLog",placeholder).format(p1 = placeholder[1], p4 = placeholder[2], p3 = user))
+                modify_result = ModifyData(db,FillPlaceholder(GetCommand("InsertLog").format(p1 = placeholder[1], p4 = placeholder[2], p3 = user),placeholder))
                 if modify_result == "Success":
                     db.commit()
                     return QueryTable(db,GetCommand("7cS"))
@@ -68,8 +67,6 @@ def ModifyDataWithLog(db, placeholder, user):
         return modify_result
 
     if placeholder[0] == "UpdateSensor":
-
-        Changed = MaxTempChanged(db,placeholder)
         modify_result = ModifyData(db,FillPlaceholder(GetCommand(placeholder[0]),placeholder))
         if modify_result == "Success":
             if Changed:
@@ -119,23 +116,14 @@ def ExecuteCommand(program, user, data):
     command = FillPlaceholder(GetCommand(program), placeholder)
     if command != "ERROR":
         if ((program[2] == "S") or (program[0:6] == "Select")):
-            if program in ["SelectBenutzer","SelectLog"]:
-                if IsAdmin(db,user):
-                    return QueryTable(db,command)
-                else:
-                    return "ERROR: Sie benötigen Adminrechte um auf die Benutzer zugreifen zu können."
-            else:
-                return QueryTable(db,command)
+            return QueryTable(db,command)
         else:
-            if IsAdmin(db,user):
-                if  program in ["7cU","InsertSensor","UpdateSensor"]:
-                    return ModifyDataWithLog(db,placeholder,user)
-                else:
-                    modify_result = ModifyData(db,command)
-                    if modify_result == "Success":
-                        db.commit()
-                    return modify_result
+            if  program in ["7cU","InsertSensor","UpdateSensor"]:
+                return ModifyDataWithLog(db,placeholder,user)
             else:
-                return "ERROR: Zum ändern von Daten benötigen sie Adminrechte."
+                modify_result = ModifyData(db,command)
+                if modify_result == "Success":
+                    db.commit()
+                return modify_result
     else:
         return "ERROR: Programmierfehler"

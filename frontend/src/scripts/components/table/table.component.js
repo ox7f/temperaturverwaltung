@@ -36,6 +36,17 @@ class TableComponent {
             }
         ];
 
+        $scope.limitOptions = [
+            {
+                name: 'Alles anzeigen',
+                value: null
+            },
+            {
+                name: '10 Einträge anzeigen',
+                value: 10
+            }
+        ];
+
         $scope.customOrderBy = (value) => {
             if (!angular.isDefined(value) || !value || value === null)
                 return;
@@ -51,12 +62,14 @@ class TableComponent {
             return Number(value[$scope.selectedFilter.label]);
         };
 
+        $scope.path = this.path;
         $scope.isAdmin = !!Number(this.user);
         $scope.sensor = this.sensor;
         $scope.entries = this.entries;
         $scope.delete = this.delete;
 
         $scope.$watch(_ => this.user, (newValue) => { $scope.isAdmin = !!Number(newValue); });
+        $scope.$watch(_ => this.path, (newValue) => { $scope.path = newValue; });
         $scope.$watch(_ => this.sensor, (newValue) => { $scope.sensor = newValue; });
         $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
         $scope.$watchCollection(_ => this.entries, (newValue) => { $scope.entries = newValue; });
@@ -66,6 +79,7 @@ class TableComponent {
 export const TableComponentDefinition = {
     restrict: 'E',
     bindings: {
+        path: '=',
         delete: '=',
         entries: '=',
         user: '=',

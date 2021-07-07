@@ -189,6 +189,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
          if (data.message !== 'Success')
             return;
 
+        delete data.new.benutzer;
+
         let name = data.name.replace('Insert', '').toLowerCase();
         entries[name].push(data.new);
 
@@ -197,6 +199,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     .on('modified', (data) => {
         if (data.message !== 'Success')
             return;
+
+        delete data.data.benutzer;
 
         let tempArr = [];
         let name = data.name.replace('Update', '').toLowerCase();
@@ -272,9 +276,18 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     });
 
     this.socketGet = (name) => socket.emit('get-data', name);
-    this.socketAdd = (name, params) => socket.emit('add-data', {name: name, params: params});
-    this.socketModify = (name, params) => socket.emit('modify-data', {name: name, params: params});
-    this.socketRemove = (name, params) => socket.emit('remove-data', {name: name, params: params});
+    this.socketAdd = (name, params) => {
+        params.benutzer = JSON.parse(Authenticator.get('user')).BenutzerID;
+        socket.emit('add-data', {name: name, params: params});
+    };
+    this.socketModify = (name, params) => {
+        params.benutzer = JSON.parse(Authenticator.get('user')).BenutzerID;
+        socket.emit('modify-data', {name: name, params: params});
+    };
+    this.socketRemove = (name, params) => {
+        params.benutzer = JSON.parse(Authenticator.get('user')).BenutzerID;
+        socket.emit('remove-data', {name: name, params: params});
+    };
 
     this.get = (key) => entries[key];
 
