@@ -57,12 +57,10 @@ def addEvent(data):
 def modifyEvent(data):
     print('modify-data', data)
 
-    # TODO: new hat ja alles sensoren und nicht nur den einen modifizierten
     emit('modified', {
         'name': data['name'],
-        'old': data['params'],
-        'new': ExecuteCommand(data['name'], data['params']['benutzer'], data['params']),
-        'message': 'Success'
+        'data': data['params'],
+        'message': ExecuteCommand(data['name'], data['params']['benutzer'], data['params'])
     })
 
 @socketio.on('remove-data')

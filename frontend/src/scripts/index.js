@@ -212,33 +212,33 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
             switch(name) {
                 case 'temperatur':
-                    if (val.TemperaturID === data.old.TemperaturID) {
+                    if (val.TemperaturID === data.data.TemperaturID) {
                         needsAdjustment = true;
-                        tempArr.push(data.new);
+                        tempArr.push(data.data);
                     }
                     break;
                 case 'log':
-                    if (val.LogID === data.old.LogID) {
+                    if (val.LogID === data.data.LogID) {
                         needsAdjustment = true;
-                        tempArr.push(data.new);
+                        tempArr.push(data.data);
                     }
                     break;
                 case 'hersteller':
-                    if (val.HerstellerID === data.old.HerstellerID) {
+                    if (val.HerstellerID === data.data.HerstellerID) {
                         needsAdjustment = true;
-                        tempArr.push(data.new);
+                        tempArr.push(data.data);
                     }
                     break;
                 case 'sensor':
-                    if (val.SensorID === data.old.SensorID) {
+                    if (val.SensorID === data.data.SensorID) {
                         needsAdjustment = true;
-                        tempArr.push(data.new);
+                        tempArr.push(data.data);
                     }
                     break;
                 case 'benutzer':
-                    if (val.BenutzerID === data.old.BenutzerID) {
+                    if (val.BenutzerID === data.data.BenutzerID) {
                         needsAdjustment = true;
-                        tempArr.push(data.new);
+                        tempArr.push(data.data);
                     }
                     break;
             };
