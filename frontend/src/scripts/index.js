@@ -197,6 +197,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $rootScope.$apply();
     })
     .on('modified', (data) => {
+        console.log('modify', data);
+
         if (data.message !== 'Success')
             return;
 
@@ -210,33 +212,33 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
             switch(name) {
                 case 'temperatur':
-                    if (val.TemperaturID === data.data.TemperaturID) {
+                    if (val.TemperaturID === data.old.TemperaturID) {
                         needsAdjustment = true;
-                        tempArr.push(data.data);
+                        tempArr.push(data.new);
                     }
                     break;
                 case 'log':
-                    if (val.LogID === data.data.LogID) {
+                    if (val.LogID === data.old.LogID) {
                         needsAdjustment = true;
-                        tempArr.push(data.data);
+                        tempArr.push(data.new);
                     }
                     break;
                 case 'hersteller':
-                    if (val.HerstellerID === data.data.HerstellerID) {
+                    if (val.HerstellerID === data.old.HerstellerID) {
                         needsAdjustment = true;
-                        tempArr.push(data.data);
+                        tempArr.push(data.new);
                     }
                     break;
                 case 'sensor':
-                    if (val.SensorID === data.data.SensorID) {
+                    if (val.SensorID === data.old.SensorID) {
                         needsAdjustment = true;
-                        tempArr.push(data.data);
+                        tempArr.push(data.new);
                     }
                     break;
                 case 'benutzer':
-                    if (val.BenutzerID === data.data.BenutzerID) {
+                    if (val.BenutzerID === data.old.BenutzerID) {
                         needsAdjustment = true;
-                        tempArr.push(data.data);
+                        tempArr.push(data.new);
                     }
                     break;
             };
