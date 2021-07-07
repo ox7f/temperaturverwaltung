@@ -14,7 +14,7 @@
 
 ### Teamregeln
 * No Crunchtime
-* Clean Code sonst gibt es Prügel
+* Clean Code, sonst gibt es Prügel
 * Code wird kommentiert
 
 ### Ziele
@@ -28,7 +28,11 @@
 * Dokumentation
 * Testen
 
-### vlt noch solche spaesschen hier:
+### Dependencies
+Python3
+pip
+npm
+yarn (npm install -g yarn)
 
 ### Installation
 #### Frontend
@@ -40,15 +44,8 @@ AngularJS Anwendung
 #### Backend
 Python Flask Anwendung
 => in den Ordner `backend` navigieren (`cd backend`)
-=> `pip install -r requirements.txt` oder `python3 -m pip install -r requirements.txt`
+=> `pip install -r requirements.txt`
 => `python3 server.py`
-
-### Dependencies
-Python3
-pip
-Nodejs
-npm
-yarn (npm install -g yarn)
 
 ### Konfiguration
 
