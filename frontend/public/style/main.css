@@ -70,7 +70,6 @@ table {
     display: block;
     height: 350px;
     overflow-y: scroll;
-    background-color:rgba(0, 0, 0, 0.1);
 }
 
 .red {
