@@ -116,11 +116,11 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
         Authenticator.login(username, password)
         .then(user => {
-            if (user)
+            if (user.message === "Success")
                 $location.path('main');
 
             $scope.$evalAsync(_ => {
-                if (!user) {
+                if (user.message !== "Success") {
                     $scope.isLoading = false;
                     $scope.loginMessage = 'Login fehlgeschlagen!';
                 }
@@ -147,7 +147,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         .then(res => res.json())
         .then(user => {
             if (user.message === 'Success')
-                this.set('user', user.data);
+                this.set('user', user.data[0]);
 
             return user;
         });

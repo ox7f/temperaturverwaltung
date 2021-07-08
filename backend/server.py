@@ -32,8 +32,11 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080', async_mod
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin='localhost')
 def login():
-    query = queryData('Anmelden', request.json)
-    return {'data': query['data'][0], 'message': query['message']}
+    data = request.json
+    print('login', data)
+
+    query = queryData('Anmelden', data)
+    return {'data': query['data'], 'message': query['message']}
 
 # socket stuff
 
@@ -145,20 +148,22 @@ def getResult(query, action, table, args):
         cursor.execute(query)
         columns = cursor.description 
 
-        if action == 'Select':
-            data = [{columns[index][0]:column for index, column in enumerate(value)} for value in cursor.fetchall()]
-        elif action == 'Anmelden':
+        if action == 'Select' or action == 'Anmelden':
             data = [{columns[index][0]:column for index, column in enumerate(value)} for value in cursor.fetchall()]
 
-        for d in data:
-            if 'Zeit' in d:
-                d['Zeit'] = d['Zeit'].__str__()
+        if not data:
+            return {'message': 'Error', 'data': []}
 
-            if 'Administrator' in d:
-                if d['Administrator'] == b'\x01':
-                    d['Administrator'] = True
-                else:
-                    d['Administrator'] = False
+        if type(data) == list:
+            for d in data:
+                if 'Zeit' in d:
+                    d['Zeit'] = d['Zeit'].__str__()
+
+                if 'Administrator' in d:
+                    if d['Administrator'] == b'\x01':
+                        d['Administrator'] = True
+                    else:
+                        d['Administrator'] = False
 
         mysql.connection.commit()
         message = 'Success'
