@@ -32,7 +32,8 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080', async_mod
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin='localhost')
 def login():
-    return {'data': queryData('Anmelden', request.json)}
+    query = queryData('Anmelden', request.json)
+    return {'data': query['data'][0], 'message': query['message']}
 
 # socket stuff
 
@@ -100,7 +101,10 @@ def queryData(name, *args):
     table = name.replace('Select', '').replace('Insert', '').replace('Delete', '').replace('Update', '')
 
     if action != 'Select':
-        args = args[0]['params']
+        if name == 'Anmelden':
+            args = args[0]
+        else:
+            args = args[0]['params']
 
     if action == 'Anmelden':
         query = "SELECT * FROM benutzer WHERE Anmeldename='{v1}' AND Passwort='{v2}'".format(v1=args['Anmeldename'], v2=args['Passwort'])
@@ -143,33 +147,18 @@ def getResult(query, action, table, args):
 
         if action == 'Select':
             data = [{columns[index][0]:column for index, column in enumerate(value)} for value in cursor.fetchall()]
-
-            for d in data:
-                if 'Zeit' in d:
-                    d['Zeit'] = d['Zeit'].__str__()
-
-                if 'Administrator' in d:
-                    if d['Administrator'] == b'\x01':
-                        d['Administrator'] = True
-                    else:
-                        d['Administrator'] = False
-
         elif action == 'Anmelden':
-            result = cursor.fetchone()
+            data = [{columns[index][0]:column for index, column in enumerate(value)} for value in cursor.fetchall()]
 
-            n = 0
-            for i in cursor.description:
-                data[i[0]] = result[n]
-                n = n + 1
+        for d in data:
+            if 'Zeit' in d:
+                d['Zeit'] = d['Zeit'].__str__()
 
-            if 'Administrator' in data:
-                if data['Administrator'] == b'\x01':
-                    data['Administrator'] = True
+            if 'Administrator' in d:
+                if d['Administrator'] == b'\x01':
+                    d['Administrator'] = True
                 else:
-                    data['Administrator'] = False
-
-        if action == 'Insert':
-            data[table+'ID'] = cursor.lastrowid
+                    d['Administrator'] = False
 
         mysql.connection.commit()
         message = 'Success'
@@ -178,12 +167,15 @@ def getResult(query, action, table, args):
     finally:
         cursor.close()
 
-    logQuery(table, args, data)
+    if action == 'Insert':
+        data[table+'ID'] = cursor.lastrowid
+
+    logQuery(table, action, args, data)
 
     return {'data': data, 'message': message}
 
-def logQuery(table, args, data):
-    if table == 'Sensor':
+def logQuery(table, action, args, data):
+    if table == 'Sensor' and action != 'Select':
         logCursor = mysql.connection.cursor()
         logCursor.execute("INSERT INTO log (SensorID, BenutzerID) VALUES ({v1},{v2})".format(v1=args['SensorID'], v2=data['BenutzerID']))
         mysql.connection.commit()

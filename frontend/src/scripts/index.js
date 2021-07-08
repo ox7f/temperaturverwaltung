@@ -145,9 +145,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             body: JSON.stringify({ Anmeldename: name, Passwort: password })
         })
         .then(res => res.json())
-        .then(json => {
-            let user = json.data;
-
+        .then(user => {
             if (user.message === 'Success')
                 this.set('user', user.data);
 
