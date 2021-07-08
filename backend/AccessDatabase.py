@@ -123,7 +123,7 @@ def ExecuteCommand(program, user, data):
                 if modify_result[0:7] == "Success":
                     db.commit()
                     if program[0:6] == "Insert":
-                        return QueryTable(db,GetCommand("Select" + program[6:] + "AfterModify").format(p1 = modify_result[8:]))
+                        return QueryTable(db,GetCommand("Select" + program[6:] + "AfterModify").format(p1 = modify_result[7:]))
                     else:                        
                         return modify_result[0:7]
     else:
