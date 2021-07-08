@@ -142,14 +142,14 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         return fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ name: name, password: password })
+            body: JSON.stringify({ Anmeldename: name, Passwort: password })
         })
         .then(res => res.json())
         .then(json => {
-            let user = json.data[0];
+            let user = json.data;
 
-            if (angular.isDefined(user) && user)
-                this.set('user', user);
+            if (user.message === 'Success')
+                this.set('user', user.data);
 
             return user;
         });
@@ -189,7 +189,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
          if (data.message !== 'Success')
             return;
 
-        delete data.new.benutzer;
+        delete data.new.BenutzerID;
 
         let name = data.name.replace('Insert', '').toLowerCase();
         entries[name].push(data.new);
@@ -197,12 +197,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         $rootScope.$apply();
     })
     .on('modified', (data) => {
-        console.log('modify', data);
-
         if (data.message !== 'Success')
             return;
 
-        delete data.data.benutzer;
+        delete data.data.BenutzerID;
 
         let tempArr = [];
         let name = data.name.replace('Update', '').toLowerCase();
@@ -279,15 +277,15 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 
     this.socketGet = (name) => socket.emit('get-data', name);
     this.socketAdd = (name, params) => {
-        params.benutzer = JSON.parse(Authenticator.get('user')).BenutzerID;
+        params.BenutzerID = JSON.parse(Authenticator.get('user')).BenutzerID;
         socket.emit('add-data', {name: name, params: params});
     };
     this.socketModify = (name, params) => {
-        params.benutzer = JSON.parse(Authenticator.get('user')).BenutzerID;
+        params.BenutzerID = JSON.parse(Authenticator.get('user')).BenutzerID;
         socket.emit('modify-data', {name: name, params: params});
     };
     this.socketRemove = (name, params) => {
-        params.benutzer = JSON.parse(Authenticator.get('user')).BenutzerID;
+        params.BenutzerID = JSON.parse(Authenticator.get('user')).BenutzerID;
         socket.emit('remove-data', {name: name, params: params});
     };
 
@@ -316,11 +314,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         let maxTemperatur = 0;
 
         data.forEach((d) => {
-            if (!angular.isDefined(d) || !angular.isDefined(d.Temperatur))
-                return;
-
             if (d.SensorID === sensor.SensorID) {
-                let wert = Number(d.Temperatur);
+                let wert = d.Temperatur;
 
                 if (wert > maxTemperatur)
                     maxTemperatur = wert;
@@ -347,11 +342,8 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             avgTemperatur = 0;
 
         data.forEach((d) => {
-            if (!angular.isDefined(d) || !angular.isDefined(d.Temperatur))
-                return;
-
             if (d.SensorID === sensor.SensorID) {
-                let wert = Number(d.Temperatur);
+                let wert = d.Temperatur;
             
                 total += wert;
                 count++;
@@ -362,11 +354,5 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         avgTemperatur = Math.round(avgTemperatur * 100) / 100;
 
         return avgTemperatur + ' °C';
-    };
-})
-
-.filter('toNumber', function() {
-    return (value) => {
-        return Number(value);
     };
 });

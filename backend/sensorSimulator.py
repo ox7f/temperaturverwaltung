@@ -1,5 +1,5 @@
 # Dependencies
-from __main__ import socketio, app, ExecuteCommand, OpenDB
+from __main__ import socketio, app, queryData, mysql
 import threading
 import random
 
@@ -15,39 +15,21 @@ class ThreadJob(threading.Thread):
             self.callback()
 
 def simulateSensor():
-
-    name = 'InsertTemperatur'
     data = {
-        'name': name,
+        'name': 'InsertTemperatur',
         'params': {
-            'TemperaturID': 0,
-            'Zeit': 0,
             'SensorID': random.randint(1, 3),
             'Temperatur': random.uniform(25.5, 105.5)
         }
     }
-    message = ExecuteCommand(data['name'], 'User', data['params'])
 
     with app.app_context():
-        db = OpenDB()
-
-        cursor = db.cursor()
-        cursor.execute('SELECT * FROM temperatur ORDER BY TemperaturID DESC LIMIT 1')
-        data = cursor.fetchone()
-
-        cursor.close()
-
-        new = {
-            'TemperaturID': data[0].__str__(),
-            'Zeit': data[1].__str__(),
-            'SensorID': data[2].__str__(),
-            'Temperatur': data[3].__str__()
-        }
+        query = queryData('InsertTemperatur', data)
 
         socketio.emit('added', {
-            'name': name,
-            'new': new,
-            'message': message
+            'name': 'InsertTemperatur',
+            'new': query['data'],
+            'message': query['message']
         }) 
 
 event = threading.Event()

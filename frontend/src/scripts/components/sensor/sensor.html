@@ -20,10 +20,10 @@
 <p>MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
 
 <div>
-    <p class="cat-heading">h&ouml;chster Messwert: </p>
+    <p class="cat-heading">H&ouml;chster Messwert: </p>
     <p>{{ data.temperatur | greatest:data.sensor }}</p>
 
-    <p class="cat-heading">durschnittlicher Messwert: </p> 
+    <p class="cat-heading">Durschnittlicher Messwert: </p> 
     <p>{{ data.temperatur | average:data.sensor }}</p>
     
     <p class="cat-heading">Herstellerinfo: </p>

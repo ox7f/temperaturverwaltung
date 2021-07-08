@@ -51,15 +51,12 @@ class TableComponent {
             if (!angular.isDefined(value) || !value || value === null)
                 return;
 
-            if (typeof value[$scope.selectedFilter.label] === 'number')
-                return value;
-
-            if (value[$scope.selectedFilter.label].includes('-') || value[$scope.selectedFilter.label].includes('-')) {
+            if (typeof value[$scope.selectedFilter.label] === 'Zeit') {
                 let date = new Date(value.Zeit);
                 return date.getTime();
             }
 
-            return Number(value[$scope.selectedFilter.label]);
+            return value[$scope.selectedFilter.label];
         };
 
         $scope.path = this.path;
