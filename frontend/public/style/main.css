@@ -3,6 +3,14 @@
     padding: 0;
 }
 
+ul {
+    list-style: none;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
 /* HEADER */
 .header-container {
     position: relative;
@@ -61,6 +69,24 @@
 /* ADMIN */
 .admin-container {
     padding: 0px 25px 0px 25px;
+}
+
+table {
+    display: block;
+    height: 350px;
+    overflow-y: scroll;
+}
+
+.red {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.yellow {
+    background-color: rgba(255, 255, 0, 0.2);
+}
+
+.green {
+    background-color: rgba(0, 255, 0, 0.2);
 }
 
 /* SELECT */

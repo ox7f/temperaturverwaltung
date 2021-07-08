@@ -1,27 +1,40 @@
 <select
+    ng-show="entries.length > 0"
     ng-model="selectedFilter"
     ng-options="option as option.name for option in filterOptions"
     ng-init="selectedFilter=filterOptions[0]">
 </select>
+<select
+    ng-show="entries.length > 0"
+    ng-model="selectedLimit"
+    ng-options="limit as limit.name for limit in limitOptions"
+    ng-init="selectedLimit=limitOptions[0]">
+</select>
 
 </br>
 
-<table class="table table-hover table-bordered">
+<table class="table table-hover table-bordered" ng-if="entries.length > 0">
     <thead>
         <tr>
             <th scope="col" ng-repeat="(key, value) in entries[0]" ng-if="key !== 'SensorID'">
-                {{ key | uppercase }}
+                {{ key.toLowerCase().includes('id') ? '#' : key | uppercase }}
             </th>
-            <th scope="col" ng-if="isAdmin">Delete</th>
+            <th scope="col" ng-if="isAdmin && path === '/admin'">Delete</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option">
+        <tr
+            ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value"
+            ng-class="{
+                'red': (entry.Temperatur | toNumber) > (sensor.MaximalTemperatur | toNumber),
+                'yellow': (entry.Temperatur | toNumber) <= (sensor.MaximalTemperatur | toNumber) && (entry.Temperatur | toNumber) > (sensor.MaximalTemperatur | toNumber) - 20,
+                'green': (entry.Temperatur | toNumber) <= (sensor.MaximalTemperatur | toNumber) - 20
+            }">
             <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
-            <td ng-if="isAdmin">
-                <i class="fas fa-trash-alt" ng-click="delete(entry, 'DeleteTemperatur')"></i>
+            <td ng-if="isAdmin && path === '/admin'">
+                <i class="fas fa-trash-alt cursor" ng-click="delete(entry, 'DeleteTemperatur')"></i>
             </td>
         </tr>
       </tbody>

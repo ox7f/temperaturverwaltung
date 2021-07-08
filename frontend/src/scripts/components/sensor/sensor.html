@@ -1,29 +1,36 @@
 <div class="main-container">
 
 <div>
+    <!--
     <p ng-click="openToolbox(data.sensor, 'UpdateSensor')" class="cat-h1-heading sensor-edit">
         <i class="fas fa-edit"></i>
         Sensor: {{ data.sensor.SensorID }}
+    -->
+
+    <p class="cat-h1-heading">
+        Sensor: {{ data.sensor.SensorID }}
+        <i class="fas fa-edit cursor" ng-click="openToolbox(data.sensor, 'UpdateSensor')" ng-if="path !== '/main' && user.Administrator > 0"></i>
+        <i class="fas fa-trash-alt cursor" ng-click="delete(data.sensor, 'DeleteSensor')" ng-if="path !== '/main' && user.Administrator > 0"></i>
     </p>
 </div>
 
+<p class="cat-heading">Info: </p>
 <p>Adresse: {{ data.sensor.Adresse }}</p>
 <p>Serverschrank: {{ data.sensor.Serverschrank }}</p>
 <p>MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
 
 <div>
-    <p class="cat-heading">Messwerte:</p>
-    <p ng-if="data.temperatur.length === 0">Keine Messwerte!</p>
-    <whkawsf-table delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
-
     <p class="cat-heading">h&ouml;chster Messwert: </p>
-    <p>{{ data.temperatur | greatest }}</p>
+    <p>{{ data.temperatur | greatest:data.sensor }}</p>
 
     <p class="cat-heading">durschnittlicher Messwert: </p> 
-    <p>{{ data.temperatur | average }}</p>
+    <p>{{ data.temperatur | average:data.sensor }}</p>
     
     <p class="cat-heading">Herstellerinfo: </p>
     <p>{{ data.hersteller.Name }}</p>
-</div>
 
-<hr>
+    <p class="cat-heading">Messwerte:</p>
+    <p ng-if="data.temperatur.length === 0">Keine Messwerte!</p>
+
+    <whkawsf-table path="path" sensor="data.sensor" delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
+</div>

@@ -1,3 +1,4 @@
+import angular from 'angular';
 import template from './table.html';
 
 class TableComponent {
@@ -35,8 +36,25 @@ class TableComponent {
             }
         ];
 
+        $scope.limitOptions = [
+            {
+                name: 'Alles anzeigen',
+                value: null
+            },
+            {
+                name: '10 Einträge anzeigen',
+                value: 10
+            }
+        ];
+
         $scope.customOrderBy = (value) => {
-            if (value.Zeit.includes('-') || value.Zeit.includes('-')) {
+            if (!angular.isDefined(value) || !value || value === null)
+                return;
+
+            if (typeof value[$scope.selectedFilter.label] === 'number')
+                return value;
+
+            if (value[$scope.selectedFilter.label].includes('-') || value[$scope.selectedFilter.label].includes('-')) {
                 let date = new Date(value.Zeit);
                 return date.getTime();
             }
@@ -44,22 +62,32 @@ class TableComponent {
             return Number(value[$scope.selectedFilter.label]);
         };
 
+        $scope.path = this.path;
         $scope.isAdmin = !!Number(this.user);
+        $scope.sensor = this.sensor;
         $scope.entries = this.entries;
         $scope.delete = this.delete;
 
         $scope.$watch(_ => this.user, (newValue) => { $scope.isAdmin = !!Number(newValue); });
+        $scope.$watch(_ => this.path, (newValue) => { $scope.path = newValue; });
+        $scope.$watch(_ => this.sensor, (newValue) => { $scope.sensor = newValue; });
         $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
-        $scope.$watchCollection(_ => this.entries, (newValue) => { $scope.entries = newValue; });
+        $scope.$watchCollection(_ => this.entries, (newValue) => {
+            $scope.entries = newValue.filter((nv) => {
+                return nv.SensorID === $scope.sensor.SensorID;
+            });
+        });
     }
 }
 
 export const TableComponentDefinition = {
     restrict: 'E',
     bindings: {
+        path: '=',
         delete: '=',
         entries: '=',
-        user: '='
+        user: '=',
+        sensor: '='
     },
     template,
     controller: TableComponent
