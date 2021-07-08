@@ -102,8 +102,6 @@ def queryData(name, *args):
     if action != 'Select':
         args = args[0]['params']
 
-    print('args', args)
-
     if action == 'Anmelden':
         query = "SELECT * FROM benutzer WHERE Anmeldename='{v1}' AND Passwort='{v2}'".format(v1=args['Anmeldename'], v2=args['Passwort'])
     elif action == 'Select':
@@ -173,8 +171,6 @@ def getResult(query, action, table, args):
         if action == 'Insert':
             data[table+'ID'] = cursor.lastrowid
 
-        # TODO - write log
-
         mysql.connection.commit()
         message = 'Success'
     except MySQLdb.IntegrityError:
@@ -182,7 +178,16 @@ def getResult(query, action, table, args):
     finally:
         cursor.close()
 
+    logQuery(table, args, data)
+
     return {'data': data, 'message': message}
+
+def logQuery(table, args, data):
+    if table == 'Sensor':
+        logCursor = mysql.connection.cursor()
+        logCursor.execute("INSERT INTO log (SensorID, BenutzerID) VALUES ({v1},{v2})".format(v1=args['SensorID'], v2=data['BenutzerID']))
+        mysql.connection.commit()
+        logCursor.close()
 
 # Webserver starten
 if __name__ == '__main__':
