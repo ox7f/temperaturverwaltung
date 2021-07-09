@@ -4,31 +4,13 @@
     <i class="fas fa-trash-alt cursor" ng-click="delete(data.sensor, 'DeleteSensor')" ng-if="path !== '/main' && user.Administrator"></i>
 
     <ul>
-        <li>
-            <h5>Info:</h5>
-        </li>
-        <li>
-            <span>Adresse: {{ data.sensor.Adresse }}</span>
-        </li>
-        <li>
-            <span>Serverschrank: {{ data.sensor.Serverschrank }}</span>
-        </li>
-        <li>
-            <span>MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</span>
-        </li>
-        <li>
-            <span>H&ouml;chster Messwert: {{ data.temperatur | greatest:data.sensor }}</span>
-        </li>
-        <li>
-            <span>Durschnittlicher Messwert: {{ data.temperatur | average:data.sensor }}</span>
-        </li>
-        <li>
-            <span>Herstellerinfo: {{ data.hersteller.Name }}</span>
-        </li>
-        <li>
-            <span>Messwerte: {{ data.hersteller.Name }}</span>
-            <spann ng-if="data.temperatur.length === 0">Keine Messwerte!</span>
-        </li>
+        <li>Adresse: {{ data.sensor.Adresse }}</li>
+        <li>Serverschrank: {{ data.sensor.Serverschrank }}</li>
+        <li>Max. Temperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</li>
+        <li>H&ouml;chster Wert: {{ data.temperatur | greatest:data.sensor }}</li>
+        <li>Durchschnitt: {{ data.temperatur | average:data.sensor }}</li>
+        <li>Hersteller: {{ data.hersteller.Name }}</li>
+        <li ng-if="data.temperatur.length === 0">Keine Messwerte!</li>
     </ul>
 
     <whkawsf-table sensor="data.sensor" delete="delete" temperatur="data.temperatur"></whkawsf-table>

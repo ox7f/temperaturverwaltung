@@ -15,7 +15,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
     .when('/main', { templateUrl: '/public/templates/main.html', controller: 'mainCtrl' })
     .when('/admin', { templateUrl: '/public/templates/admin.html', controller: 'adminCtrl' })
     .when('/login', { templateUrl: '/public/templates/login.html', controller: 'loginCtrl' })
-    .when('/logout', { redirectTo: '/login', controller: 'logoutCtrl' })
+    .when('/logout', { templateUrl: '/public/templates/logout.html', controller: 'logoutCtrl' })
     .otherwise({ redirectTo: '/login' });
 }])
 
@@ -129,8 +129,12 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
     };
 }])
 
-.controller('logoutCtrl', ['Authenticator', (Authenticator) => {
+.controller('logoutCtrl', ['$scope', '$location', 'Authenticator', ($scope, $location, Authenticator) => {
     Authenticator.logout();
+
+    $scope.$evalAsync(_ => {
+        $location.path('login');
+    });
 }])
 
 .service('Authenticator', ['$location', '$window', function($location, $window) {
@@ -151,10 +155,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
         });
     };
 
-    this.logout = _ => {
-        this.unset('user');
-        $location.path('login');
-    };
+    this.logout = _ => this.unset('user');
 
     this.get = (key) => sessionStorage.getItem(key);
     this.set = (key, value) => sessionStorage.setItem(key, JSON.stringify(value));

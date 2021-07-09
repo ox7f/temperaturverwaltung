@@ -1,26 +1,16 @@
 import template from './header.html';
 
 class HeaderComponent {
-    constructor($scope, $location) {
-        $scope.user = this.user;
+    constructor($scope, Authenticator) {
+        $scope.user = JSON.parse(Authenticator.get('user'));
 
-        $scope.logout = _ => Authenticator.logout();
-
-        $scope.toAdmin = _ => {
-            $scope.$evalAsync(_ => {
-                $location.path('admin');
-            });
-        };
-
-        $scope.$watch(_ => this.user, (newValue) => { $scope.user = newValue; });
+        $scope.$watch(_ => Authenticator.get('user'), (newValue) => { $scope.user = JSON.parse(newValue); });
     }
 }
 
 export const HeaderComponentDefinition = {
     restrict: 'E',
-    bindings: {
-        user: '='
-    },
+    bindings: {},
     template,
     controller: HeaderComponent
 };
