@@ -20,7 +20,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # DB einbinden
 mysql = MySQL(app)
 
-# CORS-Policy (Kommunikation zwischen Port 8080 und 1337 erlauben)
+# CORS einbinden
 CORS(app)
 
 # Socket in­i­ti­a­li­sie­ren
@@ -42,30 +42,17 @@ def login():
 
 @socketio.on('get-data')
 def getEvent(name):
-    print('get-data', name)
-
-    if type(name) == list:
-        for event in name:
-            query = queryData(event)
-            emit('data', {
-                'name': event,
-                'data': query['data'],
-                'message': query['message']
-            })
-    else:
-        query = queryData(name)
+    for event in name:
+        query = queryData(event)
         emit('data', {
-            'name': name,
+            'name': event,
             'data': query['data'],
             'message': query['message']
         })
 
 @socketio.on('add-data')
 def addEvent(data):
-    print('add-data', data)
-
     query = queryData(data['name'], data)
-    print('query add', query)
     emit('added', {
         'name': data['name'],
         'new': query['data'],
@@ -74,10 +61,7 @@ def addEvent(data):
 
 @socketio.on('modify-data')
 def modifyEvent(data):
-    print('modify-data', data)
-
     query = queryData(data['name'], data)
-    print('query modify', query)
     emit('modified', {
         'name': data['name'],
         'data': data['params'],
@@ -86,17 +70,12 @@ def modifyEvent(data):
 
 @socketio.on('remove-data')
 def removeEvent(data):
-    print('remove-data', data)
-
     query = queryData(data['name'], data)
-    print('query remove', query)
     emit('removed', {
         'name': data['name'],
         'old': data['params'],
         'message': query['message']
     })
-
-#import sensorSimulator
 
 # bastelt Query aus Input
 def queryData(name, *args):
@@ -112,7 +91,7 @@ def queryData(name, *args):
     if action == 'Anmelden':
         query = "SELECT * FROM benutzer WHERE Anmeldename='{v1}' AND Passwort='{v2}'".format(v1=args['Anmeldename'], v2=args['Passwort'])
     elif action == 'Select':
-        query = "SELECT * FROM {v1}".format(v1=table)
+        query = "SELECT * FROM {v1}".format(v1=table.lower())
     elif action == 'Insert':
         if table == 'Temperatur':
             query = "INSERT INTO temperatur (SensorID, Temperatur) VALUES ({v1},{v2})".format(v1=args['SensorID'], v2=args['Temperatur'])
@@ -127,12 +106,16 @@ def queryData(name, *args):
     elif action == 'Update':
         if table == 'Sensor':
             query = "UPDATE sensor SET Serverschrank={v1}, HerstellerID={v2}, MaximalTemperatur={v3}, Adresse='{v4}' WHERE SensorID={v5}".format(v1=args['Serverschrank'], v2=args['HerstellerID'], v3=args['MaximalTemperatur'], v4=args['Adresse'], v5=args['SensorID'])
+            logQuery(table, action, args)
         if table == 'Hersteller':
             query = "UPDATE hersteller SET Name='{v1}' WHERE HerstellerID={v2}".format(v1=args['Name'], v2=args['HerstellerID'])
         if table == 'Benutzer':
             query = "UPDATE benutzer SET Anmeldename='{v1}', Telefonnummer={v2}, Administrator={v3}, Passwort='{v4}' WHERE BenutzerID={v5}".format(v1=args['Anmeldename'], v2=args['Telefonnummer'], v3=args['Administrator'], v4=args['Passwort'], v5=args['BenutzerID'])
     elif action == 'Delete':
-        query = "DELETE FROM {v1} WHERE {v2}={v3}".format(v1=table, v2=table+'ID' ,v3=args[table+'ID'])
+        query = "DELETE FROM {v1} WHERE {v2}={v3}".format(v1=table.lower(), v2=table+'ID' ,v3=args[table+'ID'])
+
+        if table == 'Sensor':
+            logQuery(table, action, args)
     else:
         return 'Error'
 
@@ -141,20 +124,15 @@ def queryData(name, *args):
 # fuehrt Query aus und gibt Wert zurueck
 def getResult(query, action, table, args):
     data = args
-
     cursor = mysql.connection.cursor()
 
     try:
         cursor.execute(query)
-        columns = cursor.description 
 
         if action == 'Select' or action == 'Anmelden':
+            columns = cursor.description
             data = [{columns[index][0]:column for index, column in enumerate(value)} for value in cursor.fetchall()]
 
-        if not data:
-            return {'message': 'Error', 'data': []}
-
-        if type(data) == list:
             for d in data:
                 if 'Zeit' in d:
                     d['Zeit'] = d['Zeit'].__str__()
@@ -165,6 +143,12 @@ def getResult(query, action, table, args):
                     else:
                         d['Administrator'] = False
 
+        if not data:
+            return {'message': 'Error', 'data': []}
+
+        if action == 'Anmelden':
+            data = data[0]
+
         mysql.connection.commit()
         message = 'Success'
     except MySQLdb.IntegrityError:
@@ -174,17 +158,38 @@ def getResult(query, action, table, args):
 
     if action == 'Insert':
         data[table+'ID'] = cursor.lastrowid
-
-    logQuery(table, action, args, data)
+        if table == 'Sensor':
+            logQuery(table, action, data)
 
     return {'data': data, 'message': message}
 
-def logQuery(table, action, args, data):
+def logQuery(table, action, args):
     if table == 'Sensor' and action != 'Select':
         logCursor = mysql.connection.cursor()
-        logCursor.execute("INSERT INTO log (SensorID, BenutzerID) VALUES ({v1},{v2})".format(v1=args['SensorID'], v2=data['BenutzerID']))
-        mysql.connection.commit()
-        logCursor.close()
+
+        try:
+            logCursor.execute("INSERT INTO log (SensorID, BenutzerID, Info) VALUES ({v1},{v2},'{v3}')".format(v1=args['SensorID'], v2=args['UserID'], v3=action+table))
+            mysql.connection.commit()
+            message = 'Success'
+        except MySQLdb.IntegrityError:
+            message = 'Error'
+        finally:
+            logCursor.close()
+
+        data = {
+            'LogID': logCursor.lastrowid,
+            'SensorID': args['SensorID'],
+            'BenutzerID': args['UserID'],
+            'Info': action + table
+        }
+
+        emit('added', {
+            'name': 'InsertLog',
+            'new': data,
+            'message': message
+        }) 
+
+import sensorSimulator
 
 # Webserver starten
 if __name__ == '__main__':
