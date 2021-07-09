@@ -2,7 +2,17 @@ import angular from 'angular';
 import template from './table.html';
 
 class TableComponent {
-    constructor($scope) {
+    constructor($scope, $location, Authenticator) {
+        $scope.user = JSON.parse(Authenticator.get('user'));
+
+        $scope.data = {
+            sensor: this.sensor,
+            temperatur: this.temperatur
+        };
+
+        $scope.path = $location.$$path;
+        $scope.delete = this.delete;
+
         $scope.filterOptions = [
             {
                 name: 'ID aufsteigend',
@@ -44,6 +54,14 @@ class TableComponent {
             {
                 name: '10 Einträge anzeigen',
                 value: 10
+            },
+            {
+                name: '50 Einträge anzeigen',
+                value: 50
+            },
+            {
+                name: '100 Einträge anzeigen',
+                value: 100
             }
         ];
 
@@ -59,20 +77,11 @@ class TableComponent {
             return value[$scope.selectedFilter.label];
         };
 
-        $scope.path = this.path;
-        $scope.isAdmin = !!Number(this.user);
-        $scope.sensor = this.sensor;
-        $scope.entries = this.entries;
-        $scope.delete = this.delete;
-
-        $scope.$watch(_ => this.user, (newValue) => { $scope.isAdmin = !!Number(newValue); });
-        $scope.$watch(_ => this.path, (newValue) => { $scope.path = newValue; });
-        $scope.$watch(_ => this.sensor, (newValue) => { $scope.sensor = newValue; });
+        $scope.$watch(_ => this.sensor, (newValue) => { $scope.data.sensor = newValue; });
         $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
-        $scope.$watchCollection(_ => this.entries, (newValue) => {
-            $scope.entries = newValue.filter((nv) => {
-                return nv.SensorID === $scope.sensor.SensorID;
-            });
+
+        $scope.$watchCollection(_ => this.temperatur, (newValue) => {
+            $scope.data.temperatur = newValue.filter((nv) => nv.SensorID === $scope.data.sensor.SensorID);
         });
     }
 }
@@ -80,11 +89,9 @@ class TableComponent {
 export const TableComponentDefinition = {
     restrict: 'E',
     bindings: {
-        path: '=',
-        delete: '=',
-        entries: '=',
-        user: '=',
-        sensor: '='
+        sensor: '=',
+        temperatur: '=',
+        delete: '='
     },
     template,
     controller: TableComponent

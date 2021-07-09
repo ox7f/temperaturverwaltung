@@ -2,11 +2,8 @@
 
 <div class="sensor-container" ng-repeat="sensor in data.sensor">
     <whkawsf-sensor
-        path="path"
-        user="user"
         sensor="sensor"
-        hersteller="data.hersteller | custom:sensor"
+        hersteller="data.hersteller | getHersteller:sensor"
         temperatur="data.temperatur">
     </whkawsf-sensor>
 </div>
-<!-- <whkawsf-chart></whkawsf-chart> -->

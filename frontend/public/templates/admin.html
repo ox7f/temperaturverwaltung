@@ -55,12 +55,11 @@
 <!-- Löschen von Temperaturdaten -->
 <div class="sensor-container" ng-repeat="sensor in data.sensor">
     <whkawsf-sensor
-        path="path"
         user="user"
         sensor="sensor"
         toolbox="openToolbox"
         delete="delete"
-        hersteller="data.hersteller | custom:sensor"
+        hersteller="data.hersteller | getHersteller:sensor"
         temperatur="data.temperatur"
     ></whkawsf-sensor>
 </div>

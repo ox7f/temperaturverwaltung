@@ -5,12 +5,10 @@ import ngDialog from 'ng-dialog';
 import io from 'socket.io-client';
 
 import tableModule from './components/table';
-import chartModule from './components/chart';
 import headerModule from './components/header';
-
 import sensorModule from './components/sensor';
 
-angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule, sensorModule])
+angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModule])
 
 .config(['$routeProvider', ($routeProvider) => {
     $routeProvider
@@ -22,41 +20,25 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
 }])
 
 .controller('mainCtrl', ['$scope', '$location', 'Authenticator', 'Socket', ($scope, $location, Authenticator, Socket) => {
-    if (!Authenticator.get('user'))
-        $location.path('login');
-
-    if (Authenticator.get('user') && Authenticator.get('user') === 'undefined')
-        $location.path('login');
-    
-    Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
-
-    $scope.path = $location.$$path;
     $scope.user = JSON.parse(Authenticator.get('user'));
     $scope.data = {
         sensor: [],
         temperatur: [],
         hersteller: []
     };
+    
+    if (!$scope.user)
+        $location.path('login');
+    
+    Socket.socketGet(['SelectSensor', 'SelectTemperatur', 'SelectHersteller']);
 
     $scope.$watchCollection(_ => Authenticator.get('user'), (newValue) => { $scope.user = JSON.parse(newValue); });
-    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => { $scope.data.sensor = newValue; });
-    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => { $scope.data.temperatur = newValue; });
-    $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Sensor'), (newValue) => { $scope.data.sensor = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Temperatur'), (newValue) => { $scope.data.temperatur = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
 }])
 
 .controller('adminCtrl', ['$scope', '$location', 'ngDialog', 'Authenticator', 'Socket', ($scope, $location, ngDialog, Authenticator, Socket) => {
-    if (!Authenticator.get('user'))
-        $location.path('login');
-
-    if (Authenticator.get('user') && Authenticator.get('user') === 'undefined')
-        $location.path('login');
-
-    if (Authenticator.get('user') && JSON.parse(Authenticator.get('user')).Administrator == 0)
-        $location.path('main');
-
-    Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
-
-    $scope.path = $location.$$path;
     $scope.user = JSON.parse(Authenticator.get('user'));
     $scope.data = {
         user: [],
@@ -66,22 +48,31 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         log: []
     };
 
+    if (!$scope.user)
+        $location.path('login');
+
+    if (!$scope.user.Administrator)
+        $location.path('main');
+
+    Socket.socketGet(['SelectTemperatur', 'SelectBenutzer', 'SelectSensor', 'SelectHersteller', 'SelectLog']);
+
     $scope.$watchCollection(_ => Authenticator.get('user'), (newValue) => { $scope.user = JSON.parse(newValue); });
-    $scope.$watchCollection(_ => Socket.get('benutzer'), (newValue) => { $scope.data.user = newValue; });
-    $scope.$watchCollection(_ => Socket.get('sensor'), (newValue) => { $scope.data.sensor = newValue; });
-    $scope.$watchCollection(_ => Socket.get('temperatur'), (newValue) => { $scope.data.temperatur = newValue; });
-    $scope.$watchCollection(_ => Socket.get('hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
-    $scope.$watchCollection(_ => Socket.get('log'), (newValue) => { $scope.data.log = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Benutzer'), (newValue) => { $scope.data.user = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Sensor'), (newValue) => { $scope.data.sensor = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Temperatur'), (newValue) => { $scope.data.temperatur = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Hersteller'), (newValue) => { $scope.data.hersteller = newValue; });
+    $scope.$watchCollection(_ => Socket.get('Log'), (newValue) => { $scope.data.log = newValue; });
 
     $scope.openToolbox = (element, name) => {
         $scope.copy = angular.copy(element);
+        $scope.copy['UserID'] = $scope.user['BenutzerID'];
 
         ngDialog.openConfirm({
             template: require('/public/templates/ngDialog/toolbox.html'),
             scope: $scope,
             plain: true,
         })
-        .then(confirm => Socket.socketModify(name, confirm))
+        .then(confirm => Socket.socketModify(name, $scope.copy))
         .catch(deny => { /* do nothing */});
     };
 
@@ -91,11 +82,16 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
             scope: $scope,
             plain: true
         })
-        .then(confirm => Socket.socketRemove(name, element))
+        .then(confirm => {
+            element['UserID'] = $scope.user['BenutzerID'];
+            Socket.socketRemove(name, element);
+        })
         .catch(deny => { /* do nothing */});
     };
 
     $scope.add = (element, name) => {
+        element['UserID'] = $scope.user['BenutzerID'];
+
         if (!angular.isDefined(element) || !angular.isDefined(name))
             return;
 
@@ -142,12 +138,12 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         return fetch(`http://${SOCKET_HOST}/api/login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ Anmeldename: name, Passwort: password })
+            body: JSON.stringify({ Anmeldename:name, Passwort:password })
         })
         .then(res => res.json())
         .then(user => {
             if (user.message === 'Success')
-                this.set('user', user.data[0]);
+                this.set('user', user.data);
 
             return user;
         });
@@ -169,16 +165,16 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
     let socket = io(SOCKET_HOST);
 
     let entries = {
-        temperatur: [],
-        log: [],
-        benutzer: [],
-        sensor: [],
-        hersteller: []
+        Temperatur: [],
+        Log: [],
+        Benutzer: [],
+        Sensor: [],
+        Hersteller: []
     };
 
     socket
     .on('data', (data) => {
-        let name = data.name.replace('Select', '').toLowerCase();
+        let name = data.name.replace('Select', '');
         entries[name] = Object.values(data.data);
 
         $rootScope.$apply();
@@ -187,9 +183,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
          if (data.message !== 'Success')
             return;
 
-        delete data.new.BenutzerID;
-
-        let name = data.name.replace('Insert', '').toLowerCase();
+        let name = data.name.replace('Insert', '');
         entries[name].push(data.new);
 
         $rootScope.$apply();
@@ -198,55 +192,12 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         if (data.message !== 'Success')
             return;
 
-        delete data.data.BenutzerID;
+        let name = data.name.replace('Update', '');
 
-        let tempArr = [];
-        let name = data.name.replace('Update', '').toLowerCase();
-
-        entries[name].forEach((val) => {
-            let needsAdjustment = false;
-
-            switch(name) {
-                case 'temperatur':
-                    if (val.TemperaturID === data.data.TemperaturID) {
-                        needsAdjustment = true;
-                        tempArr.push(data.data);
-                    }
-                    break;
-                case 'log':
-                    if (val.LogID === data.data.LogID) {
-                        needsAdjustment = true;
-                        tempArr.push(data.data);
-                    }
-                    break;
-                case 'hersteller':
-                    if (val.HerstellerID === data.data.HerstellerID) {
-                        needsAdjustment = true;
-                        tempArr.push(data.data);
-                    }
-                    break;
-                case 'sensor':
-                    if (val.SensorID === data.data.SensorID) {
-                        needsAdjustment = true;
-                        tempArr.push(data.data);
-                    }
-                    break;
-                case 'benutzer':
-                    if (val.BenutzerID === data.data.BenutzerID) {
-                        needsAdjustment = true;
-                        tempArr.push(data.data);
-                    }
-                    break;
-            };
-
-            if (!needsAdjustment)
-                tempArr.push(val);
+        entries[name].forEach((val, index) => {
+            if (val[name+'ID'] === data.data[name+'ID'])
+                entries[name][index] = data.data;
         });
-
-        entries[name] = tempArr;
-
-        if (name === 'benutzer' && data.data.BenutzerID === JSON.parse(Authenticator.get('user')).BenutzerID)
-            Authenticator.set('user', data.data);
 
         $rootScope.$apply();
     })
@@ -254,49 +205,36 @@ angular.module('app', [ngRoute, ngDialog, tableModule, chartModule, headerModule
         if (data.message !== 'Success')
             return;
 
-        let name = data.name.replace('Delete', '').toLowerCase();
-        entries[name] = entries[name].filter((val) => {
-            switch(name) {
-                case 'temperatur':
-                    return val.TemperaturID !== data.old.TemperaturID;
-                case 'log':
-                    return val.LogID !== data.old.LogID;
-                case 'hersteller':
-                    return val.HerstellerID !== data.old.HerstellerID;
-                case 'sensor':
-                    return val.SensorID !== data.old.SensorID;
-                case 'benutzer':
-                    return val.BenutzerID !== data.old.BenutzerID;
-            };
-        });
+        let name = data.name.replace('Delete', '');
+        entries[name] = entries[name].filter((val) => val[name+'ID'] !== data.old[name+'ID']);
 
         $rootScope.$apply();
     });
 
     this.socketGet = (name) => socket.emit('get-data', name);
-    this.socketAdd = (name, params) => {
-        params.BenutzerID = JSON.parse(Authenticator.get('user')).BenutzerID;
-        socket.emit('add-data', {name: name, params: params});
-    };
-    this.socketModify = (name, params) => {
-        params.BenutzerID = JSON.parse(Authenticator.get('user')).BenutzerID;
-        socket.emit('modify-data', {name: name, params: params});
-    };
-    this.socketRemove = (name, params) => {
-        params.BenutzerID = JSON.parse(Authenticator.get('user')).BenutzerID;
-        socket.emit('remove-data', {name: name, params: params});
-    };
+    this.socketAdd = (name, params) => { socket.emit('add-data', {name:name, params:params}); };
+    this.socketModify = (name, params) => { socket.emit('modify-data', {name:name, params:params}); };
+    this.socketRemove = (name, params) => { socket.emit('remove-data', {name:name, params:params}); };
 
     this.get = (key) => entries[key];
 
     return this;
 }])
 
-.filter('custom', function() {
+.filter('getHersteller', function() {
     return (data, sensor) => {
         return data.filter((d) => {
             return d.HerstellerID === sensor.HerstellerID;
         })[0];
+    };
+})
+
+// todo - $digest - iteration error
+.filter('getTemperatur', function() {
+    return (data, sensor) => {
+        return data.filter((d) => {
+            return d.SensorID === sensor.SensorID;
+        });
     };
 })
 

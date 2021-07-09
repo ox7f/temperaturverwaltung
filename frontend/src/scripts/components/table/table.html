@@ -1,11 +1,11 @@
 <select
-    ng-show="entries.length > 0"
+    ng-show="data.temperatur.length > 0"
     ng-model="selectedFilter"
     ng-options="option as option.name for option in filterOptions"
-    ng-init="selectedFilter=filterOptions[0]">
+    ng-init="selectedFilter=filterOptions[1]">
 </select>
 <select
-    ng-show="entries.length > 0"
+    ng-show="data.temperatur.length > 0"
     ng-model="selectedLimit"
     ng-options="limit as limit.name for limit in limitOptions"
     ng-init="selectedLimit=limitOptions[0]">
@@ -13,28 +13,28 @@
 
 </br>
 
-<table class="table table-hover table-bordered" ng-if="entries.length > 0">
+<table class="table table-hover table-bordered" ng-if="data.temperatur.length > 0">
     <thead>
         <tr>
-            <th scope="col" ng-repeat="(key, value) in entries[0]" ng-if="key !== 'SensorID'">
+            <th scope="col" ng-repeat="(key, value) in data.temperatur[0]" ng-if="key !== 'SensorID'">
                 {{ key.toLowerCase().includes('id') ? '#' : key | uppercase }}
             </th>
-            <th scope="col" ng-if="isAdmin && path === '/admin'">Delete</th>
+            <th scope="col" ng-if="user.Administrator && path === '/admin'">Delete</th>
         </tr>
     </thead>
     <tbody>
         <tr
-            ng-repeat="entry in entries | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value"
+            ng-repeat="temperatur in data.temperatur | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value"
             ng-class="{
-                'red': (entry.Temperatur) > (sensor.MaximalTemperatur),
-                'yellow': (entry.Temperatur) <= (sensor.MaximalTemperatur) && (entry.Temperatur) > (sensor.MaximalTemperatur) - 20,
-                'green': (entry.Temperatur) <= (sensor.MaximalTemperatur) - 20
+                'red': (temperatur.Temperatur) > (data.sensor.MaximalTemperatur),
+                'yellow': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) && (temperatur.Temperatur) > (data.sensor.MaximalTemperatur) - 20,
+                'green': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) - 20
             }">
-            <td ng-repeat="(key, value) in entry" ng-if="key !== 'SensorID'">
+            <td ng-repeat="(key, value) in temperatur" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}
             </td>
-            <td ng-if="isAdmin && path === '/admin'">
-                <i class="fas fa-trash-alt cursor" ng-click="delete(entry, 'DeleteTemperatur')"></i>
+            <td ng-if="user.Administrator && path === '/admin'">
+                <i class="fas fa-trash-alt cursor" ng-click="delete(temperatur, 'DeleteTemperatur')"></i>
             </td>
         </tr>
       </tbody>
