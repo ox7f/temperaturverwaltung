@@ -1,11 +1,13 @@
 <select
-    ng-show="data.temperatur.length > 0"
+    class="form-select"
+    ng-disabled="data.temperatur.length === 0"
     ng-model="selectedFilter"
     ng-options="option as option.name for option in filterOptions"
     ng-init="selectedFilter=filterOptions[1]">
 </select>
 <select
-    ng-show="data.temperatur.length > 0"
+    class="form-select"
+    ng-disabled="data.temperatur.length === 0"
     ng-model="selectedLimit"
     ng-options="limit as limit.name for limit in limitOptions"
     ng-init="selectedLimit=limitOptions[0]">
@@ -26,9 +28,9 @@
         <tr
             ng-repeat="temperatur in data.temperatur | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value"
             ng-class="{
-                'red': (temperatur.Temperatur) > (data.sensor.MaximalTemperatur),
-                'yellow': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) && (temperatur.Temperatur) > (data.sensor.MaximalTemperatur) - 20,
-                'green': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) - 20
+                'table-danger': (temperatur.Temperatur) > (data.sensor.MaximalTemperatur),
+                'table-warning': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) && (temperatur.Temperatur) > (data.sensor.MaximalTemperatur) - 20,
+                'table-success': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) - 20
             }">
             <td ng-repeat="(key, value) in temperatur" ng-if="key !== 'SensorID'">
                 {{ key === 'Zeit' ? (value | date : "medium") : value }}

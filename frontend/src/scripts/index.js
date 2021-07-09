@@ -47,6 +47,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
         hersteller: [],
         log: []
     };
+    $scope.new = {};
 
     if (!$scope.user)
         $location.path('login');
@@ -90,6 +91,11 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
     };
 
     $scope.add = (element, name) => {
+        console.log('add', element, $scope.new);
+
+        if (!element)
+            return;
+
         element['UserID'] = $scope.user['BenutzerID'];
 
         if (!angular.isDefined(element) || !angular.isDefined(name))
