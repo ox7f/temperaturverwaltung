@@ -32,10 +32,7 @@ socketio = SocketIO(app, cors_allowed_origins='http://localhost:8080', async_mod
 @app.route('/api/login', methods=['POST'])
 @cross_origin(origin='localhost')
 def login():
-    data = request.json
-    print('login', data)
-
-    query = queryData('Anmelden', data)
+    query = queryData('Anmelden', request.json)
     return {'data': query['data'], 'message': query['message']}
 
 # socket stuff
