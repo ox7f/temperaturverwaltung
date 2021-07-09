@@ -101,10 +101,9 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
 }])
 
 .controller('loginCtrl', ['$scope', '$location', '$timeout', 'Authenticator', ($scope, $location, $timeout, Authenticator) => {
-    $scope.loginMessage = '';
-    $scope.isLoading = false;
-
     $scope.login = (username, password) => {
+        $scope.message = '';
+
         if (!angular.isDefined(username) || username.length < 3 || !angular.isDefined(password) || password.length < 3)
             return;
 
@@ -112,17 +111,14 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
 
         Authenticator.login(username, password)
         .then(user => {
-            if (user.message === "Success")
-                $location.path('main');
-
             $scope.$evalAsync(_ => {
-                if (user.message !== "Success") {
-                    $scope.isLoading = false;
-                    $scope.loginMessage = 'Login fehlgeschlagen!';
-                }
+                if (user.message === "Success")
+                    $location.path('main');
+
+                $scope.message = 'Login Error - Check your credentials!';
             });
 
-            $timeout(_ => $scope.loginMessage = '', 3000);
+            $timeout(_ => $scope.message = '', 3000);
         });
     };
 }])
