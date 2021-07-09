@@ -3,7 +3,7 @@
 <div class="sensor-container" ng-repeat="sensor in data.sensor">
     <whkawsf-sensor
         sensor="sensor"
-        hersteller="data.hersteller | getHersteller:sensor"
-        temperatur="data.temperatur">
+        temperatur="data.temperatur"
+        hersteller="data.hersteller | getHersteller:sensor">
     </whkawsf-sensor>
 </div>

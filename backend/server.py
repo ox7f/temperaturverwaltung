@@ -85,6 +85,8 @@ def queryData(name, *args):
     if action != 'Select':
         if name == 'Anmelden':
             args = args[0]
+        elif name == 'Simulator':
+            args = args[0]
         else:
             args = args[0]['params']
 
@@ -116,6 +118,8 @@ def queryData(name, *args):
 
         if table == 'Sensor':
             logQuery(table, action, args)
+    elif name == 'Simulator':
+        query = "SELECT * FROM temperatur WHERE TemperaturID={v1}".format(v1=args['TemperaturID'])
     else:
         return 'Error'
 
@@ -129,7 +133,7 @@ def getResult(query, action, table, args):
     try:
         cursor.execute(query)
 
-        if action == 'Select' or action == 'Anmelden':
+        if action == 'Select' or action == 'Anmelden' or action == 'Simulator':
             columns = cursor.description
             data = [{columns[index][0]:column for index, column in enumerate(value)} for value in cursor.fetchall()]
 

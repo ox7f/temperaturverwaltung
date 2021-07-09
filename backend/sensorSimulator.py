@@ -24,12 +24,14 @@ def simulateSensor():
     }
 
     with app.app_context():
-        query = queryData('InsertTemperatur', data)
+        # zeit fehlt noch :(
+        query1 = queryData('InsertTemperatur', data)
+        query2 = queryData('Simulator', query1['data'])
 
         socketio.emit('added', {
             'name': 'InsertTemperatur',
-            'new': query['data'],
-            'message': query['message']
+            'new': query2['data'][0],
+            'message': query2['message']
         }) 
 
 event = threading.Event()
