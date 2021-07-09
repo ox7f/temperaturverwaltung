@@ -8,7 +8,7 @@
             <div class="input-group mb-3">
                 <input ng-repeat="(key, value) in user" ng-if="!key.includes('ID')" ng-model="new[key]" class="form-control" type="text" placeholder="{{ key }}" required />
                 <span class="input-group-text">
-                    <input type="submit" value="" /><i class="fas fa-plus cursor" ng-click="add(new, 'InsertBenutzer')"></i>
+                    <i class="fas fa-plus cursor" ng-click="add(new, 'InsertBenutzer')"></i>
                 </span>
             </div>
         </div>
@@ -31,7 +31,6 @@
         <ol>
             <li ng-repeat="log in data.log">
                 {{ log | json }}
-                <i class="fas fa-edit cursor" ng-click="openToolbox(log, 'UpdateLog')"></i>
                 <i class="fas fa-trash-alt cursor" ng-click="delete(log, 'DeleteLog')"></i>
             </li>
         </ol>
@@ -47,7 +46,7 @@
         <div class="input-group mb-3">
             <input ng-model="new['Name']" class="form-control" type="text" placeholder="Name" required />
             <span class="input-group-text">
-                <input type="submit" value="" /><i class="fas fa-plus cursor" ng-click="add(new, 'InsertHersteller')"></i>
+                <i class="fas fa-plus cursor" ng-click="add(new, 'InsertHersteller')"></i>
             </span>
         </div>
 
@@ -74,7 +73,7 @@
             <input ng-model="new['MaximalTemperatur']" class="form-control" type="text" placeholder="MaximalTemperatur" required />
             <input ng-model="new['HerstellerID']" class="form-control" type="text" placeholder="HerstellerID" required />
             <span class="input-group-text">
-                <input type="submit" value="" /><i class="fas fa-plus cursor" ng-click="add(new, 'InsertSensor')"></i>
+                <i class="fas fa-plus cursor" ng-click="add(new, 'InsertSensor')"></i>
             </span>
         </div>
     </div>
