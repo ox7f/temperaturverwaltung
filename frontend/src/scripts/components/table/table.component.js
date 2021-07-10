@@ -65,18 +65,6 @@ class TableComponent {
             }
         ];
 
-        $scope.customOrderBy = (value) => {
-            if (!angular.isDefined(value) || !value || value === null)
-                return;
-
-            if (typeof value[$scope.selectedFilter.label] === 'Zeit') {
-                let date = new Date(value.Zeit);
-                return date.getTime();
-            }
-
-            return value[$scope.selectedFilter.label];
-        };
-
         $scope.$watch(_ => this.sensor, (newValue) => { $scope.data.sensor = newValue; });
         $scope.$watch(_ => this.delete, (newValue) => { $scope.delete = newValue; });
 

@@ -26,7 +26,7 @@
     </thead>
     <tbody>
         <tr
-            ng-repeat="temperatur in data.temperatur | orderBy: customOrderBy:selectedFilter.option | limitTo: selectedLimit.value"
+            ng-repeat="temperatur in data.temperatur | orderBy: selectedFilter.label:selectedFilter.option | limitTo: selectedLimit.value"
             ng-class="{
                 'table-danger': (temperatur.Temperatur) > (data.sensor.MaximalTemperatur),
                 'table-warning': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) && (temperatur.Temperatur) > (data.sensor.MaximalTemperatur) - 20,

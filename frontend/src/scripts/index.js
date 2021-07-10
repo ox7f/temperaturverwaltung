@@ -91,15 +91,10 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
     };
 
     $scope.add = (element, name) => {
-        console.log('add', element, $scope.new);
-
-        if (!element)
+        if (!angular.isDefined(element) || !angular.isDefined(name))
             return;
 
         element['UserID'] = $scope.user['BenutzerID'];
-
-        if (!angular.isDefined(element) || !angular.isDefined(name))
-            return;
 
         Socket.socketAdd(name, element);
         $scope.new = {};
@@ -110,7 +105,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
     $scope.login = (username, password) => {
         $scope.message = '';
 
-        if (!angular.isDefined(username) || username.length < 3 || !angular.isDefined(password) || password.length < 3)
+        if (!angular.isDefined(username) || !angular.isDefined(password))
             return;
 
         $scope.isLoading = true;
@@ -278,7 +273,7 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
 
         let total = 0,
             count = 0,
-            avgTemperatur = 0;
+            avgTemperatur;
 
         data.forEach((d) => {
             if (d.SensorID === sensor.SensorID) {
