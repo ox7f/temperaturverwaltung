@@ -33,7 +33,7 @@
                 'table-success': (temperatur.Temperatur) <= (data.sensor.MaximalTemperatur) - 20
             }">
             <td ng-repeat="(key, value) in temperatur" ng-if="key !== 'SensorID'">
-                {{ key === 'Zeit' ? (value | date : "medium") : key === 'TemperaturID' ? index : value }}
+                {{ key === 'Zeit' ? (value | date : "medium") : key === 'TemperaturID' ? index + 1 : value }}
             </td>
             <td ng-if="user.Administrator && path === '/admin'">
                 <i class="fas fa-trash-alt cursor" ng-click="delete(temperatur, 'DeleteTemperatur')"></i>
