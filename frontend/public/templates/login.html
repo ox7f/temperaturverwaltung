@@ -1,17 +1,15 @@
-<div class="wrapper">
-  <div class="formContent">
-    <div>
-      <a class="tab-title">Account Login</a>
+<form>
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <label>Username</label>
+            <input ng-model="username" type="text" class="form-control" placeholder="Username" required />
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label>Password</label>
+            <input ng-model="password" type="password" class="form-control" placeholder="Password" required />
+        </div>
     </div>
-    <form>
-      <input ng-model="username" for="username" type="text" class="login_uname" name="uname" placeholder="username" required>
-      <input ng-model="password" for="password" type="password" class="login_password" name="password" placeholder="password" required>
-      <input ng-click="login(username, password)" type="submit" class="login_submit" value="Log In">
-    </form>
-    <div class="loader" ng-if="isLoading">Loading...</div>
-    <div>
-      <span id="login-message" ng-if="loginMessage">{{ loginMessage }}</span>
-    </div>
-    </br>
-  </div>
-</div>
+
+    <button ng-click="login(username, password)" class="btn btn-primary" type="submit">Login</button>
+</form>

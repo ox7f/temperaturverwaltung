@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jul 02, 2021 at 12:28 PM
--- Server version: 10.4.6-MariaDB
--- PHP Version: 7.3.8
+-- Host: 127.0.0.1
+-- Erstellungszeit: 09. Jul 2021 um 19:33
+-- Server-Version: 10.4.19-MariaDB
+-- PHP-Version: 8.0.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `temperaturverwaltung`
+-- Datenbank: `temperaturverwaltung`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `benutzer`
+-- Tabellenstruktur für Tabelle `benutzer`
 --
 
 CREATE TABLE `benutzer` (
@@ -37,18 +36,18 @@ CREATE TABLE `benutzer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `benutzer`
+-- Daten für Tabelle `benutzer`
 --
 
 INSERT INTO `benutzer` (`BenutzerID`, `Anmeldename`, `Telefonnummer`, `Administrator`, `Passwort`) VALUES
-(1, 'test', '0123456789', b'0', 'test123'),
-(2, 'admin', '9876543210', b'1', 'admin123'),
-(3, 'socket', '123456789', b'0', 'socket123');
+(15, 'test', '23434', b'0', 'test123'),
+(21, 'admin', 'asdasdas', b'1', 'admin123'),
+(26, 'swag', '987654321', b'0', 'swag123');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hersteller`
+-- Tabellenstruktur für Tabelle `hersteller`
 --
 
 CREATE TABLE `hersteller` (
@@ -57,7 +56,7 @@ CREATE TABLE `hersteller` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `hersteller`
+-- Daten für Tabelle `hersteller`
 --
 
 INSERT INTO `hersteller` (`HerstellerID`, `Name`) VALUES
@@ -68,21 +67,31 @@ INSERT INTO `hersteller` (`HerstellerID`, `Name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `log`
+-- Tabellenstruktur für Tabelle `log`
 --
 
 CREATE TABLE `log` (
+  `Zeit` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `LogID` int(11) NOT NULL,
   `SensorID` int(11) NOT NULL,
   `BenutzerID` int(11) NOT NULL,
-  `MaximalTemperatur` float NOT NULL,
-  `Zeit` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `Info` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `log`
+--
+
+INSERT INTO `log` (`Zeit`, `LogID`, `SensorID`, `BenutzerID`, `Info`) VALUES
+('2021-07-09 14:54:09', 5, 1, 21, 'UpdateSensor'),
+('2021-07-09 14:54:30', 6, 1, 21, 'UpdateSensor'),
+('2021-07-09 14:58:20', 8, 1, 21, 'UpdateSensor'),
+('2021-07-09 14:59:52', 9, 1, 21, 'UpdateSensor');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sensor`
+-- Tabellenstruktur für Tabelle `sensor`
 --
 
 CREATE TABLE `sensor` (
@@ -94,18 +103,18 @@ CREATE TABLE `sensor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `sensor`
+-- Daten für Tabelle `sensor`
 --
 
 INSERT INTO `sensor` (`SensorID`, `Serverschrank`, `HerstellerID`, `MaximalTemperatur`, `Adresse`) VALUES
-(1, 1, 1, 90, '10.10.10.1'),
+(1, 1, 1, 105, '10.10.10.1'),
 (2, 2, 2, 85, '10.10.10.2'),
 (3, 3, 3, 95, '10.10.10.3');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `temperatur`
+-- Tabellenstruktur für Tabelle `temperatur`
 --
 
 CREATE TABLE `temperatur` (
@@ -116,101 +125,107 @@ CREATE TABLE `temperatur` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `temperatur`
+-- Daten für Tabelle `temperatur`
 --
 
 INSERT INTO `temperatur` (`TemperaturID`, `Zeit`, `SensorID`, `Temperatur`) VALUES
-(5, '2021-06-26 07:32:18', 1, 20),
-(6, '2021-06-26 07:32:38', 1, 20.5);
+(1, '2021-07-09 17:33:30', 1, 61.27),
+(2, '2021-07-09 17:33:30', 1, 104.86);
 
 --
--- Indexes for dumped tables
+-- Indizes der exportierten Tabellen
 --
 
 --
--- Indexes for table `benutzer`
+-- Indizes für die Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
   ADD PRIMARY KEY (`BenutzerID`);
 
 --
--- Indexes for table `hersteller`
+-- Indizes für die Tabelle `hersteller`
 --
 ALTER TABLE `hersteller`
   ADD PRIMARY KEY (`HerstellerID`);
 
 --
--- Indexes for table `log`
+-- Indizes für die Tabelle `log`
 --
 ALTER TABLE `log`
   ADD PRIMARY KEY (`LogID`),
-  ADD KEY `BenutzerID` (`BenutzerID`),
-  ADD KEY `SensorID` (`SensorID`);
+  ADD KEY `SensorID` (`SensorID`),
+  ADD KEY `BenutzerID` (`BenutzerID`);
 
 --
--- Indexes for table `sensor`
+-- Indizes für die Tabelle `sensor`
 --
 ALTER TABLE `sensor`
   ADD PRIMARY KEY (`SensorID`),
   ADD KEY `HerstellerID` (`HerstellerID`);
 
 --
--- Indexes for table `temperatur`
+-- Indizes für die Tabelle `temperatur`
 --
 ALTER TABLE `temperatur`
   ADD PRIMARY KEY (`TemperaturID`),
   ADD KEY `SensorID` (`SensorID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT für exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT for table `benutzer`
+-- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
-  MODIFY `BenutzerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `BenutzerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
--- AUTO_INCREMENT for table `hersteller`
+-- AUTO_INCREMENT für Tabelle `hersteller`
 --
 ALTER TABLE `hersteller`
-  MODIFY `HerstellerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `HerstellerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT for table `log`
+-- AUTO_INCREMENT für Tabelle `log`
 --
 ALTER TABLE `log`
-  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT for table `sensor`
+-- AUTO_INCREMENT für Tabelle `sensor`
 --
 ALTER TABLE `sensor`
-  MODIFY `SensorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `SensorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `temperatur`
+-- AUTO_INCREMENT für Tabelle `temperatur`
 --
 ALTER TABLE `temperatur`
-  MODIFY `TemperaturID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `TemperaturID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Constraints for dumped tables
+-- Constraints der exportierten Tabellen
 --
 
 --
--- Constraints for table `log`
+-- Constraints der Tabelle `log`
 --
 ALTER TABLE `log`
-  ADD CONSTRAINT `log_ibfk_1` FOREIGN KEY (`BenutzerID`) REFERENCES `benutzer` (`BenutzerID`),
-  ADD CONSTRAINT `log_ibfk_2` FOREIGN KEY (`SensorID`) REFERENCES `sensor` (`SensorID`);
+  ADD CONSTRAINT `log_ibfk_1` FOREIGN KEY (`SensorID`) REFERENCES `sensor` (`SensorID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `log_ibfk_2` FOREIGN KEY (`BenutzerID`) REFERENCES `benutzer` (`BenutzerID`);
 
 --
--- Constraints for table `sensor`
+-- Constraints der Tabelle `sensor`
 --
 ALTER TABLE `sensor`
   ADD CONSTRAINT `sensor_ibfk_1` FOREIGN KEY (`HerstellerID`) REFERENCES `hersteller` (`HerstellerID`);
+
+--
+-- Constraints der Tabelle `temperatur`
+--
+ALTER TABLE `temperatur`
+  ADD CONSTRAINT `temperatur_ibfk_1` FOREIGN KEY (`SensorID`) REFERENCES `sensor` (`SensorID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

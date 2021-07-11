@@ -1,36 +1,17 @@
-<div class="main-container">
-
 <div>
-    <!--
-    <p ng-click="openToolbox(data.sensor, 'UpdateSensor')" class="cat-h1-heading sensor-edit">
-        <i class="fas fa-edit"></i>
-        Sensor: {{ data.sensor.SensorID }}
-    -->
+    <h3>Sensor: {{ data.sensor.SensorID }}</h3>
+    <i class="fas fa-edit cursor" ng-click="openToolbox(data.sensor, 'UpdateSensor')" ng-if="path !== '/main' && user.Administrator"></i>
+    <i class="fas fa-trash-alt cursor" ng-click="delete(data.sensor, 'DeleteSensor')" ng-if="path !== '/main' && user.Administrator"></i>
 
-    <p class="cat-h1-heading">
-        Sensor: {{ data.sensor.SensorID }}
-        <i class="fas fa-edit cursor" ng-click="openToolbox(data.sensor, 'UpdateSensor')" ng-if="path !== '/main' && user.Administrator > 0"></i>
-        <i class="fas fa-trash-alt cursor" ng-click="delete(data.sensor, 'DeleteSensor')" ng-if="path !== '/main' && user.Administrator > 0"></i>
-    </p>
-</div>
+    <ul>
+        <li>Adresse: {{ data.sensor.Adresse }}</li>
+        <li>Serverschrank: {{ data.sensor.Serverschrank }}</li>
+        <li>Max. Temperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</li>
+        <li>H&ouml;chster Wert: {{ data.temperatur | greatest:data.sensor }}</li>
+        <li>Durchschnitt: {{ data.temperatur | average:data.sensor }}</li>
+        <li>Hersteller: {{ data.hersteller.Name }}</li>
+        <li ng-if="data.temperatur.length === 0">Keine Messwerte!</li>
+    </ul>
 
-<p class="cat-heading">Info: </p>
-<p>Adresse: {{ data.sensor.Adresse }}</p>
-<p>Serverschrank: {{ data.sensor.Serverschrank }}</p>
-<p>MaximalTemperatur: {{ data.sensor.MaximalTemperatur + ' °C' }}</p>
-
-<div>
-    <p class="cat-heading">h&ouml;chster Messwert: </p>
-    <p>{{ data.temperatur | greatest:data.sensor }}</p>
-
-    <p class="cat-heading">durschnittlicher Messwert: </p> 
-    <p>{{ data.temperatur | average:data.sensor }}</p>
-    
-    <p class="cat-heading">Herstellerinfo: </p>
-    <p>{{ data.hersteller.Name }}</p>
-
-    <p class="cat-heading">Messwerte:</p>
-    <p ng-if="data.temperatur.length === 0">Keine Messwerte!</p>
-
-    <whkawsf-table path="path" sensor="data.sensor" delete="delete" user="user.Administrator" entries="data.temperatur"></whkawsf-table>
+    <whkawsf-table sensor="data.sensor" delete="delete" temperatur="data.temperatur"></whkawsf-table>
 </div>
