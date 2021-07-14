@@ -102,6 +102,11 @@ angular.module('app', [ngRoute, ngDialog, tableModule, headerModule, sensorModul
 }])
 
 .controller('loginCtrl', ['$scope', '$location', '$timeout', 'Authenticator', ($scope, $location, $timeout, Authenticator) => {
+    $scope.user = JSON.parse(Authenticator.get('user'));
+
+    if ($scope.user)
+        $location.path('main');
+
     $scope.login = (username, password) => {
         $scope.message = '';
 
