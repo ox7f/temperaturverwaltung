@@ -24,7 +24,6 @@ def simulateSensor():
     }
 
     with app.app_context():
-        # zeit fehlt noch :(
         query1 = queryData('InsertTemperatur', data)
         query2 = queryData('Simulator', query1['data'])
 
